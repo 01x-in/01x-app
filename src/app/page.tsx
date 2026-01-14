@@ -21,7 +21,7 @@ export default function Home() {
             Zero → One → Scale
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl mx-auto">
-            This is a paid Full Stack Builder environment.<br />
+            A paid full-stack builder environment.<br />
             You join, explore an idea, use AI to accelerate, and ship an MVP.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -36,7 +36,7 @@ export default function Home() {
       </section>
 
       {/* Zero → One → Scale Section */}
-      <section className="section-full">
+      <section id="zero-one-scale" className="section-full">
         <div className="container-wide">
           <div className="grid md:grid-cols-3 gap-8 md:gap-12">
             {/* Zero */}
@@ -134,7 +134,7 @@ export default function Home() {
       </section>
 
       {/* Why This Is Paid Section */}
-      <section className="section-full">
+      <section id="why-paid" className="section-full">
         <div className="container-wide">
           <div className="grid md:grid-cols-5 gap-8 md:gap-16">
             <div className="md:col-span-2">
@@ -181,7 +181,7 @@ export default function Home() {
       </section>
 
       {/* Full-Stack Builder Growth Section */}
-      <section className="section-full">
+      <section id="full-stack" className="section-full">
         <div className="container-narrow">
           <h2 className="text-3xl md:text-4xl font-semibold mb-8">
             Builders who touch everything.
@@ -217,7 +217,7 @@ export default function Home() {
       </section>
 
       {/* Role of AI Section */}
-      <section className="section-full">
+      <section id="ai-role" className="section-full">
         <div className="container-wide">
           <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-start">
             <div>
@@ -381,7 +381,7 @@ export default function Home() {
       </section>
 
       {/* Access CTA Section + Footer */}
-      <section className="section-full flex-col justify-between py-0">
+      <section id="cta" className="section-full flex-col justify-between py-0">
         <div className="flex-1 flex items-center justify-center">
           <div className="container-narrow text-center">
             <h2 className="text-3xl md:text-4xl font-semibold mb-6">
@@ -424,3 +424,4 @@ export default function Home() {
     </div>
   );
 }
+
