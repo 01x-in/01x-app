@@ -12,8 +12,8 @@ export default function Home() {
       <Navbar />
       {/* Hero Section */}
       <section id="hero" className="section-full pt-16">
-        <div className="container-narrow text-center">
-          <Badge variant="outline" className="mb-6 rounded-full px-4 py-1.5 text-sm font-medium">
+        <div className="container-narrow text-center -mt-8">
+          <Badge variant="outline" className="mb-6 rounded-full px-4 py-1.5 text-xs font-medium border-border/50">
             <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#d7ff00]"></span>
             Coming Soon!
           </Badge>
@@ -44,9 +44,10 @@ export default function Home() {
               <Badge variant="outline" className="text-sm font-medium">Zero</Badge>
               <h3 className="text-xl font-semibold">Where ideas start</h3>
               <p className="text-muted-foreground leading-relaxed">
-                You have an idea — maybe half-formed, maybe overwhelming. You&apos;re curious
-                about building but unsure where to begin. Zero is the starting point:
-                raw ambition, undefined scope, real uncertainty.
+                You have an idea — maybe half-formed, maybe overwhelming.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Zero is the starting point: raw ambition, undefined scope, real uncertainty.
               </p>
             </div>
 
@@ -56,6 +57,8 @@ export default function Home() {
               <h3 className="text-xl font-semibold">A shipped MVP</h3>
               <p className="text-muted-foreground leading-relaxed">
                 One is a working product. Something real that exists in the world.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
                 You built it. You shipped it. It might be rough, but it&apos;s yours.
                 This is where confidence starts.
               </p>
@@ -66,7 +69,9 @@ export default function Home() {
               <Badge variant="outline" className="text-sm font-medium">Scale</Badge>
               <h3 className="text-xl font-semibold">Growth through guidance</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Scale doesn&apos;t mean raising millions. It means refinement.
+                Scale doesn&apos;t mean fundraising. It means refinement.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
                 It means exposure to mentors who&apos;ve built before. It means
                 learning what to do next — and having help deciding.
               </p>
@@ -139,12 +144,15 @@ export default function Home() {
           <div className="grid md:grid-cols-5 gap-8 md:gap-16">
             <div className="md:col-span-2">
               <h2 className="text-3xl md:text-4xl font-semibold">
-                Why you pay to be here.
+                Why you pay to be here?
               </h2>
             </div>
             <div className="md:col-span-3 space-y-6">
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Payment isn&apos;t a paywall — it&apos;s a filter.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                This is not a subscription to content. You&apos;re not buying videos or courses.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 When builders pay, they commit. They show up. They take the work seriously.
@@ -171,7 +179,6 @@ export default function Home() {
                 </li>
               </ul>
               <p className="text-muted-foreground leading-relaxed pt-4">
-                This is not a subscription to content. You&apos;re not buying videos or courses.
                 You&apos;re paying for access to a serious building environment — and for the
                 quality of people you&apos;ll build alongside.
               </p>
@@ -231,19 +238,19 @@ export default function Home() {
             </div>
             <div className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
-                It does not:
+                AI does not:
               </p>
               <ul className="space-y-2 text-muted-foreground">
                 <li className="flex gap-3">
-                  <span className="text-foreground">×</span>
+                  <span className="text-red-600">×</span>
                   Remove the need to learn
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-foreground">×</span>
+                  <span className="text-red-600">×</span>
                   Replace your judgment
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-foreground">×</span>
+                  <span className="text-red-600">×</span>
                   Guarantee better outcomes
                 </li>
               </ul>
