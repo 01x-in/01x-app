@@ -12,8 +12,8 @@ export default function Home() {
       <Navbar />
       <div className="scroll-snap-container bg-background">
         {/* Hero Section */}
-        <section id="hero" className="section-full pt-16">
-          <div className="container-narrow text-center -mt-8">
+        <section id="hero" className="section-full min-h-screen pt-24 md:pt-16">
+          <div className="container-narrow text-center md:-mt-8">
             <Badge variant="outline" className="mb-6 rounded-full px-4 py-1.5 text-xs font-medium border-border/50">
               <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#d7ff00]"></span>
               Coming Soon!

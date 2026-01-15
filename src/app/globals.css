@@ -131,50 +131,74 @@
   }
 
   /* Headlines: font-weight 600 */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: 600;
   }
 
   /* Small labels: font-weight 500, letter-spacing 0.02em */
-  .label, .text-label {
+  .label,
+  .text-label {
     font-weight: 500;
     letter-spacing: 0.02em;
   }
 }
 
-/* Scroll snap container */
+/* Scroll snap container - only on larger screens */
 .scroll-snap-container {
-  height: 100vh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
+  overflow-y: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Full-screen section utilities with scroll snap */
+@media (min-width: 768px) {
+  .scroll-snap-container {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Full-screen section utilities - snap only on larger screens */
 .section-full {
-  height: 100vh;
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  overflow: hidden;
+  padding: 4rem 0;
+}
+
+@media (min-width: 768px) {
+  .section-full {
+    min-height: 100vh;
+    padding: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
 }
 
 /* For sections that need scrollable content */
 .section-full-scrollable {
-  height: 100vh;
-  min-height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  overflow-y: auto;
-  padding-top: 5rem;
-  padding-bottom: 2rem;
+  padding: 5rem 0 2rem;
+}
+
+@media (min-width: 768px) {
+  .section-full-scrollable {
+    height: 100vh;
+    min-height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow-y: auto;
+    padding-top: 5rem;
+    padding-bottom: 2rem;
+  }
 }
 
 /* Section spacing utilities */
