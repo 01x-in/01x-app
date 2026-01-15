@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "01X — From Zero to One to Scale",
   description: "A paid builder environment. Join a cohort, explore an idea, use AI to accelerate, and ship an MVP. From zero to one to scale.",
   keywords: ["builder", "startup", "cohort", "MVP", "full-stack", "AI"],
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

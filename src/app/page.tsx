@@ -423,8 +423,8 @@ export default function Home() {
                 </div>
               </div>
               {/* Desktop: horizontal single row */}
-              <div className="hidden md:flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
+              <div className="hidden md:flex items-center justify-between gap-8">
+                <p className="text-sm text-muted-foreground shrink-0">
                   Built by people who build. For people who want to.
                 </p>
                 <div className="flex items-center gap-4 text-sm">
@@ -433,6 +433,7 @@ export default function Home() {
                   <span className="text-border">|</span>
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+                  <span className="text-border">|</span>
                   <ThemeToggle />
                 </div>
               </div>
