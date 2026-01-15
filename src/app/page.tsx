@@ -389,7 +389,7 @@ export default function Home() {
         </section>
 
         {/* Access CTA Section + Footer */}
-        <section id="cta" className="section-full flex-col justify-between py-0">
+        <section id="cta" className="section-full min-h-screen flex-col justify-between py-0">
           <div className="flex-1 flex items-center justify-center">
             <div className="container-narrow text-center">
               <h2 className="text-3xl md:text-4xl font-semibold mb-6">
@@ -402,29 +402,39 @@ export default function Home() {
               <Button size="lg" className="text-base px-10">
                 Apply for Access
               </Button>
-              <p className="text-sm text-muted-foreground mt-6">
-                Questions? <Link href="#" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>
-              </p>
             </div>
           </div>
 
           {/* Footer */}
           <footer className="border-t">
             <div className="container-wide py-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              {/* Mobile: stacked and centered */}
+              <div className="flex flex-col items-center gap-4 text-center md:hidden">
                 <p className="text-sm text-muted-foreground">
                   Built by people who build. For people who want to.
                 </p>
-                <span className="hidden md:block text-border">|</span>
-                <div className="flex flex-wrap items-center gap-6 text-sm">
+                <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Principles</Link>
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
                   <span className="text-border">|</span>
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+                  <ThemeToggle />
                 </div>
-                <ThemeToggle />
+              </div>
+              {/* Desktop: horizontal single row */}
+              <div className="hidden md:flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  Built by people who build. For people who want to.
+                </p>
+                <div className="flex items-center gap-4 text-sm">
+                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
+                  <span className="text-border">|</span>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+                  <ThemeToggle />
+                </div>
               </div>
             </div>
           </footer>
