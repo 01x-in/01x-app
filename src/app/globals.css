@@ -142,12 +142,39 @@
   }
 }
 
-/* Full-screen section utilities */
+/* Scroll snap container */
+.scroll-snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Full-screen section utilities with scroll snap */
 .section-full {
+  height: 100vh;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+}
+
+/* For sections that need scrollable content */
+.section-full-scrollable {
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow-y: auto;
+  padding-top: 5rem;
+  padding-bottom: 2rem;
 }
 
 /* Section spacing utilities */
