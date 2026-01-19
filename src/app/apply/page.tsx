@@ -17,6 +17,10 @@ export default function ApplyPage() {
         progress,
         submitAnswer,
         restartChat,
+        hasDraft,
+        draftInfo,
+        resumeFromDraft,
+        startFresh,
     } = useChat();
 
     return (
@@ -24,48 +28,91 @@ export default function ApplyPage() {
             {/* Navbar */}
             <Navbar variant="apply" />
 
-            {/* Spacer for fixed navbar + progress bar */}
-            <div className="h-24 shrink-0" />
+            {/* Progress bar - thin strip under navbar */}
+            <div className="fixed top-[calc(1rem+3.5rem+0.5rem)] left-1/2 -translate-x-1/2 z-40 w-full max-w-5xl px-6">
+                <div className="flex items-center gap-3">
+                    {/* Progress track */}
+                    <div className="flex-1 h-1 bg-muted/50 rounded-full overflow-hidden relative">
+                        {/* Glow effect */}
+                        <div
+                            className="absolute inset-0 h-full rounded-full transition-all duration-700 ease-out"
+                            style={{
+                                width: `${progress}%`,
+                                background: "linear-gradient(90deg, #d7ff00, #a8cc00)",
+                                boxShadow: progress > 0 ? "0 0 12px rgba(215, 255, 0, 0.6), 0 0 4px rgba(215, 255, 0, 0.8)" : "none",
+                            }}
+                        />
+                    </div>
 
-            {/* Progress bar below navbar */}
-            <div className="fixed top-[calc(1rem+3.5rem+1rem)] left-0 right-0 z-40">
-                <div className="container-narrow">
-                    <div className="flex items-center gap-3">
-                        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-[#d7ff00] transition-all duration-500 ease-out"
-                                style={{ width: `${progress}%` }}
-                            />
-                        </div>
-                        <span className="text-xs text-muted-foreground font-mono">
+                    {/* Percentage badge */}
+                    <div className="flex items-center gap-2">
+                        <span
+                            className="text-xs font-medium tabular-nums px-2 py-0.5 rounded-full transition-all duration-300"
+                            style={{
+                                backgroundColor: progress > 0 ? "rgba(215, 255, 0, 0.15)" : "transparent",
+                                color: progress > 0 ? "#d7ff00" : "var(--muted-foreground)",
+                            }}
+                        >
                             {progress}%
                         </span>
+
+                        {/* Restart button */}
                         {messages.length > 0 && (
                             <Button
                                 variant="ghost"
                                 size="icon-sm"
                                 onClick={restartChat}
-                                className="text-muted-foreground hover:text-foreground"
+                                className="text-muted-foreground hover:text-foreground h-6 w-6"
                                 title="Start over"
                             >
-                                <RotateCcw className="h-4 w-4" />
+                                <RotateCcw className="h-3.5 w-3.5" />
                             </Button>
                         )}
                     </div>
                 </div>
             </div>
 
-            {/* Chat area */}
-            <ChatContainer
-                messages={messages}
-                isTyping={isTyping}
-                className="container-narrow"
-            />
+            {/* Spacer for fixed navbar + progress bar */}
+            <div className="h-20 shrink-0" />
+
+            {/* Draft resume prompt */}
+            {hasDraft && draftInfo && messages.length === 0 && (
+                <div className="flex-1 flex items-center justify-center px-4">
+                    <div className="bg-card border rounded-2xl p-6 max-w-md text-center space-y-4">
+                        <div className="text-4xl">📝</div>
+                        <h2 className="text-lg font-semibold">Welcome back!</h2>
+                        <p className="text-sm text-muted-foreground">
+                            You have a saved application at {draftInfo.progress}% complete.
+                            Would you like to continue where you left off?
+                        </p>
+                        <div className="flex gap-3 justify-center pt-2">
+                            <Button variant="outline" onClick={startFresh}>
+                                Start Fresh
+                            </Button>
+                            <Button
+                                onClick={resumeFromDraft}
+                                className="bg-[#d7ff00] text-black hover:bg-[#c5eb00]"
+                            >
+                                Continue
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Chat area - only show if no draft prompt */}
+            {(!hasDraft || messages.length > 0) && (
+                <ChatContainer
+                    messages={messages}
+                    isTyping={isTyping}
+                    className="container-narrow"
+                />
+            )}
 
             {/* Input area */}
             <div className="shrink-0 border-t bg-background/80 backdrop-blur-sm">
                 <div className="container-narrow py-4">
-                    {currentQuestion && !isComplete ? (
+                    {hasDraft && messages.length === 0 ? null : currentQuestion && !isComplete ? (
                         <ChatInput
                             question={currentQuestion}
                             onSubmit={submitAnswer}
