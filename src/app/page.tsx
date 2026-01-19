@@ -26,8 +26,8 @@ export default function Home() {
               You join, explore an idea, use AI to accelerate, and ship an MVP.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-base px-8">
-                Apply for Access
+              <Button size="lg" className="text-base px-8" asChild>
+                <Link href="/apply">Apply for Access</Link>
               </Button>
               <Button size="lg" variant="outline" className="text-base px-8" asChild>
                 <Link href="#how-it-works">See How It Works</Link>
@@ -399,8 +399,8 @@ export default function Home() {
                 Apply for access to an upcoming cohort. We review applications manually.
                 If it&apos;s a fit, we&apos;ll be in touch.
               </p>
-              <Button size="lg" className="text-base px-10">
-                Apply for Access
+              <Button size="lg" className="text-base px-10" asChild>
+                <Link href="/apply">Apply for Access</Link>
               </Button>
             </div>
           </div>

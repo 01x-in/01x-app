@@ -213,3 +213,40 @@
 .container-wide {
   @apply mx-auto max-w-5xl px-6;
 }
+
+/* Chat-specific styles */
+.typing-dot {
+  @apply w-2 h-2 rounded-full bg-muted-foreground/50;
+  animation: typing-bounce 1.4s ease-in-out infinite;
+}
+
+@keyframes typing-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Shake animation for validation errors */
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
