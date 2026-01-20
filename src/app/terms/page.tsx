@@ -131,8 +131,8 @@ export default function TermsPage() {
                             <h2 className="text-xl font-semibold mb-3">8. Contact</h2>
                             <p className="text-muted-foreground leading-relaxed">
                                 Questions about these Terms? Reach out to us at{" "}
-                                <a href="mailto:hello@01x.dev" className="text-[#d7ff00] hover:underline">
-                                    hello@01x.dev
+                                <a href="mailto:hello@01x.in" className="text-[#d7ff00] hover:underline">
+                                    hello@01x.in
                                 </a>
                             </p>
                         </section>

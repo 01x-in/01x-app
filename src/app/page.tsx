@@ -107,7 +107,7 @@ export default function Home() {
                 {
                   step: "03",
                   title: "Use AI to accelerate",
-                  description: "AI helps you think faster, prototype faster, and iterate faster. It does not replace effort."
+                  description: "AI helps you think faster and prototype faster. It doesn't replace effort."
                 },
                 {
                   step: "04",
@@ -117,12 +117,7 @@ export default function Home() {
                 {
                   step: "05",
                   title: "Ship an MVP",
-                  description: "At some point, you stop exploring and start shipping. This is non-negotiable."
-                },
-                {
-                  step: "06",
-                  title: "Learn, iterate, grow",
-                  description: "After shipping, you review, improve, and may access deeper mentorship over time."
+                  description: "You stop exploring and start shipping. Then you iterate, improve, and grow."
                 }
               ].map((item) => (
                 <div key={item.step} className="flex gap-6 items-start">

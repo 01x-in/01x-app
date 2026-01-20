@@ -135,8 +135,8 @@ export default function PrivacyPage() {
                                 </ul>
                                 <p>
                                     To exercise any of these rights, email us at{" "}
-                                    <a href="mailto:privacy@01x.dev" className="text-[#d7ff00] hover:underline">
-                                        privacy@01x.dev
+                                    <a href="mailto:privacy@01x.in" className="text-[#d7ff00] hover:underline">
+                                        privacy@01x.in
                                     </a>
                                 </p>
                             </div>
@@ -169,8 +169,8 @@ export default function PrivacyPage() {
                             <h2 className="text-xl font-semibold mb-3">9. Contact Us</h2>
                             <p className="text-muted-foreground leading-relaxed">
                                 Questions or concerns about privacy? We're happy to help. Reach out at{" "}
-                                <a href="mailto:privacy@01x.dev" className="text-[#d7ff00] hover:underline">
-                                    privacy@01x.dev
+                                <a href="mailto:privacy@01x.in" className="text-[#d7ff00] hover:underline">
+                                    privacy@01x.in
                                 </a>
                             </p>
                         </section>
