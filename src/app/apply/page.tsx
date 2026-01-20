@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useChat } from "./lib/use-chat";
 import { ChatContainer } from "./components/chat-container";
 import { ChatInput } from "./components/chat-input";
@@ -22,6 +23,21 @@ export default function ApplyPage() {
         resumeFromDraft,
         startFresh,
     } = useChat();
+
+    // Handle Enter key on draft resume prompt
+    useEffect(() => {
+        if (!hasDraft || messages.length > 0) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                resumeFromDraft();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [hasDraft, messages.length, resumeFromDraft]);
 
     return (
         <div className="flex flex-col h-[100dvh] bg-background">
