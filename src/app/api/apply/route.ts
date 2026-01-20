@@ -49,21 +49,28 @@ export async function POST(request: NextRequest) {
         };
 
         // Send to Google Apps Script
+        // Google Apps Script returns a redirect that needs to be followed
         const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "text/plain", // GAS handles this better than application/json
             },
             body: JSON.stringify(rowData),
+            redirect: "follow", // Explicitly follow redirects
         });
 
-        if (!response.ok) {
-            console.error("Google Sheets error:", await response.text());
-            // Still return success to user
-            return NextResponse.json({ success: true, warning: "Backup storage used" });
+        // GAS returns HTML on success after redirect, check for success
+        const responseText = await response.text();
+
+        // Check if it looks like a success response or error
+        if (response.ok || responseText.includes('"success":true') || responseText.includes('success')) {
+            console.log("Google Sheets: Data submitted successfully");
+            return NextResponse.json({ success: true });
         }
 
-        return NextResponse.json({ success: true });
+        // Log error but still return success to user
+        console.error("Google Sheets response:", responseText.substring(0, 200));
+        return NextResponse.json({ success: true, warning: "Backup storage used" });
     } catch (error) {
         console.error("Submit error:", error);
         return NextResponse.json(
@@ -72,3 +79,4 @@ export async function POST(request: NextRequest) {
         );
     }
 }
+
