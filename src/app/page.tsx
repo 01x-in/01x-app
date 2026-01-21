@@ -412,8 +412,8 @@ export default function Home() {
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
                   <span className="text-border">|</span>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+                  <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
+                  <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
                   <ThemeToggle />
                 </div>
               </div>
@@ -426,8 +426,8 @@ export default function Home() {
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
                   <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
                   <span className="text-border">|</span>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+                  <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
+                  <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
                   <span className="text-border">|</span>
                   <ThemeToggle />
                 </div>
