@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { MentorsShowcase } from "@/components/mentors/MentorsShowcase";
 
 export default function Home() {
   return (
@@ -315,6 +316,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Mentors Showcase Section */}
+        <MentorsShowcase />
 
         {/* Who This Is For Section */}
         <section id="for-you" className="section-full">
