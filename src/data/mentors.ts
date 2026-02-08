@@ -174,7 +174,7 @@ const mentors: Mentor[] = [
     id: "elena-vasquez",
     name: "Elena Vasquez",
     title: "Head of Growth @ Notion",
-    domains: ["Growth", "Product", "Data"],
+    domains: ["Growth", "Product"],
     bioShort: "Grew Notion from 1M to 30M users. Data-obsessed, BS-allergic.",
     bioLong:
       "I joined Notion when we had 1M users. Now we have 30M+. I've seen every growth hack, and I can tell you which ones actually work. I'm allergic to vanity metrics and 'growth theater.' I help builders focus on the metrics that matter and build sustainable acquisition channels.",
@@ -237,7 +237,7 @@ const mentors: Mentor[] = [
     id: "nina-okafor",
     name: "Nina Okafor",
     title: "VP Operations @ Late-Stage Startup",
-    domains: ["Ops", "Founder", "Growth"],
+    domains: ["Founder", "Growth"],
     bioShort: "Scaled ops from 10 to 500 people. Process without bureaucracy.",
     bioLong:
       "I've built operations at three startups—two acquired, one public. I know how to create processes that help teams move faster, not slower. I help early-stage builders think about ops before it becomes a fire: hiring, legal basics, finance fundamentals, and when to actually start worrying about these things.",
@@ -267,7 +267,7 @@ const mentors: Mentor[] = [
     id: "alex-thompson",
     name: "Alex Thompson",
     title: "Principal Data Scientist @ OpenAI",
-    domains: ["AI", "Data", "Engineering"],
+    domains: ["AI", "Engineering"],
     bioShort: "ML at scale. Helping builders use AI tools that actually ship.",
     bioLong:
       "I've spent 10 years in ML/AI, the last 3 at OpenAI. I've seen the hype cycles come and go. I help builders cut through the noise and figure out where AI actually adds value to their product—and where it's just a distraction. Focus on shipping, not on chasing the latest model.",
