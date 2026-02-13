@@ -1,19 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MentorFilters } from "@/components/mentors/MentorFilters";
 import { MentorsGrid } from "@/components/mentors/MentorsGrid";
-import { getMentors, filterMentors, type DomainTag } from "@/data/mentors";
+import { filterMentors, type Mentor, type DomainTag } from "@/data/mentors";
 
 export default function MentorsPage() {
     const [selectedDomains, setSelectedDomains] = useState<DomainTag[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [allMentors, setAllMentors] = useState<Mentor[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const allMentors = getMentors();
+    useEffect(() => {
+        fetch("/api/v1/mentors")
+            .then((res) => res.json())
+            .then((data) => {
+                setAllMentors(Array.isArray(data) ? data : []);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Failed to fetch mentors:", err);
+                setLoading(false);
+            });
+    }, []);
+
     const filteredMentors = filterMentors(allMentors, selectedDomains, searchQuery);
 
     return (
@@ -41,7 +55,18 @@ export default function MentorsPage() {
                     </div>
 
                     {/* Grid */}
-                    <MentorsGrid mentors={filteredMentors} />
+                    {loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[1, 2, 3, 4, 5, 6].map((i) => (
+                                <div
+                                    key={i}
+                                    className="h-[280px] rounded-lg bg-muted/50 animate-pulse"
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <MentorsGrid mentors={filteredMentors} />
+                    )}
 
                     {/* Become a Mentor Section */}
                     <section className="mt-24 pt-12 border-t">

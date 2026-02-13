@@ -92,6 +92,11 @@ export function useChat() {
     const initialized = useRef(false);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+    // Reset initialization flag on mount (fixes stale ref during client-side navigation)
+    useEffect(() => {
+        initialized.current = false;
+    }, []);
+
     // Check for draft on mount
     useEffect(() => {
         const draft = loadDraft();

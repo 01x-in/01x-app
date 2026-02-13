@@ -9,5 +9,13 @@
     "assets": {
         "directory": ".open-next/assets",
         "binding": "ASSETS"
-    }
+    },
+    "d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "01x-db",
+			"database_id": "1b6b2a95-757b-443e-87f9-0b8a9c9610ec",
+			"migrations_dir": "db/migrations"
+		}
+	]
 }

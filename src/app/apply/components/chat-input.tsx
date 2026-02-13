@@ -64,9 +64,9 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
                     <p className="text-sm">
                         By continuing, you agree to share your information with 01X.
                         See our{" "}
-                        <Link href="/terms" className="underline text-[#d7ff00]">Terms</Link>
+                        <Link href="/terms" className="underline font-medium">Terms</Link>
                         {" "}&{" "}
-                        <Link href="/privacy" className="underline text-[#d7ff00]">Privacy Policy</Link>.
+                        <Link href="/privacy" className="underline font-medium">Privacy Policy</Link>.
                     </p>
                 </div>,
                 {

@@ -1,15 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MentorCard } from "./MentorCard";
 import { MentorModal } from "./MentorModal";
-import { getFeaturedMentors, type Mentor } from "@/data/mentors";
+import type { Mentor } from "@/data/mentors";
 
 export function MentorsShowcase() {
     const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
-    const featuredMentors = getFeaturedMentors();
+    const [featuredMentors, setFeaturedMentors] = useState<Mentor[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch("/api/v1/mentors?featured=1")
+            .then((res) => res.json())
+            .then((data) => {
+                setFeaturedMentors(Array.isArray(data) ? data : []);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Failed to fetch featured mentors:", err);
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return (
+            <section id="mentors-showcase" className="section-full">
+                <div className="w-full max-w-7xl mx-auto px-6">
+                    <div className="text-center mb-10">
+                        <h2 className="text-3xl md:text-4xl font-semibold mb-4">Mentors</h2>
+                        <p className="text-muted-foreground text-lg max-w-xl mx-auto mb-6">
+                            Builders who&apos;ve shipped, scaled, and learned the hard way.
+                        </p>
+                    </div>
+                    <div className="flex gap-4 justify-center">
+                        {[1, 2, 3, 4].map((i) => (
+                            <div
+                                key={i}
+                                className="shrink-0 w-[280px] h-[200px] rounded-lg bg-muted/50 animate-pulse"
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    if (featuredMentors.length === 0) return null;
 
     // Duplicate for seamless infinite scroll
     const duplicatedMentors = [...featuredMentors, ...featuredMentors];

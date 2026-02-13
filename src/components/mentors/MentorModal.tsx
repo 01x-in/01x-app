@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Mentor } from "@/data/mentors";
+import { ONE_ON_ONE_LABELS } from "@/data/mentors";
 import Link from "next/link";
 
 interface MentorModalProps {
@@ -115,10 +116,10 @@ export function MentorModal({ mentor, open, onOpenChange }: MentorModalProps) {
                                     Weekend Sessions
                                 </Badge>
                             )}
-                            {mentor.availability.oneOnOnePerMonth && (
+                            {mentor.availability.oneOnOneFrequency && (
                                 <Badge variant="outline" className="text-sm py-1.5 px-3">
                                     <span className="mr-1.5 text-blue-600">📅</span>
-                                    {mentor.availability.oneOnOnePerMonth} 1:1{mentor.availability.oneOnOnePerMonth > 1 ? "s" : ""} / month
+                                    {ONE_ON_ONE_LABELS[mentor.availability.oneOnOneFrequency]}
                                 </Badge>
                             )}
                         </div>

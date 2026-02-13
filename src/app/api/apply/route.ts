@@ -1,94 +1,76 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// Hardcoded fallback — .env.local is NOT available in Cloudflare Workers
-const FALLBACK_GOOGLE_SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbwdOubsv3qIp0ZN2qkNEc38x7DBthxUITcV4KU0Qea00mJMiarE5jUAuK9Qi-m3m5z4/exec";
+import { getDB } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
     try {
         const formData = await request.json();
 
-        // Read env at request time (Cloudflare Workers provides env per-request)
-        const GOOGLE_SCRIPT_URL =
-            process.env.GOOGLE_SCRIPT_URL || FALLBACK_GOOGLE_SCRIPT_URL;
+        const db = getDB();
+        await db
+            .prepare(
+                `INSERT INTO applications (
+                    full_name, email, location, linkedin_url,
+                    what_building, why_matters, current_approach, problem_solved,
+                    current_stage, product_link,
+                    has_cofounder, open_to_connect,
+                    background, primary_skill, superpower,
+                    hours_per_week, investment_range,
+                    primary_goal, success_looks_like, wants_mentors,
+                    tried_before, what_happened, biggest_blocker,
+                    heard_from, why_now, ready_to_commit,
+                    comfortable_public, willing_to_help,
+                    biggest_fear, specific_help
+                ) VALUES (
+                    ?1, ?2, ?3, ?4,
+                    ?5, ?6, ?7, ?8,
+                    ?9, ?10,
+                    ?11, ?12,
+                    ?13, ?14, ?15,
+                    ?16, ?17,
+                    ?18, ?19, ?20,
+                    ?21, ?22, ?23,
+                    ?24, ?25, ?26,
+                    ?27, ?28,
+                    ?29, ?30
+                )`
+            )
+            .bind(
+                formData.fullName || "",
+                formData.email || "",
+                formData.location || "",
+                formData.linkedinUrl || "",
+                formData.whatBuilding || "",
+                formData.whyMatters || "",
+                formData.currentApproach || "",
+                formData.problemSolved || "",
+                formData.currentStage || "",
+                formData.productLink || "",
+                formData.hasCofounder || "",
+                formData.openToConnect || "",
+                formData.background || "",
+                formData.primarySkill || "",
+                formData.superpower || "",
+                formData.hoursPerWeek || "",
+                formData.investmentRange || "",
+                formData.primaryGoal || "",
+                formData.successLooksLike || "",
+                formData.wantsMentors || "",
+                formData.triedBefore || "",
+                formData.whatHappened || "",
+                formData.biggestBlocker || "",
+                formData.heardFrom || "",
+                formData.whyNow || "",
+                formData.readyToCommit || "",
+                formData.comfortablePublic || "",
+                formData.willingToHelp || "",
+                formData.biggestFear || "",
+                formData.specificHelp || ""
+            )
+            .run();
 
-        console.log(
-            "[apply] GOOGLE_SCRIPT_URL resolved:",
-            GOOGLE_SCRIPT_URL ? "YES" : "NO",
-            "(from env:",
-            !!process.env.GOOGLE_SCRIPT_URL,
-            ")"
-        );
+        console.log("[apply] ✅ Application saved to D1");
 
-        // Flatten form data for spreadsheet
-        const rowData = {
-            timestamp: new Date().toISOString(),
-            fullName: formData.fullName || "",
-            email: formData.email || "",
-            location: formData.location || "",
-            linkedinUrl: formData.linkedinUrl || "",
-            whatBuilding: formData.whatBuilding || "",
-            whyMatters: formData.whyMatters || "",
-            currentApproach: formData.currentApproach || "",
-            problemSolved: formData.problemSolved || "",
-            currentStage: formData.currentStage || "",
-            productLink: formData.productLink || "",
-            hasCofounder: formData.hasCofounder || "",
-            openToConnect: formData.openToConnect || "",
-            background: formData.background || "",
-            primarySkill: formData.primarySkill || "",
-            superpower: formData.superpower || "",
-            hoursPerWeek: formData.hoursPerWeek || "",
-            investmentRange: formData.investmentRange || "",
-            primaryGoal: formData.primaryGoal || "",
-            successLooksLike: formData.successLooksLike || "",
-            wantsMentors: formData.wantsMentors || "",
-            triedBefore: formData.triedBefore || "",
-            whatHappened: formData.whatHappened || "",
-            biggestBlocker: formData.biggestBlocker || "",
-            heardFrom: formData.heardFrom || "",
-            whyNow: formData.whyNow || "",
-            readyToCommit: formData.readyToCommit || "",
-            comfortablePublic: formData.comfortablePublic || "",
-            willingToHelp: formData.willingToHelp || "",
-            biggestFear: formData.biggestFear || "",
-            specificHelp: formData.specificHelp || "",
-        };
-
-        console.log("[apply] Submitting to Google Sheets, fields:", Object.keys(rowData).length);
-        console.log("[apply] Form data keys present:", Object.keys(formData).filter(k => formData[k]).join(", "));
-
-        // Send to Google Apps Script
-        // Google Apps Script returns a redirect that needs to be followed
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "text/plain", // GAS handles this better than application/json
-            },
-            body: JSON.stringify(rowData),
-            redirect: "follow", // Explicitly follow redirects
-        });
-
-        // GAS returns HTML on success after redirect, check for success
-        const responseText = await response.text();
-
-        console.log("[apply] Google Sheets response:", {
-            status: response.status,
-            statusText: response.statusText,
-            url: response.url,
-            redirected: response.redirected,
-            bodyPreview: responseText.substring(0, 300),
-        });
-
-        // Check if it looks like a success response or error
-        if (response.ok || responseText.includes('"success":true') || responseText.includes('success')) {
-            console.log("[apply] ✅ Google Sheets: Data submitted successfully");
-            return NextResponse.json({ success: true });
-        }
-
-        // Log error but still return success to user
-        console.error("[apply] ❌ Google Sheets unexpected response:", responseText.substring(0, 500));
-        return NextResponse.json({ success: true, warning: "Backup storage used" });
+        return NextResponse.json({ success: true });
     } catch (error) {
         console.error("[apply] ❌ Submit error:", error);
         return NextResponse.json(
@@ -97,4 +79,3 @@ export async function POST(request: NextRequest) {
         );
     }
 }
-
