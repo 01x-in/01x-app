@@ -1,17 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Google Apps Script Web App URL - set in environment
-const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
+// Hardcoded fallback — .env.local is NOT available in Cloudflare Workers
+const FALLBACK_GOOGLE_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbwdOubsv3qIp0ZN2qkNEc38x7DBthxUITcV4KU0Qea00mJMiarE5jUAuK9Qi-m3m5z4/exec";
 
 export async function POST(request: NextRequest) {
     try {
         const formData = await request.json();
 
-        if (!GOOGLE_SCRIPT_URL) {
-            console.error("GOOGLE_SCRIPT_URL not configured");
-            // Still return success to user, but log error
-            return NextResponse.json({ success: true, warning: "Storage not configured" });
-        }
+        // Read env at request time (Cloudflare Workers provides env per-request)
+        const GOOGLE_SCRIPT_URL =
+            process.env.GOOGLE_SCRIPT_URL || FALLBACK_GOOGLE_SCRIPT_URL;
+
+        console.log(
+            "[apply] GOOGLE_SCRIPT_URL resolved:",
+            GOOGLE_SCRIPT_URL ? "YES" : "NO",
+            "(from env:",
+            !!process.env.GOOGLE_SCRIPT_URL,
+            ")"
+        );
 
         // Flatten form data for spreadsheet
         const rowData = {
@@ -48,6 +55,9 @@ export async function POST(request: NextRequest) {
             specificHelp: formData.specificHelp || "",
         };
 
+        console.log("[apply] Submitting to Google Sheets, fields:", Object.keys(rowData).length);
+        console.log("[apply] Form data keys present:", Object.keys(formData).filter(k => formData[k]).join(", "));
+
         // Send to Google Apps Script
         // Google Apps Script returns a redirect that needs to be followed
         const response = await fetch(GOOGLE_SCRIPT_URL, {
@@ -62,17 +72,25 @@ export async function POST(request: NextRequest) {
         // GAS returns HTML on success after redirect, check for success
         const responseText = await response.text();
 
+        console.log("[apply] Google Sheets response:", {
+            status: response.status,
+            statusText: response.statusText,
+            url: response.url,
+            redirected: response.redirected,
+            bodyPreview: responseText.substring(0, 300),
+        });
+
         // Check if it looks like a success response or error
         if (response.ok || responseText.includes('"success":true') || responseText.includes('success')) {
-            console.log("Google Sheets: Data submitted successfully");
+            console.log("[apply] ✅ Google Sheets: Data submitted successfully");
             return NextResponse.json({ success: true });
         }
 
         // Log error but still return success to user
-        console.error("Google Sheets response:", responseText.substring(0, 200));
+        console.error("[apply] ❌ Google Sheets unexpected response:", responseText.substring(0, 500));
         return NextResponse.json({ success: true, warning: "Backup storage used" });
     } catch (error) {
-        console.error("Submit error:", error);
+        console.error("[apply] ❌ Submit error:", error);
         return NextResponse.json(
             { success: false, error: "Failed to submit application" },
             { status: 500 }

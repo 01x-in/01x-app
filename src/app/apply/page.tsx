@@ -63,11 +63,10 @@ export default function ApplyPage() {
                     {/* Percentage badge */}
                     <div className="flex items-center gap-2">
                         <span
-                            className="text-xs font-medium tabular-nums px-2 py-0.5 rounded-full transition-all duration-300"
-                            style={{
-                                backgroundColor: progress > 0 ? "rgba(215, 255, 0, 0.15)" : "transparent",
-                                color: progress > 0 ? "#d7ff00" : "var(--muted-foreground)",
-                            }}
+                            className={`text-xs font-semibold tabular-nums px-2 py-0.5 rounded-full transition-all duration-300 ${progress > 0
+                                    ? "bg-[rgba(215,255,0,0.15)] text-[#5a6600] dark:text-[#d7ff00]"
+                                    : "text-muted-foreground"
+                                }`}
                         >
                             {progress}%
                         </span>
