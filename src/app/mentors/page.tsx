@@ -87,9 +87,9 @@ export default function MentorsPage() {
                                 </li>
                             </ul>
                             <Button asChild>
-                                <a href="mailto:mentors@01x.dev?subject=Interested in mentoring">
+                                <Link href="/mentor/apply">
                                     Become a Mentor
-                                </a>
+                                </Link>
                             </Button>
                         </div>
                     </section>

@@ -2,14 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { Message } from "../lib/types";
+import { Message } from "./types";
 
 interface ChatMessageProps {
     message: Message;
     isLatest?: boolean;
+    accentColor?: string;
 }
 
-export function ChatMessage({ message, isLatest }: ChatMessageProps) {
+export function ChatMessage({ message, isLatest: _isLatest, accentColor = "#d7ff00" }: ChatMessageProps) {
     const isBot = message.type === "bot";
     const messageRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +30,6 @@ export function ChatMessage({ message, isLatest }: ChatMessageProps) {
         }
     }, []);
 
-    // Format message content with line breaks
     const formattedContent = message.content.split("\n").map((line, i, arr) => (
         <span key={i}>
             {line}
@@ -40,18 +40,16 @@ export function ChatMessage({ message, isLatest }: ChatMessageProps) {
     return (
         <div
             ref={messageRef}
-            className={cn(
-                "flex w-full",
-                isBot ? "justify-start" : "justify-end"
-            )}
+            className={cn("flex w-full", isBot ? "justify-start" : "justify-end")}
         >
             <div
                 className={cn(
                     "max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 text-[15px] leading-relaxed",
                     isBot
                         ? "bg-card border border-border/50 text-foreground rounded-bl-md"
-                        : "bg-[#d7ff00] text-black rounded-br-md font-medium"
+                        : "rounded-br-md font-medium"
                 )}
+                style={isBot ? undefined : { background: accentColor, color: "#000" }}
             >
                 {formattedContent}
             </div>

@@ -3,24 +3,33 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Question, QuestionOption } from "../lib/types";
+import { Question, QuestionOption } from "./types";
 import { Send } from "lucide-react";
-import { toast } from "sonner";
-import Link from "next/link";
 
 interface ChatInputProps {
     question: Question;
     onSubmit: (answer: string, displayAnswer?: string) => void;
     disabled?: boolean;
+    accentColor?: string;
+    /**
+     * Called when the user selects the very first option (fires once per session).
+     * Used by consumers to show e.g. a consent toast.
+     */
+    onFirstOptionSelect?: (questionId: string) => void;
 }
 
-export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
+export function ChatInput({
+    question,
+    onSubmit,
+    disabled,
+    accentColor = "#d7ff00",
+    onFirstOptionSelect,
+}: ChatInputProps) {
     const [value, setValue] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [isShaking, setIsShaking] = useState(false);
     const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
-    // Focus input on mount and question change
     useEffect(() => {
         if (inputRef.current && !disabled) {
             inputRef.current.focus();
@@ -31,17 +40,12 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
 
     const handleSubmit = () => {
         if (disabled) return;
-
         const trimmedValue = value.trim();
-
-        // Required validation
         if (question.required && !trimmedValue) {
             setError("This field is required");
             triggerShake();
             return;
         }
-
-        // Custom validation
         if (question.validation && trimmedValue) {
             const validationError = question.validation(trimmedValue);
             if (validationError) {
@@ -50,36 +54,12 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
                 return;
             }
         }
-
         onSubmit(trimmedValue);
     };
 
     const handleOptionSelect = (option: QuestionOption) => {
         if (disabled) return;
-
-        // Show consent toast on intro question (when clicking "Let's go!")
-        if (question.id === "intro") {
-            toast(
-                <div className="flex flex-col gap-2">
-                    <p className="text-sm">
-                        By continuing, you agree to share your information with 01X.
-                        See our{" "}
-                        <Link href="/terms" className="underline font-medium">Terms</Link>
-                        {" "}&{" "}
-                        <Link href="/privacy" className="underline font-medium">Privacy Policy</Link>.
-                    </p>
-                </div>,
-                {
-                    duration: 10000,
-                    icon: "🔒",
-                    action: {
-                        label: "Ok",
-                        onClick: () => { },
-                    },
-                }
-            );
-        }
-
+        onFirstOptionSelect?.(question.id);
         const displayLabel = option.emoji ? `${option.emoji} ${option.label}` : option.label;
         onSubmit(option.value, displayLabel);
     };
@@ -92,9 +72,7 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Enter") {
             if (question.type === "textarea") {
-                if (e.metaKey || e.ctrlKey) {
-                    handleSubmit();
-                }
+                if (e.metaKey || e.ctrlKey) handleSubmit();
             } else {
                 e.preventDefault();
                 handleSubmit();
@@ -102,23 +80,25 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
         }
     };
 
-    // Handle number key shortcuts for button options
+    // Number-key & Enter shortcuts for button-type questions
     useEffect(() => {
         if (disabled) return;
-        if (question.type !== "confirm" && question.type !== "select" && question.type !== "multi-select") return;
+        if (
+            question.type !== "confirm" &&
+            question.type !== "select" &&
+            question.type !== "multi-select"
+        ) return;
 
         const handleKeyDown = (e: globalThis.KeyboardEvent) => {
             const options = question.options;
             if (!options) return;
 
-            // Enter key selects first option (for confirm type) or single option
             if (e.key === "Enter" && options.length === 1) {
                 e.preventDefault();
                 handleOptionSelect(options[0]);
                 return;
             }
 
-            // Number keys 1-9 select corresponding option
             const num = parseInt(e.key);
             if (num >= 1 && num <= 9 && num <= options.length) {
                 e.preventDefault();
@@ -128,9 +108,11 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [question.id, question.type, question.options, disabled]);
 
-    // Render based on question type
+    // ── Button-type questions ───────────────────────────────────────────────
+
     if (question.type === "confirm" || question.type === "select") {
         const showNumbers = question.options && question.options.length > 1;
         return (
@@ -145,8 +127,13 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
                             disabled={disabled}
                             className={cn(
                                 "transition-all relative",
-                                question.type === "confirm" && "bg-[#d7ff00] text-black hover:bg-[#c5eb00]"
+                                question.type === "confirm" && "text-black hover:opacity-90"
                             )}
+                            style={
+                                question.type === "confirm"
+                                    ? { backgroundColor: accentColor }
+                                    : undefined
+                            }
                         >
                             {showNumbers && (
                                 <span className="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-muted text-muted-foreground text-xs flex items-center justify-center font-mono border">
@@ -200,7 +187,8 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
         );
     }
 
-    // Text-based inputs
+    // ── Text-based inputs ────────────────────────────────────────────────────
+
     return (
         <div className={cn("w-full", isShaking && "animate-shake")}>
             <div className="relative flex items-end gap-2 bg-card border border-border rounded-2xl p-2">
@@ -208,10 +196,7 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
                     <textarea
                         ref={inputRef as React.RefObject<HTMLTextAreaElement>}
                         value={value}
-                        onChange={(e) => {
-                            setValue(e.target.value);
-                            setError(null);
-                        }}
+                        onChange={(e) => { setValue(e.target.value); setError(null); }}
                         onKeyDown={handleKeyDown}
                         placeholder={question.placeholder || "Type your answer..."}
                         disabled={disabled}
@@ -224,12 +209,15 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
                 ) : (
                     <input
                         ref={inputRef as React.RefObject<HTMLInputElement>}
-                        type={question.type === "email" ? "email" : question.type === "url" ? "url" : "text"}
+                        type={
+                            question.type === "email"
+                                ? "email"
+                                : question.type === "url"
+                                    ? "url"
+                                    : "text"
+                        }
                         value={value}
-                        onChange={(e) => {
-                            setValue(e.target.value);
-                            setError(null);
-                        }}
+                        onChange={(e) => { setValue(e.target.value); setError(null); }}
                         onKeyDown={handleKeyDown}
                         placeholder={question.placeholder || "Type your answer..."}
                         disabled={disabled}
@@ -243,7 +231,8 @@ export function ChatInput({ question, onSubmit, disabled }: ChatInputProps) {
                     size="icon"
                     onClick={handleSubmit}
                     disabled={disabled || !value.trim()}
-                    className="shrink-0 bg-[#d7ff00] text-black hover:bg-[#c5eb00] disabled:opacity-50"
+                    className="shrink-0 text-black hover:opacity-90 disabled:opacity-50"
+                    style={{ backgroundColor: accentColor }}
                 >
                     <Send className="h-4 w-4" />
                 </Button>
