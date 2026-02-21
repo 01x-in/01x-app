@@ -6,6 +6,7 @@ import Link from "next/link";
 import Navbar from "@/components/navbar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MentorsShowcase } from "@/components/mentors/MentorsShowcase";
+import { BuiltIn01X } from "@/components/projects/BuiltIn01X";
 
 export default function Home() {
   return (
@@ -316,6 +317,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Built in 01X — Projects Showcase */}
+        <BuiltIn01X />
 
         {/* Mentors Showcase Section */}
         <MentorsShowcase />
