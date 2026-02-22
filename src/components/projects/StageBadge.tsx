@@ -6,20 +6,20 @@ type Stage = "zero" | "one" | "x";
 
 const stageConfig: Record<Stage, { label: string; tooltip: string; dotClass: string; badgeClass: string }> = {
     zero: {
-        label: "Zero",
+        label: "Idea",
         tooltip: "Idea stage — private workspace",
         dotClass: "bg-muted-foreground/40",
         badgeClass: "border-border bg-muted/50 text-muted-foreground",
     },
     one: {
-        label: "One",
+        label: "MVP",
         tooltip: "MVP — working product shipped",
         dotClass: "bg-blue-500",
         badgeClass:
             "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-400",
     },
     x: {
-        label: "X",
+        label: "Scale",
         tooltip: "Scale — live product with traction",
         dotClass: "bg-[#d7ff00]",
         badgeClass:
@@ -39,7 +39,7 @@ export function StageBadge({ stage, className, size = "md" }: StageBadgeProps) {
     return (
         <span
             className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border font-medium",
+                "inline-flex items-center gap-1.5 rounded-full border font-medium w-fit",
                 size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs",
                 config.badgeClass,
                 className

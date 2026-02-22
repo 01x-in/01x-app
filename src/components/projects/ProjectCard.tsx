@@ -7,6 +7,35 @@ import { Badge } from "@/components/ui/badge";
 import { StageBadge } from "./StageBadge";
 import type { ProjectWithRelations } from "@/types/projects";
 
+// Maps tech keywords → a concise domain label shown as a chip
+const DOMAIN_MAP: [RegExp, string][] = [
+    [/openai|gpt|llm|ai|ml|hugging/i, "AI/ML"],
+    [/solidity|web3|ethers|blockchain/i, "Web3"],
+    [/stripe|razorpay|lemonsqueezy/i, "Payments"],
+    [/react native|expo|flutter/i, "Mobile"],
+    [/electron/i, "Desktop"],
+    [/prisma|supabase|postgres|mysql|d1/i, "Database"],
+    [/twilio|whatsapp|sms/i, "Messaging"],
+    [/next\.js|remix|nuxt/i, "SaaS"],
+    [/cloudflare|workers|edge/i, "Edge"],
+    [/figma|design/i, "Design"],
+];
+
+function getDomainTags(techStack?: string[]): string[] {
+    if (!techStack?.length) return [];
+    const joined = techStack.join(" ");
+    const seen = new Set<string>();
+    const tags: string[] = [];
+    for (const [re, label] of DOMAIN_MAP) {
+        if (re.test(joined) && !seen.has(label)) {
+            seen.add(label);
+            tags.push(label);
+            if (tags.length === 2) break;
+        }
+    }
+    return tags;
+}
+
 interface ProjectCardProps {
     project: ProjectWithRelations;
     /** compact = homepage card; standard = listing page card */
@@ -95,7 +124,18 @@ export function ProjectCard({ project, variant = "standard", className }: Projec
 
                 {/* Content */}
                 <div className="p-4 flex flex-col gap-2 flex-1">
-                    <StageBadge stage={project.stage} size="sm" />
+                    {/* Stage + domain tags row */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                        <StageBadge stage={project.stage} size="sm" />
+                        {getDomainTags(project.techStack).map((tag) => (
+                            <span
+                                key={tag}
+                                className="inline-flex items-center rounded-full border border-border bg-muted/50 px-2 py-0.5 text-[10px] font-medium text-muted-foreground w-fit"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
 
                     <h3 className="font-semibold text-sm leading-snug line-clamp-2 group-hover:text-foreground transition-colors">
                         {project.title}
@@ -145,6 +185,14 @@ export function ProjectCard({ project, variant = "standard", className }: Projec
                 {/* Badges */}
                 <div className="flex flex-wrap items-center gap-2">
                     <StageBadge stage={project.stage} />
+                    {getDomainTags(project.techStack).map((tag) => (
+                        <span
+                            key={tag}
+                            className="inline-flex items-center rounded-full border border-border bg-muted/50 px-2 py-0.5 text-xs font-medium text-muted-foreground w-fit"
+                        >
+                            {tag}
+                        </span>
+                    ))}
                     {project.lookingForCollaborators && (
                         <span className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-700 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-400">
                             <Users className="h-3 w-3" aria-hidden />

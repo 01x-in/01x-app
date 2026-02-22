@@ -32,7 +32,7 @@ export default function MentorsPage() {
 
     return (
         <>
-            <Navbar />
+            <Navbar variant="pages" />
             <main className="min-h-screen bg-background pt-24 pb-16">
                 <div className="container-wide">
                     {/* Header */}

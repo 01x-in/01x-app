@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { parseProjectRow, parseMemberRow } from "@/lib/projects-db";
+import type { Project } from "@/types/projects";
 
 /**
  * GET /api/v1/projects/featured
@@ -42,8 +43,8 @@ export async function GET(request: NextRequest) {
 
     // Fetch relations for each project
     const projectsWithRelations = await Promise.all(
-      projects.map(async (project) => {
-        const relations: any = { ...project };
+      projects.map(async (project: Project) => {
+        const relations: Record<string, unknown> = { ...project };
 
         // Fetch creator (basic info only for homepage)
         const creator = await db
@@ -57,6 +58,26 @@ export async function GET(request: NextRequest) {
             avatarUrl: creator.avatar_url,
             memberType: creator.member_type,
           };
+        }
+
+        // Fetch collaborators (co-builders, whether students or mentors)
+        const { results: collabRows } = await db
+          .prepare(`
+            SELECT m.id, m.full_name, m.avatar_url, m.member_type
+            FROM project_collaborators pc
+            JOIN members m ON m.id = pc.member_id
+            WHERE pc.project_id = ?1
+            LIMIT 5
+          `)
+          .bind(project.id)
+          .all();
+        if (collabRows.length > 0) {
+          relations.collaborators = collabRows.map((m: any) => ({
+            id: m.id,
+            fullName: m.full_name,
+            avatarUrl: m.avatar_url,
+            memberType: m.member_type,
+          }));
         }
 
         // Check if current member has upvoted
