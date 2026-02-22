@@ -104,7 +104,7 @@ export async function GET(
       `)
       .bind(id)
       .all();
-    response.mentors = mentors.map((m) => ({
+    response.mentors = mentors.map((m: Record<string, unknown>) => ({
       id: m.id,
       name: m.name,
       title: m.title,

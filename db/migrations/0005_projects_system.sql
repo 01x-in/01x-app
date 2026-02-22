@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS members (
   location TEXT,
 
   -- Member Type
-  member_type TEXT NOT NULL DEFAULT 'student', -- 'student', 'mentor', 'both'
+  member_type TEXT NOT NULL DEFAULT 'student'
+    CHECK (member_type IN ('student', 'mentor', 'both')), -- enum guard
 
   -- Links
   mentor_id TEXT, -- Reference to mentors table if they are a mentor
@@ -60,7 +61,8 @@ CREATE TABLE IF NOT EXISTS cohorts (
   end_date TEXT,
 
   -- Status
-  status TEXT NOT NULL DEFAULT 'upcoming', -- 'upcoming', 'active', 'completed', 'archived'
+  status TEXT NOT NULL DEFAULT 'upcoming'
+    CHECK (status IN ('upcoming', 'active', 'completed', 'archived')), -- enum guard
   is_active INTEGER NOT NULL DEFAULT 1,
 
   -- Meta
@@ -83,7 +85,8 @@ CREATE TABLE IF NOT EXISTS cohort_memberships (
 
   cohort_id TEXT NOT NULL,
   member_id TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'student', -- 'student', 'mentor'
+  role TEXT NOT NULL DEFAULT 'student'
+    CHECK (role IN ('student', 'mentor')), -- enum guard
 
   FOREIGN KEY (cohort_id) REFERENCES cohorts(id) ON DELETE CASCADE,
   FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE,
@@ -108,8 +111,10 @@ CREATE TABLE IF NOT EXISTS projects (
   description TEXT, -- Long form description
 
   -- Stage & Visibility
-  stage TEXT NOT NULL DEFAULT 'zero', -- 'zero' (Idea), 'one' (MVP), 'x' (Scale)
-  visibility TEXT NOT NULL DEFAULT 'private', -- 'private', 'collaborators', 'public'
+  stage TEXT NOT NULL DEFAULT 'zero'
+    CHECK (stage IN ('zero', 'one', 'x')), -- enum guard: Zero=Idea, One=MVP, X=Scale
+  visibility TEXT NOT NULL DEFAULT 'private'
+    CHECK (visibility IN ('private', 'collaborators', 'public')), -- enum guard
   published INTEGER NOT NULL DEFAULT 0, -- boolean: can only be 1 if stage is 'one' or 'x'
 
   -- Creator
@@ -148,7 +153,9 @@ CREATE TABLE IF NOT EXISTS projects (
   -- Ranking
   featured_rank INTEGER DEFAULT 999, -- Lower = higher priority on homepage
 
-  FOREIGN KEY (creator_id) REFERENCES members(id) ON DELETE CASCADE,
+  -- RESTRICT: prevents deleting a member who still owns projects;
+  -- projects must be reassigned or archived before the member can be removed.
+  FOREIGN KEY (creator_id) REFERENCES members(id) ON DELETE RESTRICT,
   FOREIGN KEY (cohort_id) REFERENCES cohorts(id) ON DELETE SET NULL,
 
   -- Constraint: published can only be 1 if stage is 'one' or 'x'
@@ -182,7 +189,8 @@ CREATE TABLE IF NOT EXISTS project_collaborators (
 
   project_id TEXT NOT NULL,
   member_id TEXT NOT NULL,
-  role TEXT DEFAULT 'collaborator', -- 'collaborator', 'contributor', etc.
+  role TEXT DEFAULT 'collaborator'
+    CHECK (role IN ('collaborator', 'contributor')), -- enum guard
 
   FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
   FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE,
@@ -253,7 +261,7 @@ CREATE TABLE IF NOT EXISTS project_comments (
 
   FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
   FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE,
-  FOREIGN KEY (parent_comment_id) REFERENCES project_comments(id) ON DELETE CASCADE
+  FOREIGN KEY (parent_comment_id) REFERENCES project_comments(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_project_comments_project ON project_comments(project_id);
@@ -275,7 +283,14 @@ END;
 
 -- Update projects.updated_at
 CREATE TRIGGER IF NOT EXISTS trigger_projects_updated_at
-AFTER UPDATE ON projects
+AFTER UPDATE OF
+  title, tagline, description,
+  stage, visibility, published,
+  cover_image_url, demo_video_url, product_url, github_url, screenshots,
+  tech_stack, problem_statement, target_audience, one_pager,
+  metrics, testimonials, launch_date,
+  request_feedback, looking_for_collaborators
+ON projects
 FOR EACH ROW
 BEGIN
   UPDATE projects SET updated_at = datetime('now') WHERE id = NEW.id;
@@ -309,7 +324,7 @@ AFTER DELETE ON project_upvotes
 FOR EACH ROW
 BEGIN
   UPDATE projects
-  SET upvotes_count = upvotes_count - 1
+  SET upvotes_count = MAX(0, upvotes_count - 1)
   WHERE id = OLD.project_id;
 END;
 
@@ -335,7 +350,7 @@ FOR EACH ROW
 WHEN NEW.is_deleted = 1 AND OLD.is_deleted = 0
 BEGIN
   UPDATE projects
-  SET comments_count = comments_count - 1
+  SET comments_count = MAX(0, comments_count - 1)
   WHERE id = NEW.project_id;
 END;
 
@@ -346,6 +361,6 @@ FOR EACH ROW
 WHEN OLD.is_deleted = 0
 BEGIN
   UPDATE projects
-  SET comments_count = comments_count - 1
+  SET comments_count = MAX(0, comments_count - 1)
   WHERE id = OLD.project_id;
 END;

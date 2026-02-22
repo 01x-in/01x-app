@@ -36,7 +36,7 @@ export async function GET(
       .bind(projectId)
       .all();
 
-    const collaborators = results.map((row) => ({
+    const collaborators = results.map((row: Record<string, unknown>) => ({
       ...parseMemberRow(row),
       role: row.role,
       joinedAt: row.joined_at,
