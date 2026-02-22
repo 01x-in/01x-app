@@ -82,8 +82,8 @@ export default function ProjectsPage() {
     return (
         <>
             <Navbar variant="pages" />
-            <main className="min-h-screen bg-background pt-24 pb-16">
-                <div className="container-wide">
+            <main className="min-h-screen flex flex-col bg-background pt-24">
+                <div className="container-wide flex-1 pb-16">
                     {/* Header */}
                     <div className="mb-12">
                         <h1 className="text-4xl md:text-5xl font-semibold mb-4">Projects</h1>

@@ -159,8 +159,8 @@ export default function MyProjectsPage() {
     return (
         <>
             <Navbar variant="pages" />
-            <main className="min-h-screen bg-background pt-24 pb-16">
-                <div className="container-wide">
+            <main className="min-h-screen flex flex-col bg-background pt-24">
+                <div className="container-wide flex-1 pb-16">
                     {/* Header */}
                     <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                         <div>

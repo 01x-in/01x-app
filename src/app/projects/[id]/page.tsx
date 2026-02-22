@@ -255,8 +255,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     return (
         <>
             <Navbar variant="pages" />
-            <main className="min-h-screen bg-background pt-24 pb-16">
-                <div className="container-wide max-w-4xl">
+            <main className="min-h-screen flex flex-col bg-background pt-24">
+                <div className="container-wide max-w-4xl flex-1 pb-16">
                     {/* Breadcrumb */}
                     <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
                         <Link href="/projects" className="hover:text-foreground transition-colors">Projects</Link>
