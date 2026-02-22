@@ -59,7 +59,7 @@ function showConsentToast(questionId: string) {
 export default function MentorApplyPage() {
     return (
         <div className="flex flex-col h-[100dvh] bg-background">
-            <Navbar />
+            <Navbar variant="apply" backHref="/mentors" />
 
             <ConversationalFlow
                 questions={mentorQuestions}

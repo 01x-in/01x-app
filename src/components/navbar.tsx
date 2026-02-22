@@ -7,9 +7,11 @@ import { ArrowLeft } from "lucide-react";
 
 interface NavbarProps {
     variant?: "default" | "apply";
+    /** Only used with variant="apply" — where the Back button links to. Defaults to "/". */
+    backHref?: string;
 }
 
-export default function Navbar({ variant = "default" }: NavbarProps) {
+export default function Navbar({ variant = "default", backHref = "/" }: NavbarProps) {
     const scrollTo = (id: string) => {
         const element = document.getElementById(id);
         const container = document.querySelector('.scroll-snap-container');
@@ -53,10 +55,10 @@ export default function Navbar({ variant = "default" }: NavbarProps) {
                                 How It Works
                             </button>
                             <button
-                                onClick={() => scrollTo("mentorship")}
+                                onClick={() => scrollTo("mentors-showcase")}
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                             >
-                                Mentorship
+                                Mentors
                             </button>
                             <button
                                 onClick={() => scrollTo("for-you")}
@@ -70,7 +72,7 @@ export default function Navbar({ variant = "default" }: NavbarProps) {
                     {/* CTA - different based on variant */}
                     {isApplyPage ? (
                         <Button size="sm" variant="outline" className="rounded-full" asChild>
-                            <Link href="/">
+                            <Link href={backHref}>
                                 <ArrowLeft className="h-4 w-4 mr-1.5" />
                                 Back
                             </Link>
