@@ -1,4 +1,4 @@
-import { Question, FormData } from "./types";
+import { Question, FlowFormData as FormData } from "@/components/conversational-flow/types";
 
 // Celebration messages between sections
 const celebrations = {
