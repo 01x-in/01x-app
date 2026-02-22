@@ -14,6 +14,7 @@ import { StageBadge } from "@/components/projects/StageBadge";
 import { VisibilityBadge } from "@/components/projects/VisibilityBadge";
 import { MediaGallery } from "@/components/projects/MediaGallery";
 import { PeopleStack } from "@/components/projects/PeopleStack";
+import Footer from "@/components/footer";
 import { cn } from "@/lib/utils";
 import { track, events } from "@/lib/analytics";
 import type { ProjectWithRelations, ProjectCommentWithMember } from "@/types/projects";
@@ -246,9 +247,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
     const isOwner = memberId === project.creatorId;
     const tabs: { id: Tab; label: string; show: boolean }[] = [
-        { id: "overview", label: "Overview", show: true },
-        { id: "media", label: `Media (${(project.screenshots ?? []).length})`, show: (project.screenshots ?? []).length > 0 },
-        { id: "scale", label: "Scale", show: project.stage === "x" && !!project.metrics },
+        { id: "overview" as Tab, label: "Overview", show: true },
+        { id: "media" as Tab, label: `Media (${(project.screenshots ?? []).length})`, show: (project.screenshots ?? []).length > 0 },
+        { id: "scale" as Tab, label: "Scale", show: project.stage === "x" && !!project.metrics },
     ].filter((t) => t.show);
 
     return (
@@ -632,21 +633,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     </section>
                 </div>
 
-                {/* Footer */}
-                <footer className="border-t mt-24">
-                    <div className="container-wide py-8">
-                        <div className="hidden md:flex items-center justify-between gap-8">
-                            <p className="text-sm text-muted-foreground shrink-0">Built by people who build. For people who want to.</p>
-                            <div className="flex items-center gap-4 text-sm">
-                                <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
-                                <Link href="/projects" className="text-muted-foreground hover:text-foreground transition-colors">Projects</Link>
-                                <Link href="/mentors" className="text-muted-foreground hover:text-foreground transition-colors">Mentors</Link>
-                                <span className="text-border">|</span>
-                                <ThemeToggle />
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer className="mt-24" />
             </main>
         </>
     );

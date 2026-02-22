@@ -11,6 +11,7 @@ import { FilterBar } from "@/components/projects/FilterBar";
 import { EmptyState } from "@/components/projects/EmptyState";
 import { Boxes, RefreshCw } from "lucide-react";
 import type { ProjectWithRelations } from "@/types/projects";
+import Footer from "@/components/footer";
 
 type StageFilter = "all" | "one" | "x";
 type SortOption = "newest" | "most_upvoted";
@@ -182,34 +183,7 @@ export default function ProjectsPage() {
                     )}
                 </div>
 
-                {/* Footer */}
-                <footer className="border-t mt-24">
-                    <div className="container-wide py-8">
-                        <div className="flex flex-col items-center gap-4 text-center md:hidden">
-                            <p className="text-sm text-muted-foreground">Built by people who build. For people who want to.</p>
-                            <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-                                <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
-                                <Link href="/mentors" className="text-muted-foreground hover:text-foreground transition-colors">Mentors</Link>
-                                <span className="text-border">|</span>
-                                <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-                                <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-                                <ThemeToggle />
-                            </div>
-                        </div>
-                        <div className="hidden md:flex items-center justify-between gap-8">
-                            <p className="text-sm text-muted-foreground shrink-0">Built by people who build. For people who want to.</p>
-                            <div className="flex items-center gap-4 text-sm">
-                                <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
-                                <Link href="/mentors" className="text-muted-foreground hover:text-foreground transition-colors">Mentors</Link>
-                                <span className="text-border">|</span>
-                                <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-                                <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-                                <span className="text-border">|</span>
-                                <ThemeToggle />
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer className="mt-24" />
             </main>
         </>
     );

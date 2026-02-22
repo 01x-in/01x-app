@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { StageBadge } from "@/components/projects/StageBadge";
 import { VisibilityBadge } from "@/components/projects/VisibilityBadge";
 import { EmptyState } from "@/components/projects/EmptyState";
+import Footer from "@/components/footer";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types/projects";
 
@@ -244,20 +245,7 @@ export default function MyProjectsPage() {
                     )}
                 </div>
 
-                {/* Footer */}
-                <footer className="border-t mt-24">
-                    <div className="container-wide py-8">
-                        <div className="hidden md:flex items-center justify-between gap-8">
-                            <p className="text-sm text-muted-foreground shrink-0">Built by people who build. For people who want to.</p>
-                            <div className="flex items-center gap-4 text-sm">
-                                <Link href="/projects" className="text-muted-foreground hover:text-foreground transition-colors">All projects</Link>
-                                <Link href="/mentors" className="text-muted-foreground hover:text-foreground transition-colors">Mentors</Link>
-                                <span className="text-border">|</span>
-                                <ThemeToggle />
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer className="mt-24" />
             </main>
         </>
     );
