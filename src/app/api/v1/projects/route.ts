@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
 
     // Execute query
     const { results } = await db.prepare(query).bind(...bindings).all();
-    const projects = results.map(parseProjectRow);
+    const projects: Project[] = results.map(parseProjectRow);
 
     // Get total count for pagination
     const { query: countQuery, bindings: countBindings } = buildProjectsListQuery({
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
           `)
           .bind(project.id)
           .all();
-        relations.mentors = mentors.map((m) => ({
+        relations.mentors = mentors.map((m: Record<string, unknown>) => ({
           id: m.id,
           name: m.name,
           title: m.title,

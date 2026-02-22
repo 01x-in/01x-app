@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { parseProjectCommentRow, parseMemberRow } from "@/lib/projects-db";
-import type { ProjectCommentInput, ProjectCommentWithMember } from "@/types/projects";
+import type { ProjectComment, ProjectCommentInput, ProjectCommentWithMember } from "@/types/projects";
 
 /**
  * GET /api/v1/projects/[id]/comments
@@ -37,7 +37,7 @@ export async function GET(
       .bind(projectId)
       .all();
 
-    const comments = results.map(parseProjectCommentRow);
+    const comments: ProjectComment[] = results.map(parseProjectCommentRow);
 
     // Fetch member data for all comments
     const memberIds = [...new Set(comments.map((c) => c.memberId))];
