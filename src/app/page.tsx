@@ -260,6 +260,9 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Mentors Showcase Section */}
+        <MentorsShowcase />
+
         {/* Mentorship & Events Section */}
         <section id="mentorship" className="section-full">
           <div className="container-wide">
@@ -316,9 +319,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Mentors Showcase Section */}
-        <MentorsShowcase />
 
         {/* Who This Is For Section */}
         <section id="for-you" className="section-full">
