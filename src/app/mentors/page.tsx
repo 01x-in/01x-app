@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MentorFilters } from "@/components/mentors/MentorFilters";
 import { MentorsGrid } from "@/components/mentors/MentorsGrid";
+import Footer from "@/components/footer";
 import { filterMentors, type Mentor, type DomainTag } from "@/data/mentors";
 
 export default function MentorsPage() {
@@ -32,9 +33,9 @@ export default function MentorsPage() {
 
     return (
         <>
-            <Navbar />
-            <main className="min-h-screen bg-background pt-24 pb-16">
-                <div className="container-wide">
+            <Navbar variant="pages" />
+            <main className="min-h-screen flex flex-col bg-background pt-24">
+                <div className="container-wide flex-1 pb-16">
                     {/* Header */}
                     <div className="mb-12">
                         <h1 className="text-4xl md:text-5xl font-semibold mb-4">Meet the Mentors</h1>
@@ -95,42 +96,7 @@ export default function MentorsPage() {
                     </section>
                 </div>
 
-                {/* Footer */}
-                <footer className="border-t mt-24">
-                    <div className="container-wide py-8">
-                        {/* Mobile: stacked and centered */}
-                        <div className="flex flex-col items-center gap-4 text-center md:hidden">
-                            <p className="text-sm text-muted-foreground">
-                                Built by people who build. For people who want to.
-                            </p>
-                            <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-                                <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
-                                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-                                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
-                                <span className="text-border">|</span>
-                                <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-                                <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-                                <ThemeToggle />
-                            </div>
-                        </div>
-                        {/* Desktop: horizontal single row */}
-                        <div className="hidden md:flex items-center justify-between gap-8">
-                            <p className="text-sm text-muted-foreground shrink-0">
-                                Built by people who build. For people who want to.
-                            </p>
-                            <div className="flex items-center gap-4 text-sm">
-                                <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
-                                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-                                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
-                                <span className="text-border">|</span>
-                                <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-                                <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-                                <span className="text-border">|</span>
-                                <ThemeToggle />
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer className="mt-24" />
             </main>
         </>
     );

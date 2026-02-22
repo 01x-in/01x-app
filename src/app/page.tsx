@@ -6,6 +6,8 @@ import Link from "next/link";
 import Navbar from "@/components/navbar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MentorsShowcase } from "@/components/mentors/MentorsShowcase";
+import { BuiltIn01X } from "@/components/projects/BuiltIn01X";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (
@@ -320,6 +322,10 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Built in 01X — Projects Showcase */}
+        <BuiltIn01X />
+
+
         {/* Who This Is For Section */}
         <section id="for-you" className="section-full">
           <div className="container-wide">
@@ -405,39 +411,7 @@ export default function Home() {
           </div>
 
           {/* Footer */}
-          <footer className="border-t">
-            <div className="container-wide py-8">
-              {/* Mobile: stacked and centered */}
-              <div className="flex flex-col items-center gap-4 text-center md:hidden">
-                <p className="text-sm text-muted-foreground">
-                  Built by people who build. For people who want to.
-                </p>
-                <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
-                  <span className="text-border">|</span>
-                  <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-                  <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-                  <ThemeToggle />
-                </div>
-              </div>
-              {/* Desktop: horizontal single row */}
-              <div className="hidden md:flex items-center justify-between gap-8">
-                <p className="text-sm text-muted-foreground shrink-0">
-                  Built by people who build. For people who want to.
-                </p>
-                <div className="flex items-center gap-4 text-sm">
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
-                  <span className="text-border">|</span>
-                  <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-                  <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-                  <span className="text-border">|</span>
-                  <ThemeToggle />
-                </div>
-              </div>
-            </div>
-          </footer>
+          <Footer />
         </section>
       </div>
     </>
