@@ -28,7 +28,7 @@ export default function O1XLogoStatic({
             <rect x="100" y="20" width="20" height="60" rx="6" fill={color} />
 
             {/* X (Crossed Bars) */}
-            <g transform="translate(170, 50)">
+            <g transform="translate(175, 50) scale(1.15)">
                 <rect x="-10" y="-30" width="20" height="60" rx="6" transform="rotate(45)" fill={color} />
                 <rect x="-10" y="-30" width="20" height="60" rx="6" transform="rotate(-45)" fill={color} />
             </g>
