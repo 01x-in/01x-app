@@ -20,14 +20,13 @@ const flowConfig: FlowConfig = {
         `Thank you for applying, ${data.fullName?.split(" ")[0] || "friend"}! 🎉\n\nWe've received your application and will review it carefully. Expect to hear from us within a few days.\n\nIn the meantime, follow us on Twitter/X for updates!`,
 
     onComplete: async (formData) => {
-        try {
-            await fetch("/api/apply", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-        } catch (error) {
-            console.error("Failed to submit application:", error);
+        const response = await fetch("/api/apply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
+        if (!response.ok) {
+            throw new Error(`Submission failed: ${response.status}`);
         }
     },
 };

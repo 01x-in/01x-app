@@ -1,10 +1,55 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function POST(request: NextRequest) {
     try {
         const data = await request.json();
 
+        // ── Required field validation ──────────────────────────────────────
+        const fullName = (data.fullName ?? "").trim();
+        const email = (data.email ?? "").trim();
+        const title = (data.title ?? "").trim();
+
+        if (!fullName) {
+            return NextResponse.json(
+                { success: false, error: "Full name is required" },
+                { status: 400 }
+            );
+        }
+        if (!email || !EMAIL_REGEX.test(email)) {
+            return NextResponse.json(
+                { success: false, error: "A valid email address is required" },
+                { status: 400 }
+            );
+        }
+        if (!title) {
+            return NextResponse.json(
+                { success: false, error: "Current role / title is required" },
+                { status: 400 }
+            );
+        }
+
+        // ── Optional fields (nullable in DB) ──────────────────────────────
+        const location = (data.location ?? "").trim() || null;
+        const linkedinUrl = (data.linkedinUrl ?? "").trim() || null;
+        const twitterUrl = (data.twitterUrl ?? "").trim() || null;
+        const domains = (data.domains ?? "").trim() || null;
+        const yearsExperience = (data.yearsExperience ?? "").trim() || null;
+        const bioShort = (data.bioShort ?? "").trim() || null;
+        const biggestWin = (data.biggestWin ?? "").trim() || null;
+        const bestAt = (data.bestAt ?? "").trim() || null;
+        const mentoringApproach = (data.mentoringApproach ?? "").trim() || null;
+        const whyMentor = (data.whyMentor ?? "").trim() || null;
+        const idealMentee = (data.idealMentee ?? "").trim() || null;
+        const oneOnOneFrequency = (data.oneOnOneFrequency ?? "").trim() || null;
+        const asyncFeedback = (data.asyncFeedback ?? "").trim() || null;
+        const weekendSessions = (data.weekendSessions ?? "").trim() || null;
+        const heardAboutUs = (data.heardAboutUs ?? "").trim() || null;
+        const anythingElse = (data.anythingElse ?? "").trim() || null;
+
+        // ── Insert ────────────────────────────────────────────────────────
         const db = getDB();
         await db
             .prepare(
@@ -23,25 +68,11 @@ export async function POST(request: NextRequest) {
                 )`
             )
             .bind(
-                data.fullName || "",
-                data.email || "",
-                data.title || "",
-                data.location || "",
-                data.linkedinUrl || "",
-                data.twitterUrl || "",
-                data.domains || "",
-                data.yearsExperience || "",
-                data.bioShort || "",
-                data.biggestWin || "",
-                data.bestAt || "",
-                data.mentoringApproach || "",
-                data.whyMentor || "",
-                data.idealMentee || "",
-                data.oneOnOneFrequency || "",
-                data.asyncFeedback || "",
-                data.weekendSessions || "",
-                data.heardAboutUs || "",
-                data.anythingElse || ""
+                fullName, email, title, location, linkedinUrl, twitterUrl,
+                domains, yearsExperience, bioShort, biggestWin, bestAt,
+                mentoringApproach, whyMentor, idealMentee,
+                oneOnOneFrequency, asyncFeedback, weekendSessions,
+                heardAboutUs, anythingElse
             )
             .run();
 

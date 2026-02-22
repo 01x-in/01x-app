@@ -20,14 +20,13 @@ const flowConfig: FlowConfig = {
         `Thank you, ${data.fullName?.split(" ")[0] || "friend"}! 🙌\n\nWe review every mentor application personally and keep the community intentionally small.\n\nWe'll be in touch within a few days. In the meantime, check out the builders you'd be working with at 01x.in/apply.`,
 
     onComplete: async (formData) => {
-        try {
-            await fetch("/api/mentor/apply", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-        } catch (error) {
-            console.error("Failed to submit mentor application:", error);
+        const response = await fetch("/api/mentor/apply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
+        if (!response.ok) {
+            throw new Error(`Submission failed: ${response.status}`);
         }
     },
 };

@@ -224,7 +224,7 @@ export function useConversationalFlow(questions: Question[], config: FlowConfig 
     // ── Submit answer ──────────────────────────────────────────────────────
 
     const submitAnswer = useCallback(
-        (answer: string, displayAnswer?: string) => {
+        async (answer: string, displayAnswer?: string) => {
             const { currentQuestionId, formData } = state;
             if (!currentQuestionId) return;
 
@@ -241,7 +241,31 @@ export function useConversationalFlow(questions: Question[], config: FlowConfig 
 
             // Final "submit" question
             if (currentQuestionId === "submit") {
-                setState((prev) => ({ ...prev, isComplete: true, progress: 100 }));
+                // Show typing while we await the API call
+                setState((prev) => ({ ...prev, isTyping: true }));
+
+                try {
+                    await onComplete?.(newFormData);
+                } catch (error) {
+                    console.error("[useConversationalFlow] onComplete failed:", error);
+                    setState((prev) => ({ ...prev, isTyping: false }));
+                    // Surface a bot error message — don't flip to complete
+                    addBotMessage(
+                        "Something went wrong submitting your application. Please try again, or reach out to us directly.",
+                        currentQuestionId
+                    );
+                    return;
+                }
+
+                // Only reach here on success
+                setState((prev) => ({ ...prev, isComplete: true, progress: 100, isTyping: false }));
+
+                if (completedKey) {
+                    try {
+                        localStorage.setItem(completedKey, JSON.stringify(newFormData));
+                    } catch (_) { }
+                }
+                if (draftKey) clearDraft(draftKey);
 
                 const defaultMsg =
                     "Thank you! 🎉\n\nWe've received your submission and will be in touch soon.";
@@ -254,14 +278,6 @@ export function useConversationalFlow(questions: Question[], config: FlowConfig 
                     addBotMessage(closingMsg, "complete");
                 }, 500);
 
-                if (completedKey) {
-                    try {
-                        localStorage.setItem(completedKey, JSON.stringify(newFormData));
-                    } catch (_) { }
-                }
-                if (draftKey) clearDraft(draftKey);
-
-                onComplete?.(newFormData);
                 return;
             }
 

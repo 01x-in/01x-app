@@ -29,6 +29,8 @@ export function ChatInput({
     const [error, setError] = useState<string | null>(null);
     const [isShaking, setIsShaking] = useState(false);
     const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+    // Ensures onFirstOptionSelect fires at most once across all option clicks
+    const hasFiredRef = useRef(false);
 
     useEffect(() => {
         if (inputRef.current && !disabled) {
@@ -59,7 +61,10 @@ export function ChatInput({
 
     const handleOptionSelect = (option: QuestionOption) => {
         if (disabled) return;
-        onFirstOptionSelect?.(question.id);
+        if (!hasFiredRef.current) {
+            hasFiredRef.current = true;
+            onFirstOptionSelect?.(question.id);
+        }
         const displayLabel = option.emoji ? `${option.emoji} ${option.label}` : option.label;
         onSubmit(option.value, displayLabel);
     };
