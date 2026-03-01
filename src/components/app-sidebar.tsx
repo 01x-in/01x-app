@@ -43,6 +43,7 @@ const navConfig: Record<UserRole, NavItem[]> = {
     { title: "Dashboard", url: "/app", icon: LayoutDashboard },
     { title: "Members", url: "/app/members", icon: Users },
     { title: "Mentors", url: "/app/mentors", icon: GraduationCap },
+    { title: "Projects", url: "/app/projects", icon: FolderKanban },
     { title: "Applications", url: "/app/applications", icon: FileText },
   ],
   member: [
@@ -102,7 +103,6 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarMenu>
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>

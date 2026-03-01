@@ -5,6 +5,7 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
+import { DashboardBreadcrumb } from "./_components/dashboard-breadcrumb"
 import { getCurrentUser } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { currentUser } from "@clerk/nextjs/server"
@@ -43,6 +44,7 @@ export default async function DashboardLayout({
                             orientation="vertical"
                             className="mr-2 data-[orientation=vertical]:h-4"
                         />
+                        <DashboardBreadcrumb />
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

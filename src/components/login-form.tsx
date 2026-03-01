@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useSignIn } from "@clerk/nextjs"
+import { useState, useEffect } from "react"
+import { useSignIn, useSession, useClerk } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import O1XLogoStatic from "@/components/o1x-logo-static"
@@ -24,6 +24,8 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"form">) {
   const { isLoaded, signIn, setActive } = useSignIn()
+  const { session } = useSession()
+  const { signOut } = useClerk()
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -31,6 +33,13 @@ export function LoginForm({
   const [loading, setLoading] = useState(false)
   const [needs2FA, setNeeds2FA] = useState(false)
   const [otpCode, setOtpCode] = useState("")
+
+  // If already signed in, redirect to /app
+  useEffect(() => {
+    if (session) {
+      router.push("/app")
+    }
+  }, [session, router])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -56,10 +65,32 @@ export function LoginForm({
         setNeeds2FA(true)
       }
     } catch (err: unknown) {
-      const clerkError = err as { errors?: { message: string }[] }
-      setError(
-        clerkError.errors?.[0]?.message || "Invalid email or password"
-      )
+      const clerkError = err as { errors?: { code?: string; message: string }[] }
+      const errorCode = clerkError.errors?.[0]?.code
+
+      // Handle "session already exists" — sign out stale session and retry
+      if (errorCode === "session_exists") {
+        await signOut()
+        // Retry the sign-in after clearing the stale session
+        try {
+          const retryResult = await signIn.create({
+            identifier: email,
+            password,
+          })
+          if (retryResult.status === "complete") {
+            await setActive({ session: retryResult.createdSessionId })
+            router.push("/app")
+            return
+          }
+        } catch (retryErr: unknown) {
+          const retryError = retryErr as { errors?: { message: string }[] }
+          setError(retryError.errors?.[0]?.message || "Login failed, please try again")
+        }
+      } else {
+        setError(
+          clerkError.errors?.[0]?.message || "Invalid email or password"
+        )
+      }
     } finally {
       setLoading(false)
     }
