@@ -29,7 +29,8 @@ export default async function ProjectDetailPage({
     if (!project) notFound()
 
     // Access control: admin sees all, member sees own, mentor sees assigned
-    if (user.role === "member" && user.memberId) {
+    if (user.role === "member") {
+        if (!user.memberId) notFound()
         if (project.creator_id !== user.memberId) {
             // Check if collaborator
             const collab = await db
@@ -38,7 +39,8 @@ export default async function ProjectDetailPage({
                 .first()
             if (!collab) notFound()
         }
-    } else if (user.role === "mentor" && user.mentorId) {
+    } else if (user.role === "mentor") {
+        if (!user.mentorId) notFound()
         const pm = await db
             .prepare("SELECT 1 FROM project_mentors WHERE project_id = ?1 AND mentor_id = ?2")
             .bind(id, user.mentorId)

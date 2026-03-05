@@ -19,7 +19,8 @@ export default async function MentorsAdminPage({
     const q = params.q || ""
     const approvedFilter = params.approved || ""
     const featuredFilter = params.featured || ""
-    const page = Math.max(1, parseInt(params.page || "1", 10))
+    const parsed = parseInt(params.page || "1", 10)
+    const page = Number.isNaN(parsed) ? 1 : Math.max(1, parsed)
     const offset = (page - 1) * PAGE_SIZE
 
     // Build WHERE clauses

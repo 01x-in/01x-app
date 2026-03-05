@@ -77,8 +77,8 @@ export async function POST(
             // Create mentor record
             await db
                 .prepare(`
-          INSERT INTO mentors (id, name, title, domains, bio_short, highlights, mentoring_style, availability, location, image_src, image_alt, featured)
-          VALUES (?1, ?2, ?3, ?4, ?5, '[]', '[]', '{}', ?6, '/mentors/default.jpg', ?7, 0)
+          INSERT INTO mentors (id, name, title, domains, bio_short, highlights, mentoring_style, availability, location, image_src, image_alt, is_approved, is_featured)
+          VALUES (?1, ?2, ?3, ?4, ?5, '[]', '[]', '{}', ?6, '/mentors/default.jpg', ?7, 1, 0)
         `)
                 .bind(
                     roleId,

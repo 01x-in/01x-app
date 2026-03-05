@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import { PageHeader } from "../../_components/page-header"
 import { Search, ChevronLeft, ChevronRight } from "lucide-react"
@@ -28,10 +28,10 @@ export default function ApplicationsPage() {
     const [statusFilter, setStatusFilter] = useState("")
     const [page, setPage] = useState(1)
 
-    // Fetch applications on mount and tab change
-    useState(() => {
+    // Fetch applications on mount
+    useEffect(() => {
         fetchApplications()
-    })
+    }, [])
 
     async function fetchApplications() {
         setLoading(true)
@@ -285,8 +285,8 @@ export default function ApplicationsPage() {
                                 key={p}
                                 onClick={() => setPage(p)}
                                 className={`inline-flex items-center justify-center size-8 rounded-md text-sm font-medium transition-colors ${p === currentPage
-                                        ? "bg-primary text-primary-foreground"
-                                        : "hover:bg-muted"
+                                    ? "bg-primary text-primary-foreground"
+                                    : "hover:bg-muted"
                                     }`}
                             >
                                 {p}
