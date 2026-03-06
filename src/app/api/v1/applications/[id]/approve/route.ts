@@ -22,8 +22,17 @@ export async function POST(
         await requireRole("admin")
         const db = getDB()
         const { id } = await params
-        const body = await request.json()
-        const type: "cohort" | "mentor" = body.type || "cohort"
+        let body: any = {}
+        try {
+            body = await request.json()
+        } catch (err) {
+            return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
+        }
+
+        const type = body.type || "cohort"
+        if (type !== "cohort" && type !== "mentor") {
+            return NextResponse.json({ error: "Invalid type. Must be 'cohort' or 'mentor'" }, { status: 400 })
+        }
 
         // 1. Atomically claim and fetch the application
         let application: Record<string, unknown> | null = null
