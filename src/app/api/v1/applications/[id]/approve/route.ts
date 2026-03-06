@@ -25,25 +25,28 @@ export async function POST(
         const body = await request.json()
         const type: "cohort" | "mentor" = body.type || "cohort"
 
-        // 1. Fetch the application
+        // 1. Atomically claim and fetch the application
         let application: Record<string, unknown> | null = null
         if (type === "mentor") {
             application = await db
-                .prepare("SELECT * FROM mentor_applications WHERE id = ?1")
+                .prepare("UPDATE mentor_applications SET status = 'approved' WHERE id = ?1 AND status = 'pending' RETURNING *")
                 .bind(id)
                 .first()
         } else {
             application = await db
-                .prepare("SELECT * FROM applications WHERE id = ?1")
+                .prepare("UPDATE applications SET status = 'approved' WHERE id = ?1 AND status = 'pending' RETURNING *")
                 .bind(id)
                 .first()
         }
 
         if (!application) {
-            return NextResponse.json({ error: "Application not found" }, { status: 404 })
-        }
+            // Check if it exists but wasn't pending
+            const table = type === "mentor" ? "mentor_applications" : "applications"
+            const exists = await db.prepare(`SELECT status FROM ${table} WHERE id = ?1`).bind(id).first()
 
-        if (application.status !== "pending") {
+            if (!exists) {
+                return NextResponse.json({ error: "Application not found" }, { status: 404 })
+            }
             return NextResponse.json({ error: "Application already processed" }, { status: 400 })
         }
 
@@ -66,7 +69,7 @@ export async function POST(
         } catch (clerkError: unknown) {
             const errMsg = clerkError instanceof Error ? clerkError.message : "Clerk error"
             console.error("[approve] ❌ Clerk createUser failed:", errMsg)
-            return NextResponse.json({ error: `Failed to create user: ${errMsg}` }, { status: 500 })
+            return NextResponse.json({ error: "Failed to create user" }, { status: 500 })
         }
 
         // 3. Generate internal IDs
@@ -100,11 +103,6 @@ export async function POST(
                 .bind(userId, clerkUser.id, email, fullName, roleId)
                 .run()
 
-            // Update application status
-            await db
-                .prepare("UPDATE mentor_applications SET status = 'approved' WHERE id = ?1")
-                .bind(id)
-                .run()
         } else {
             // Create member record
             await db
@@ -130,11 +128,6 @@ export async function POST(
                 .bind(userId, clerkUser.id, email, fullName, roleId)
                 .run()
 
-            // Update application status
-            await db
-                .prepare("UPDATE applications SET status = 'approved' WHERE id = ?1")
-                .bind(id)
-                .run()
         }
 
         // 4. Send approval email
@@ -161,6 +154,7 @@ export async function POST(
         console.error("[approve] ❌ Error:", error)
         const message = error instanceof Error ? error.message : "Approval failed"
         const status = message.includes("Unauthorized") || message.includes("Forbidden") ? 403 : 500
-        return NextResponse.json({ error: message }, { status })
+        const displayMessage = status === 403 ? message : "Internal server error"
+        return NextResponse.json({ error: displayMessage }, { status })
     }
 }
