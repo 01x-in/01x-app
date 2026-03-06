@@ -260,9 +260,9 @@ export default async function ProjectDetailPage({
 
             {project.stage === "x" && Object.keys(metrics).length > 0 && (
                 <DetailSection title="Scale Metrics">
-                    {metrics.users && <DetailField label="Users" value={String(metrics.users)} />}
-                    {metrics.revenue && <DetailField label="Revenue" value={String(metrics.revenue)} />}
-                    {metrics.growth_percentage && <DetailField label="Growth" value={`${metrics.growth_percentage}%`} />}
+                    {metrics.users != null && <DetailField label="Users" value={String(metrics.users)} />}
+                    {metrics.revenue != null && <DetailField label="Revenue" value={String(metrics.revenue)} />}
+                    {metrics.growth_percentage != null && <DetailField label="Growth" value={`${metrics.growth_percentage}%`} />}
                 </DetailSection>
             )}
 
