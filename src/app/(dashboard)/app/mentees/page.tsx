@@ -41,7 +41,7 @@ export default async function MenteesPage() {
                 </div>
             ) : (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {results.map((mentee) => {
+                    {results.map((mentee: Record<string, unknown>) => {
                         let techStack: string[] = []
                         try { techStack = JSON.parse(mentee.tech_stack as string) } catch { /* empty */ }
 
@@ -69,14 +69,14 @@ export default async function MenteesPage() {
                                     </div>
                                 </div>
 
-                                {mentee.bio && (
+                                {(mentee.bio as string | null) && (
                                     <p className="text-sm text-muted-foreground line-clamp-2">
                                         {mentee.bio as string}
                                     </p>
                                 )}
 
                                 <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                    <span>{mentee.project_count} project{(mentee.project_count as number) !== 1 ? "s" : ""}</span>
+                                    <span>{mentee.project_count as number} project{(mentee.project_count as number) !== 1 ? "s" : ""}</span>
                                     {(mentee.location as string) && <span>{mentee.location as string}</span>}
                                 </div>
 
