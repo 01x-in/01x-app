@@ -34,35 +34,32 @@ export async function POST(
             return NextResponse.json({ error: "Invalid type. Must be 'cohort' or 'mentor'" }, { status: 400 })
         }
 
-        // 1. Atomically claim and fetch the application
-        let application: Record<string, unknown> | null = null
-        if (type === "mentor") {
-            application = await db
-                .prepare("UPDATE mentor_applications SET status = 'approved' WHERE id = ?1 AND status = 'pending' RETURNING *")
-                .bind(id)
-                .first()
-        } else {
-            application = await db
-                .prepare("UPDATE applications SET status = 'approved' WHERE id = ?1 AND status = 'pending' RETURNING *")
-                .bind(id)
-                .first()
-        }
+        // 1. Fetch the application (read-only — do NOT update status yet)
+        const table = type === "mentor" ? "mentor_applications" : "applications"
+        const application = await db
+            .prepare(`SELECT * FROM ${table} WHERE id = ?1`)
+            .bind(id)
+            .first<Record<string, unknown>>()
 
         if (!application) {
-            // Check if it exists but wasn't pending
-            const table = type === "mentor" ? "mentor_applications" : "applications"
-            const exists = await db.prepare(`SELECT status FROM ${table} WHERE id = ?1`).bind(id).first()
-
-            if (!exists) {
-                return NextResponse.json({ error: "Application not found" }, { status: 404 })
-            }
+            return NextResponse.json({ error: "Application not found" }, { status: 404 })
+        }
+        if (application.status !== "pending") {
             return NextResponse.json({ error: "Application already processed" }, { status: 400 })
         }
 
-        const email = application.email as string
-        const fullName = application.full_name as string
-        const nameParts = fullName.split(" ")
-        const firstName = nameParts[0]
+        const email = (application.email as string | null | undefined)?.trim()
+        const fullName = (application.full_name as string | null | undefined)?.trim()
+
+        if (!email) {
+            return NextResponse.json({ error: "Application is missing a valid email address" }, { status: 422 })
+        }
+        if (!fullName) {
+            return NextResponse.json({ error: "Application is missing a valid full name" }, { status: 422 })
+        }
+
+        const nameParts = fullName.split(" ").filter(Boolean)
+        const firstName = nameParts[0] || undefined
         const lastName = nameParts.slice(1).join(" ") || undefined
 
         // 2. Create Clerk user
@@ -86,73 +83,75 @@ export async function POST(
         const roleId = crypto.randomUUID()
 
         if (type === "mentor") {
-            // Create mentor record
-            await db
-                .prepare(`
+            // Atomically create mentor + user rows via D1 batch (single transaction)
+            await db.batch([
+                db
+                    .prepare(`
           INSERT INTO mentors (id, name, title, domains, bio_short, highlights, mentoring_style, availability, location, image_src, image_alt, is_approved, is_featured)
           VALUES (?1, ?2, ?3, ?4, ?5, '[]', '[]', '{}', ?6, '/mentors/default.jpg', ?7, 1, 0)
         `)
-                .bind(
-                    roleId,
-                    fullName,
-                    (application.title as string) || "Mentor",
-                    JSON.stringify([(application.domains as string) || "General"]),
-                    (application.bio_short as string) || "",
-                    (application.location as string) || null,
-                    `${fullName} avatar`
-                )
-                .run()
-
-            // Create user row
-            await db
-                .prepare(`
+                    .bind(
+                        roleId,
+                        fullName,
+                        (application.title as string) || "Mentor",
+                        JSON.stringify([(application.domains as string) || "General"]),
+                        (application.bio_short as string) || "",
+                        (application.location as string) || null,
+                        `${fullName} avatar`
+                    ),
+                db
+                    .prepare(`
           INSERT INTO users (id, clerk_id, email, full_name, role, mentor_id)
           VALUES (?1, ?2, ?3, ?4, 'mentor', ?5)
         `)
-                .bind(userId, clerkUser.id, email, fullName, roleId)
-                .run()
+                    .bind(userId, clerkUser.id, email, fullName, roleId),
+            ])
 
         } else {
-            // Create member record
-            await db
-                .prepare(`
+            // Atomically create member + user rows via D1 batch (single transaction)
+            await db.batch([
+                db
+                    .prepare(`
           INSERT INTO members (id, full_name, email, member_type, location, linkedin_url)
           VALUES (?1, ?2, ?3, 'student', ?4, ?5)
         `)
-                .bind(
-                    roleId,
-                    fullName,
-                    email,
-                    (application.location as string) || null,
-                    (application.linkedin_url as string) || null
-                )
-                .run()
-
-            // Create user row
-            await db
-                .prepare(`
+                    .bind(
+                        roleId,
+                        fullName,
+                        email,
+                        (application.location as string) || null,
+                        (application.linkedin_url as string) || null
+                    ),
+                db
+                    .prepare(`
           INSERT INTO users (id, clerk_id, email, full_name, role, member_id)
           VALUES (?1, ?2, ?3, ?4, 'member', ?5)
         `)
-                .bind(userId, clerkUser.id, email, fullName, roleId)
-                .run()
+                    .bind(userId, clerkUser.id, email, fullName, roleId),
+            ])
 
         }
 
-        // 4. Send approval email
+        // 4. Send approval email (non-blocking)
         try {
             await resend.emails.send({
                 from: EMAIL_FROM,
                 to: email,
                 subject: "Your 01X application has been approved! 🎉",
                 react: ApplicationApprovedEmail({
-                    name: firstName,
+                    name: firstName ?? fullName,
                     role: type === "mentor" ? "mentor" : "member",
                 }),
             })
         } catch (emailError) {
             console.error("[approve] ⚠️ Email send failed (non-blocking):", emailError)
         }
+
+        // 5. All side effects succeeded — now mark the application as approved
+        await db
+            .prepare(`UPDATE ${table} SET status = 'approved' WHERE id = ?1`)
+            .bind(id)
+            .run()
 
         return NextResponse.json({
             success: true,
@@ -163,7 +162,7 @@ export async function POST(
         console.error("[approve] ❌ Error:", error)
         const message = error instanceof Error ? error.message : "Approval failed"
         const status = message.includes("Unauthorized") || message.includes("Forbidden") ? 403 : 500
-        const displayMessage = status === 403 ? message : "Internal server error"
+        const displayMessage = status === 403 ? "Unauthorized access" : "Internal server error"
         return NextResponse.json({ error: displayMessage }, { status })
     }
 }

@@ -113,7 +113,10 @@ export default async function MentorsAdminPage({
                                 results.map((mentor: Record<string, unknown>) => {
                                     let domains: string[] = []
                                     try {
-                                        domains = JSON.parse(mentor.domains as string)
+                                        const parsed = JSON.parse(mentor.domains as string)
+                                        if (Array.isArray(parsed)) {
+                                            domains = parsed
+                                        }
                                     } catch { /* empty */ }
 
                                     return (

@@ -46,6 +46,10 @@ export default async function ProjectDetailPage({
             .bind(id, user.mentorId)
             .first()
         if (!pm) notFound()
+    } else if (user.role === "admin") {
+        // Admin sees all projects — no additional check needed
+    } else {
+        notFound()
     }
 
     // Get creator info
