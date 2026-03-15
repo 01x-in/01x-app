@@ -108,7 +108,7 @@ export default async function MemberDetailPage({
                             >
                                 <div>
                                     <span className="font-medium text-sm">{p.title as string}</span>
-                                    {p.tagline && (
+                                    {(p.tagline as string | null) && (
                                         <p className="text-xs text-muted-foreground mt-0.5">{String(p.tagline)}</p>
                                     )}
                                 </div>
