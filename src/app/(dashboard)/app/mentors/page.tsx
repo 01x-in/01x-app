@@ -33,12 +33,12 @@ export default async function MentorsAdminPage({
         bindings.push(`%${q}%`)
         bindIdx++
     }
-    if (approvedFilter) {
+    if (approvedFilter === "approved" || approvedFilter === "pending") {
         conditions.push(`is_approved = ?${bindIdx}`)
         bindings.push(approvedFilter === "approved" ? 1 : 0)
         bindIdx++
     }
-    if (featuredFilter) {
+    if (featuredFilter === "yes" || featuredFilter === "no") {
         conditions.push(`is_featured = ?${bindIdx}`)
         bindings.push(featuredFilter === "yes" ? 1 : 0)
         bindIdx++
