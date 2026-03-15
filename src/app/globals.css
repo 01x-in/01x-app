@@ -221,11 +221,13 @@
 }
 
 @keyframes typing-bounce {
+
   0%,
   60%,
   100% {
     transform: translateY(0);
   }
+
   30% {
     transform: translateY(-4px);
   }
@@ -237,14 +239,17 @@
 }
 
 @keyframes shake {
+
   0%,
   100% {
     transform: translateX(0);
   }
+
   20%,
   60% {
     transform: translateX(-4px);
   }
+
   40%,
   80% {
     transform: translateX(4px);
@@ -256,6 +261,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
