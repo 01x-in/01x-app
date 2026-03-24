@@ -153,7 +153,7 @@ export default async function ProjectsPage({
                                     {stageLabels[project.stage as string] || (project.stage as string)}
                                 </span>
                             </div>
-                            {project.tagline && (
+                            {Boolean(project.tagline) && (
                                 <p className="text-sm text-muted-foreground line-clamp-2">{project.tagline as string}</p>
                             )}
                             <div className="flex items-center gap-3 text-xs text-muted-foreground pt-1">
