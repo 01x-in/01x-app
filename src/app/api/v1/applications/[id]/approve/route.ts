@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { clerkClient } from "@clerk/nextjs/server"
 import { getDB } from "@/lib/db"
 import { requireRole } from "@/lib/auth"
-import { resend, EMAIL_FROM } from "@/lib/email"
+import { getResend, EMAIL_FROM } from "@/lib/email"
 import { ApplicationApprovedEmail } from "@/emails/application-approved"
 
 /**
@@ -134,7 +134,7 @@ export async function POST(
 
         // 4. Send approval email (non-blocking)
         try {
-            await resend.emails.send({
+            await getResend().emails.send({
                 from: EMAIL_FROM,
                 to: email,
                 subject: "Your 01X application has been approved! 🎉",

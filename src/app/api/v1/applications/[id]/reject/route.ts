@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getDB } from "@/lib/db"
 import { requireRole } from "@/lib/auth"
-import { resend, EMAIL_FROM } from "@/lib/email"
+import { getResend, EMAIL_FROM } from "@/lib/email"
 import { ApplicationRejectedEmail } from "@/emails/application-rejected"
 
 /**
@@ -46,7 +46,7 @@ export async function POST(
         const firstName = fullName.split(" ")[0]
 
         try {
-            await resend.emails.send({
+            await getResend().emails.send({
                 from: EMAIL_FROM,
                 to: email,
                 subject: "Update on your 01X application",
