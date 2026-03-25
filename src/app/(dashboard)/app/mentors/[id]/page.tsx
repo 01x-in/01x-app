@@ -156,7 +156,7 @@ export default async function MentorDetailPage({
                             >
                                 <div>
                                     <span className="font-medium text-sm">{p.title as string}</span>
-                                    {p.tagline && (
+                                    {Boolean(p.tagline) && (
                                         <p className="text-xs text-muted-foreground mt-0.5">{String(p.tagline)}</p>
                                     )}
                                 </div>

@@ -28,7 +28,7 @@ export default async function DashboardLayout({
     const clerkUser = await currentUser()
 
     const user = {
-        name: dbUser.full_name || clerkUser?.fullName || "User",
+        name: dbUser.fullName || clerkUser?.fullName || "User",
         email: dbUser.email || clerkUser?.emailAddresses?.[0]?.emailAddress || "",
         avatar: clerkUser?.imageUrl || "",
     }
