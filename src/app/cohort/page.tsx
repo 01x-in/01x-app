@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CohortFAQ } from "./_components/cohort-faq";
+import { CohortStructure } from "./_components/cohort-structure";
 
 export const metadata: Metadata = {
   title: "The 100-Day Cohort — 01X",
@@ -13,41 +14,6 @@ export const metadata: Metadata = {
     "14 weeks. 4 phases. 3 gates. Enter with an idea, leave with a launched product and real users. 8–12 builders per cohort.",
 };
 
-const phases = [
-  {
-    step: "01",
-    badge: "Intro",
-    label: "Days 1–2 — Intro Weekend",
-    body: "You meet your cohort. You meet your mentors. You pressure-test your idea in front of the room. By Sunday night, you have a direction and your first deliverable. No warm-up week. You start moving on Day 1.",
-  },
-  {
-    step: "02",
-    badge: "Clarity",
-    label: "Weeks 1–2 — Clarity",
-    body: "You think you know the problem. Prove it. Talk to real people. Validate your assumptions. Write a problem statement that survives scrutiny.",
-    gate: "Gate 1: Validated problem + 3 user conversations. No gate, no building.",
-  },
-  {
-    step: "03",
-    badge: "Build",
-    label: "Weeks 3–8 — Build",
-    body: "Build the thing. Not a pitch deck. Not a prototype in Figma. A working product. By Week 6, you put it in front of 10 strangers and watch what happens.",
-    gate: "Gate 2: Working MVP + guerrilla test results from 10 real users. No gate, no users.",
-  },
-  {
-    step: "04",
-    badge: "Users",
-    label: "Weeks 9–11 — Users",
-    body: "Building was the easy part. Now find 20 people who come back. Run feedback loops. Fix what matters. Ignore what doesn\u2019t. Learn the difference.",
-    gate: "Gate 3: 20 active users + retention signal. No gate, no launch.",
-  },
-  {
-    step: "05",
-    badge: "Launch",
-    label: "Weeks 12–14 — Launch",
-    body: "You go public. Twice. First launch to learn, second launch to land. The cohort ends with Demo Day — you stand up and show what you shipped.",
-  },
-];
 
 const shipItems = [
   "A validated problem statement backed by real user conversations",
@@ -159,8 +125,7 @@ export default function CohortPage() {
             </h1>
             <div className="space-y-4 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mx-auto mb-10">
               <p>
-                14 weeks. 4 phases. 3 gates.<br />
-                You have to earn your way through.
+                14 weeks. 4 phases. 3 gates.
               </p>
               {/* <p>
                 This is not a course. There are no videos. No &ldquo;community
@@ -192,51 +157,15 @@ export default function CohortPage() {
         </section>
 
         {/* ── SECTION 1: The 100-Day Structure ── */}
-        <section id="structure" className="section-full-scrollable">
+        <section id="structure" className="section-full">
           <div className="container-wide">
               <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
-                The 100-day structure
+                Earn your way through.
               </h2>
               <p className="text-muted-foreground text-center mb-12 max-w-lg mx-auto">
-                Five phases. Three gates. Each one earned.
+                You don&rsquo;t pass the gate — you watch others launch.
               </p>
-            <div className="space-y-4">
-              {phases.map((phase, i) => (
-                  <div key={phase.step} className="flex gap-4 md:gap-6">
-                    <div className="flex flex-col items-center shrink-0">
-                      <span className="text-sm font-mono text-muted-foreground w-8 h-8 flex items-center justify-center rounded-full border bg-card">
-                        {phase.step}
-                      </span>
-                      {i < phases.length - 1 && (
-                        <div className="w-px flex-1 bg-border mt-2" />
-                      )}
-                    </div>
-                    <div className="pb-6 flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <Badge
-                          variant="outline"
-                          className="text-xs font-medium"
-                        >
-                          {phase.badge}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground">
-                          {phase.label}
-                        </span>
-                      </div>
-                      <p className="text-foreground leading-relaxed mb-3">
-                        {phase.body}
-                      </p>
-                      {phase.gate && (
-                        <div className="rounded-lg border-l-2 border-[#d7ff00] bg-[#d7ff00]/10 pl-4 pr-4 py-3">
-                          <p className="text-sm font-medium text-foreground/90">
-                            {phase.gate}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-              ))}
-            </div>
+            <CohortStructure />
           </div>
         </section>
 
