@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CohortFAQ } from "./_components/cohort-faq";
 import { CohortStructure } from "./_components/cohort-structure";
 import { WeeklyRhythm } from "./_components/weekly-rhythm";
+import { DeliverablesGraded } from "./_components/deliverables-graded";
+import { WhatYouShip } from "./_components/what-you-ship";
 
 export const metadata: Metadata = {
   title: "The 100-Day Cohort — 01X",
@@ -16,43 +18,9 @@ export const metadata: Metadata = {
 };
 
 
-const shipItems = [
-  "A validated problem statement backed by real user conversations",
-  "A working MVP that solves a real problem for real people",
-  "Guerrilla test results from 10 users with documented patterns",
-  "20 active users who chose to use your product",
-  "A feedback synthesis — what you changed, what you ignored, and why",
-  "Launch assets — landing page, positioning, distribution channels mapped",
-  "Two public launches with documented results",
-  "A Demo Day presentation of your shipped product",
-  "A peer network of 8–12 builders who watched you ship",
-];
 
 
 
-const grades = [
-  {
-    level: "L1",
-    label: "Ship-grade",
-    description:
-      "Complete, clear, demonstrates real understanding and effort. This is the standard.",
-    cardClass: "border-[#d7ff00] bg-[#d7ff00]/5",
-  },
-  {
-    level: "L2",
-    label: "Draft-grade",
-    description:
-      "Good attempt. Gaps remain. Shows engagement but needs refinement.",
-    cardClass: "border-border bg-card/50",
-  },
-  {
-    level: "L3",
-    label: "Incomplete",
-    description:
-      "Didn\u2019t show up meaningfully. This is the signal that you\u2019re falling behind.",
-    cardClass: "border-destructive/50 bg-destructive/5",
-  },
-];
 
 const segments = [
   {
@@ -102,18 +70,6 @@ export default function CohortPage() {
               <p>
                 14 weeks. 4 phases. 3 gates.
               </p>
-              {/* <p>
-                This is not a course. There are no videos. No &ldquo;community
-                access.&rdquo; No passive learning.
-              </p>
-              <p>
-                You enter with an idea. You leave with a launched product and
-                real users — or you know exactly why you didn&rsquo;t.
-              </p> */}
-              {/* <p className="text-base text-muted-foreground/80">
-                8–12 builders per cohort. Seats are limited because attention is
-                limited.
-              </p> */}
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-base px-8" asChild>
@@ -157,73 +113,33 @@ export default function CohortPage() {
           </div>
         </section>
 
-        {/* ── SECTION 3: What You'll Ship ── */}
+        {/* ── SECTION 3: Grading ── */}
         <section className="section-full">
           <div className="container-wide">
-              <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
-                What you&rsquo;ll ship in 100 days
-              </h2>
-              <p className="text-muted-foreground mb-10 max-w-2xl mx-auto text-center">
-                This is not a list of things you&rsquo;ll &ldquo;learn
-                about.&rdquo; These are artifacts you will have built and own
-                when you walk out.
-              </p>
-              <div className="grid md:grid-cols-2 gap-x-6 gap-y-3 mb-10">
-                {shipItems.map((item) => (
-                  <div
-                    key={item}
-                    className="flex gap-3 rounded-lg bg-card/30 border border-border/50 px-4 py-3 text-sm"
-                  >
-                    <span className="text-green-500 shrink-0 mt-0.5">✓</span>
-                    <span className="text-muted-foreground">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-muted-foreground text-center text-sm">
-                If you do the work, you leave with all of this. If you
-                don&rsquo;t, you&rsquo;ll know exactly where you stalled.
-              </p>
-          </div>
-        </section>
-
-        {/* ── SECTION 4: Grading ── */}
-        <section className="section-full">
-          <div className="container-wide">
-            <h2 className="text-3xl md:text-4xl font-semibold mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
               Deliverables are graded.
             </h2>
-            <p className="text-muted-foreground mb-8">
+            <p className="text-muted-foreground mb-8 text-center">
               Every Sunday produces a mandatory deliverable due by Friday.
             </p>
-            <div className="space-y-3 mb-6">
-              {grades.map((grade) => (
-                <Card
-                  key={grade.level}
-                  className={`border-l-4 ${grade.cardClass}`}
-                >
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Badge
-                        variant="outline"
-                        className="font-mono text-xs"
-                      >
-                        {grade.level}
-                      </Badge>
-                      {grade.label}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {grade.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <p className="text-muted-foreground text-sm">
+            <DeliverablesGraded />
+            <p className="text-sm text-muted-foreground text-center mt-6">
               One resubmission per deliverable. The system rewards effort.
               It does not reward coasting.
             </p>
+          </div>
+        </section>
+
+        {/* ── SECTION 4: What You'll Ship ── */}
+        <section className="section-full">
+          <div className="container-wide">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
+              What you walk out with
+            </h2>
+            <p className="text-muted-foreground mb-10 max-w-2xl mx-auto text-center">
+              Not a certificate. Not a completion badge.
+            </p>
+            <WhatYouShip />
           </div>
         </section>
 
