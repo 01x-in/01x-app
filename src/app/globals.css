@@ -164,6 +164,26 @@
   }
 }
 
+/* Disable scroll snap for print / PDF export */
+@media print {
+  .scroll-snap-container {
+    height: auto !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+
+  .section-full,
+  .section-full-scrollable {
+    min-height: auto !important;
+    height: auto !important;
+    scroll-snap-align: none !important;
+    scroll-snap-stop: unset !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
 /* Full-screen section utilities - snap only on larger screens */
 .section-full {
   display: flex;
