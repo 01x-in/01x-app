@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CohortFAQ } from "./_components/cohort-faq";
 import { CohortStructure } from "./_components/cohort-structure";
+import { WeeklyRhythm } from "./_components/weekly-rhythm";
 
 export const metadata: Metadata = {
   title: "The 100-Day Cohort — 01X",
@@ -27,33 +28,7 @@ const shipItems = [
   "A peer network of 8–12 builders who watched you ship",
 ];
 
-const weeklyRhythm = [
-  {
-    day: "Sunday",
-    label: "Direction",
-    body: "Mentor-led session. Framework, context, hard questions. You set your weekly goal. You get your deliverable assignment.",
-    highlight: true,
-  },
-  { day: "Mon–Tue", label: "Build", highlight: false },
-  {
-    day: "Wednesday",
-    label: "Async check-in",
-    body: "Three questions. What did you ship since Sunday? What\u2019s blocking you? What\u2019s the plan for Thursday–Friday? Your mentor reads it and responds.",
-    highlight: true,
-  },
-  {
-    day: "Thu–Fri",
-    label: "Build",
-    body: "Complete your deliverable.",
-    highlight: false,
-  },
-  {
-    day: "Saturday",
-    label: "Review",
-    body: "Office hours with mentors. Your deliverable gets graded. Your peer reviews your work. No hiding. You leave knowing exactly where you stand.",
-    highlight: true,
-  },
-];
+
 
 const grades = [
   {
@@ -169,7 +144,20 @@ export default function CohortPage() {
           </div>
         </section>
 
-        {/* ── SECTION 2: What You'll Ship ── */}
+        {/* ── SECTION 2: Weekly Rhythm ── */}
+        <section className="section-full">
+          <div className="container-wide">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-3 text-center">
+              The weekly rhythm
+            </h2>
+            <p className="text-lg text-muted-foreground mb-10 text-center">
+              Every week. Same beat. No ambiguity.
+            </p>
+            <WeeklyRhythm />
+          </div>
+        </section>
+
+        {/* ── SECTION 3: What You'll Ship ── */}
         <section className="section-full">
           <div className="container-wide">
               <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
@@ -198,88 +186,44 @@ export default function CohortPage() {
           </div>
         </section>
 
-        {/* ── SECTION 3: Weekly Rhythm + Grading (combined) ── */}
+        {/* ── SECTION 4: Grading ── */}
         <section className="section-full">
           <div className="container-wide">
-            <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-start">
-              {/* Weekly Rhythm */}
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-semibold mb-4">
-                    The weekly rhythm
-                  </h2>
-                  <p className="text-muted-foreground mb-8">
-                    Every week. Same beat. No ambiguity.
-                  </p>
-                  <div className="space-y-2">
-                    {weeklyRhythm.map((item) => (
-                      <div
-                        key={item.day}
-                        className={`flex gap-3 rounded-lg p-3 ${
-                          item.highlight
-                            ? "bg-card/50 border border-border/50"
-                            : "opacity-70"
-                        }`}
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4">
+              Deliverables are graded.
+            </h2>
+            <p className="text-muted-foreground mb-8">
+              Every Sunday produces a mandatory deliverable due by Friday.
+            </p>
+            <div className="space-y-3 mb-6">
+              {grades.map((grade) => (
+                <Card
+                  key={grade.level}
+                  className={`border-l-4 ${grade.cardClass}`}
+                >
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className="font-mono text-xs"
                       >
-                        <Badge
-                          variant="outline"
-                          className="shrink-0 h-fit text-xs font-medium mt-0.5"
-                        >
-                          {item.day}
-                        </Badge>
-                        <div>
-                          <span className="font-medium text-foreground text-sm">
-                            {item.label}
-                          </span>
-                          {item.body && (
-                            <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">
-                              {item.body}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-              {/* Grading */}
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-semibold mb-4">
-                    Deliverables are graded.
-                  </h2>
-                  <p className="text-muted-foreground mb-8">
-                    Every Sunday produces a mandatory deliverable due by Friday.
-                  </p>
-                  <div className="space-y-3 mb-6">
-                    {grades.map((grade) => (
-                      <Card
-                        key={grade.level}
-                        className={`border-l-4 ${grade.cardClass}`}
-                      >
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-base flex items-center gap-2">
-                            <Badge
-                              variant="outline"
-                              className="font-mono text-xs"
-                            >
-                              {grade.level}
-                            </Badge>
-                            {grade.label}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-sm text-muted-foreground leading-relaxed">
-                            {grade.description}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    One resubmission per deliverable. The system rewards effort.
-                    It does not reward coasting.
-                  </p>
-                </div>
+                        {grade.level}
+                      </Badge>
+                      {grade.label}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {grade.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
+            <p className="text-muted-foreground text-sm">
+              One resubmission per deliverable. The system rewards effort.
+              It does not reward coasting.
+            </p>
           </div>
         </section>
 
