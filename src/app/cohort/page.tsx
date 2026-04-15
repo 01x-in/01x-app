@@ -11,6 +11,7 @@ import { DeliverablesGraded } from "./_components/deliverables-graded";
 import { WhatYouShip } from "./_components/what-you-ship";
 import { TwoMentors } from "./_components/two-mentors";
 import { CohortComposition } from "./_components/cohort-composition";
+import { PricingCards } from "./_components/pricing-cards";
 
 export const metadata: Metadata = {
   title: "The 100-Day Cohort — 01X",
@@ -162,54 +163,17 @@ export default function CohortPage() {
         {/* ── SECTION 7: Pricing ── */}
         <section className="section-full">
           <div className="container-wide">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl md:text-5xl font-semibold mb-4">
-                  <span className="text-[#d7ff00]">₹15,000</span> for 100
-                  days.
-                </h2>
-                <p className="text-muted-foreground leading-relaxed max-w-xl mx-auto">
-                  That&rsquo;s ₹150 per day of structured mentorship, graded
-                  deliverables, peer review, and accountability. There is no
-                  cheaper way to get two dedicated mentors, a curated peer
-                  cohort, and a system that forces you to ship.
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-12">
-                <div className="rounded-xl border bg-card/50 p-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-sm font-mono text-muted-foreground w-7 h-7 flex items-center justify-center rounded-full border">
-                      1
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      ₹5,000 deposit
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    When your application is accepted. This locks your seat.
-                    Non-refundable. This is the commitment filter.
-                  </p>
-                </div>
-                <div className="rounded-xl border bg-card/50 p-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-sm font-mono text-muted-foreground w-7 h-7 flex items-center justify-center rounded-full border">
-                      2
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      ₹10,000 before Day 1
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Pay before the intro weekend. No installments. Pay before you
-                    start.
-                  </p>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground text-center max-w-md mx-auto">
-                This is not a subscription. Not a paywall. It&rsquo;s a filter.
-                If ₹15,000 feels like too much to bet on yourself for 100 days,
-                this isn&rsquo;t for you yet.
-              </p>
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
+              ₹150 a day. Ship your idea.
+            </h2>
+            <p className="text-muted-foreground text-center mb-10 max-w-lg mx-auto">
+              100 days of structured mentorship, graded deliverables, peer
+              review, and accountability.
+            </p>
+            <PricingCards />
+            <p className="text-sm text-muted-foreground text-center leading-relaxed max-w-xl mx-auto mt-8">
+              This is not a subscription. Not a paywall. It&rsquo;s a filter.
+            </p>
           </div>
         </section>
 

@@ -255,7 +255,7 @@ price_body: "That's ₹150 per day of structured mentorship, graded deliverables
 2. ₹10,000 before Day 1 — the intro weekend. — "Pay before you start."
 
 ```
-closing: "This is not a subscription. Not a paywall. It's a filter. If ₹15,000 feels like too much to bet on yourself for 100 days, this isn't for you yet."
+closing: "This is not a subscription. Not a paywall. It's a filter."
 ```
 
 **UI directive:** Give this section visual weight. The price headline should be large (`text-3xl md:text-4xl font-semibold`). The payment steps as a two-step numbered list with clear structure. Consider a subtle background shift or a card with slightly different `bg-card` or `bg-muted/10` to make pricing feel anchored. Do NOT make it look like a SaaS pricing table — keep it editorial and direct.

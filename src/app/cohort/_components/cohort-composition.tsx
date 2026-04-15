@@ -39,7 +39,7 @@ function TechnicalBuildersVisual() {
   return (
     <div
       className={cn(
-        "h-24 bg-muted/50 border-b border-border",
+        "h-28 bg-muted/50 border-b border-border",
         "flex items-center justify-center"
       )}
     >
@@ -47,11 +47,11 @@ function TechnicalBuildersVisual() {
         {/* Code icon in rounded rect */}
         <div
           className={cn(
-            "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
+            "w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0",
             "bg-[#d7ff00]/10 border border-[#d7ff00]/30"
           )}
         >
-          <Code2 size={20} stroke="#d7ff00" />
+          <Code2 size={22} stroke="#d7ff00" />
         </div>
 
         {/* Code lines */}
@@ -70,33 +70,33 @@ function ProductDesignVisual() {
   return (
     <div
       className={cn(
-        "h-24 bg-muted/50 border-b border-border",
+        "h-28 bg-muted/50 border-b border-border",
         "flex items-center justify-center"
       )}
     >
       {/* Wireframe layout */}
-      <div className="flex flex-col gap-1 w-32">
+      <div className="flex flex-col gap-1 w-36">
         {/* Header bar */}
         <div
           className={cn(
-            "h-3 w-full rounded-sm border",
+            "h-3.5 w-full rounded-sm border",
             "bg-[#d7ff00]/20 border-[#d7ff00]/30"
           )}
         />
         {/* Body: sidebar + content */}
         <div className="flex gap-1">
           {/* Sidebar */}
-          <div className="h-10 w-8 rounded-sm border border-border bg-transparent" />
+          <div className="h-12 w-10 rounded-sm border border-border bg-transparent" />
           {/* Content area */}
           <div className="flex-1 flex flex-col gap-1">
-            <div className="h-2.5 rounded-sm border border-border bg-transparent" />
+            <div className="h-3 rounded-sm border border-border bg-transparent" />
             <div
               className={cn(
-                "h-2.5 rounded-sm border",
+                "h-3 rounded-sm border",
                 "bg-[#d7ff00]/15 border-border"
               )}
             />
-            <div className="h-2.5 rounded-sm border border-border bg-transparent" />
+            <div className="h-3 rounded-sm border border-border bg-transparent" />
           </div>
         </div>
       </div>
@@ -108,16 +108,16 @@ function GrowthOperatorsVisual() {
   return (
     <div
       className={cn(
-        "h-24 bg-muted/50 border-b border-border",
+        "h-28 bg-muted/50 border-b border-border",
         "flex items-center justify-center"
       )}
     >
       <div className="flex items-end gap-2">
         {/* Three vertical bars */}
         <div className="flex items-end gap-1.5">
-          <div className="w-4 h-5 rounded-sm bg-border" />
-          <div className="w-4 h-8 rounded-sm bg-border" />
-          <div className="w-4 h-12 rounded-sm bg-[#d7ff00]" />
+          <div className="w-4 h-6 rounded-sm bg-border" />
+          <div className="w-4 h-10 rounded-sm bg-border" />
+          <div className="w-4 h-14 rounded-sm bg-[#d7ff00]" />
         </div>
         {/* TrendingUp icon */}
         <TrendingUp size={16} stroke="#d7ff00" className="mb-0.5" />
