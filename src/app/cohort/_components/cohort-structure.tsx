@@ -153,20 +153,16 @@ export function CohortStructure() {
                   <p className="text-xs text-muted-foreground tracking-widest uppercase mb-0.5">
                     {p.tag}
                   </p>
-                  <p className="text-sm font-medium text-foreground">
-                    {p.name}
-                  </p>
-                  {p.gate && (
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                      <span
-                        className="rounded-full bg-[#d7ff00]"
-                        style={{ width: 5, height: 5, display: "inline-block" }}
-                      />
-                      <span className="text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium text-foreground">
+                      {p.name}
+                    </p>
+                    {p.gate && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide bg-[#d7ff00]/10 text-[#d7ff00]">
                         {p.gate.label}
                       </span>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </button>
             );

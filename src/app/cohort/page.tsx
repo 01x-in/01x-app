@@ -4,12 +4,12 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CohortFAQ } from "./_components/cohort-faq";
 import { CohortStructure } from "./_components/cohort-structure";
 import { WeeklyRhythm } from "./_components/weekly-rhythm";
 import { DeliverablesGraded } from "./_components/deliverables-graded";
 import { WhatYouShip } from "./_components/what-you-ship";
+import { TwoMentors } from "./_components/two-mentors";
 
 export const metadata: Metadata = {
   title: "The 100-Day Cohort — 01X",
@@ -130,7 +130,20 @@ export default function CohortPage() {
           </div>
         </section>
 
-        {/* ── SECTION 4: What You'll Ship ── */}
+        {/* ── SECTION 4: Two Mentors ── */}
+        <section className="section-full">
+          <div className="container-wide">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
+              Two mentors. Not optional.
+            </h2>
+            <p className="text-muted-foreground text-center mb-10 max-w-lg mx-auto">
+              They&rsquo;ve failed. They&rsquo;ve shipped. They know the difference.
+            </p>
+            <TwoMentors />
+          </div>
+        </section>
+
+        {/* ── SECTION 5: What You'll Ship ── */}
         <section className="section-full">
           <div className="container-wide">
             <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
@@ -140,65 +153,6 @@ export default function CohortPage() {
               Not a certificate. Not a completion badge.
             </p>
             <WhatYouShip />
-          </div>
-        </section>
-
-        {/* ── SECTION 4: Two Mentors ── */}
-        <section className="section-full">
-          <div className="container-wide">
-              <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
-                Two mentors. Not optional.
-              </h2>
-              <p className="text-muted-foreground text-center mb-10 max-w-lg mx-auto">
-                Mentors are builders, not lecturers. They&rsquo;ve shipped
-                products, made hard calls under uncertainty, and know the
-                difference between real progress and motion.
-              </p>
-              <div className="grid md:grid-cols-2 gap-6">
-                <Card className="bg-card/50">
-                  <CardHeader>
-                    <CardTitle className="text-xl flex items-center gap-3">
-                      <Badge
-                        variant="outline"
-                        className="text-xs font-medium"
-                      >
-                        Day 1 → 100
-                      </Badge>
-                      Primary mentor
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Is with you from Day 1 to Day 100. They know your product,
-                      your blockers, your tendencies. They read your Wednesday
-                      check-ins. They attend your Saturday reviews. They carry
-                      context so you don&rsquo;t have to re-explain yourself
-                      every week.
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-card/50">
-                  <CardHeader>
-                    <CardTitle className="text-xl flex items-center gap-3">
-                      <Badge
-                        variant="outline"
-                        className="text-xs font-medium"
-                      >
-                        Rotates
-                      </Badge>
-                      Phase specialist
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Rotates as you progress. Product thinker during Clarity.
-                      Execution-focused builder during Build. UX and user
-                      psychology during Users. Growth operator during Launch. The
-                      right expertise at the right moment.
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
           </div>
         </section>
 
