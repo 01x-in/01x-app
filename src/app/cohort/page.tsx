@@ -10,6 +10,7 @@ import { WeeklyRhythm } from "./_components/weekly-rhythm";
 import { DeliverablesGraded } from "./_components/deliverables-graded";
 import { WhatYouShip } from "./_components/what-you-ship";
 import { TwoMentors } from "./_components/two-mentors";
+import { CohortComposition } from "./_components/cohort-composition";
 
 export const metadata: Metadata = {
   title: "The 100-Day Cohort — 01X",
@@ -22,36 +23,14 @@ export const metadata: Metadata = {
 
 
 
-const segments = [
-  {
-    pct: "~40%",
-    label: "Technical builders",
-    description: "who can code their MVP. They are the engine.",
-  },
-  {
-    pct: "~30%",
-    label: "Product & design thinkers",
-    description:
-      "who challenge the \u201Cwhat\u201D and \u201Cwhy.\u201D They keep builders honest.",
-  },
-  {
-    pct: "~20%",
-    label: "Growth & business operators",
-    description:
-      "who solve distribution. They prevent \u201Cbuild it and they will come.\u201D",
-  },
-  {
-    pct: "~10%",
-    label: "Domain experts",
-    description: "with deep vertical knowledge. They ground ideas in reality.",
-  },
-];
+
 
 export default function CohortPage() {
   return (
     <>
       <Navbar variant="pages" />
       <div className="scroll-snap-container bg-background">
+
         {/* ── HERO ── */}
         <section className="section-full min-h-screen pt-24 md:pt-16">
           <div className="container-narrow text-center md:-mt-8">
@@ -87,7 +66,7 @@ export default function CohortPage() {
           </div>
         </section>
 
-        {/* ── SECTION 1: The 100-Day Structure ── */}
+        {/* ── SECTION 1: Structure ── */}
         <section id="structure" className="section-full">
           <div className="container-wide">
               <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
@@ -143,7 +122,29 @@ export default function CohortPage() {
           </div>
         </section>
 
-        {/* ── SECTION 5: What You'll Ship ── */}
+        {/* ── SECTION 5: Cohort Composition ── */}
+        <section className="section-full">
+          <div className="container-wide">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
+              Who&rsquo;s in the room with you
+            </h2>
+            <p className="text-muted-foreground text-center mb-10 max-w-lg mx-auto">
+              Eight to twelve people. Mixed by design. Every gap covered.
+            </p>
+            <CohortComposition />
+            <p className="text-sm text-muted-foreground text-center leading-relaxed max-w-2xl mx-auto mt-8">
+              You&rsquo;re paired with someone from a{" "}
+              <strong className="text-foreground font-medium">different segment</strong>{" "}
+              every week. The engineer reviews the product person&rsquo;s
+              positioning. The product person reviews the engineer&rsquo;s UX.{" "}
+              <strong className="text-foreground font-medium">
+                You will see your blind spots.
+              </strong>
+            </p>
+          </div>
+        </section>
+
+        {/* ── SECTION 6: What You'll Ship ── */}
         <section className="section-full">
           <div className="container-wide">
             <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
@@ -156,57 +157,9 @@ export default function CohortPage() {
           </div>
         </section>
 
-        {/* ── SECTION 5: Composition + Observer (combined) ── */}
-        <section className="section-full">
-          <div className="container-wide">
-              <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
-                Cohort composition is deliberate
-              </h2>
-              <p className="text-muted-foreground text-center mb-10">
-                Each cohort is mixed by design:
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                {segments.map((seg) => (
-                  <div
-                    key={seg.pct}
-                    className="rounded-xl border bg-card/50 p-5 text-center"
-                  >
-                    <span className="block text-3xl md:text-4xl font-semibold text-[#d7ff00] mb-2">
-                      {seg.pct}
-                    </span>
-                    <span className="block font-medium text-foreground text-sm mb-1">
-                      {seg.label}
-                    </span>
-                    <span className="block text-xs text-muted-foreground leading-relaxed">
-                      {seg.description}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-muted-foreground text-center text-sm max-w-xl mx-auto mb-12">
-                You&rsquo;re paired with someone from a different segment for
-                weekly peer review. The engineer reviews the product
-                person&rsquo;s positioning. The product person reviews the
-                engineer&rsquo;s UX. You will see your blind spots.
-              </p>
+        
 
-            {/* Observer Mode callout */}
-              <div className="rounded-xl border border-dashed bg-muted/20 p-6 md:p-8 text-center max-w-2xl mx-auto">
-                <h3 className="text-xl font-semibold mb-3">
-                  What if you&rsquo;re not ready
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  If you don&rsquo;t pass a gate, you get one extra week. Still
-                  not there? You move to observer mode — you attend sessions,
-                  learn from peers, but don&rsquo;t launch something that
-                  isn&rsquo;t ready. No shame in it. You&rsquo;ll know exactly
-                  where you stalled.
-                </p>
-              </div>
-          </div>
-        </section>
-
-        {/* ── SECTION 6: Pricing ── */}
+        {/* ── SECTION 7: Pricing ── */}
         <section className="section-full">
           <div className="container-wide">
               <div className="text-center mb-12">
@@ -260,11 +213,11 @@ export default function CohortPage() {
           </div>
         </section>
 
-        {/* ── SECTION 7: FAQ ── */}
+        {/* ── SECTION 7: FAQs ── */}
         <section className="section-full-scrollable">
           <div className="container-wide">
               <h2 className="text-3xl md:text-4xl font-semibold mb-10 text-center">
-                FAQ
+                FAQs
               </h2>
               <div className="max-w-2xl mx-auto">
                 <CohortFAQ />
