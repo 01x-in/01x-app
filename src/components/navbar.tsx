@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import O1XLogo from "@/components/o1x-logo";
+
 import { ArrowLeft } from "lucide-react";
 
 interface NavbarProps {
-    variant?: "default" | "apply" | "pages";
+    variant?: "default" | "apply" | "pages" | "cohort";
     backHref?: string;
 }
 
@@ -28,11 +28,36 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
     const isApplyPage = variant === "apply";
     const isPagesVariant = variant === "pages";
 
-    // Cross-link: flip between /mentors and /projects
-    const isOnMentors = pathname?.startsWith("/mentors");
-    const crossLink = isOnMentors
-        ? { label: "Projects", href: "/projects" }
-        : { label: "Mentors", href: "/mentors" };
+    // Context-aware nav links for the pages variant — each page shows the other three destinations
+    const pagesNavLinks = (() => {
+        if (pathname?.startsWith("/mentors")) {
+            return [
+                { label: "Home", href: "/" },
+                { label: "Cohort", href: "/cohort" },
+                { label: "Projects", href: "/projects" },
+            ];
+        }
+        if (pathname?.startsWith("/projects")) {
+            return [
+                { label: "Home", href: "/" },
+                { label: "Cohort", href: "/cohort" },
+                { label: "Mentors", href: "/mentors" },
+            ];
+        }
+        if (pathname?.startsWith("/cohort")) {
+            return [
+                { label: "Home", href: "/" },
+                { label: "Mentors", href: "/mentors" },
+                { label: "Projects", href: "/projects" },
+            ];
+        }
+        // Fallback for other pages using the pages variant
+        return [
+            { label: "Home", href: "/" },
+            { label: "Cohort", href: "/cohort" },
+            { label: "Mentors", href: "/mentors" },
+        ];
+    })();
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 w-full py-4">
@@ -40,37 +65,55 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                 <nav className="flex h-14 items-center justify-between rounded-full border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 px-4 md:px-6 shadow-sm">
                     {/* Logo & Brand — always links to home */}
                     <Link href="/" className="flex items-center gap-2.5">
-                        <O1XLogo size={32} color="#d7ff00" />
-                        <span className="font-semibold text-base tracking-tight">01X</span>
+                        {/* Inline SVG so currentColor adapts to light/dark mode */}
+                        <span
+                            aria-label="01X Logo"
+                            className="text-brand transition-colors"
+                        >
+                            <svg
+                                viewBox="0 0 220 100"
+                                fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-8 w-auto"
+                                aria-hidden="true"
+                            >
+                                {/* 0 (Circle) */}
+                                <circle cx="50" cy="50" r="30" />
+                                {/* 1 (Bar) */}
+                                <rect x="100" y="20" width="20" height="60" rx="6" />
+                                {/* X (Crossed Bars) */}
+                                <g transform="translate(175, 50) scale(1.15)">
+                                    <rect x="-10" y="-30" width="20" height="60" rx="6" transform="rotate(45)" />
+                                    <rect x="-10" y="-30" width="20" height="60" rx="6" transform="rotate(-45)" />
+                                </g>
+                            </svg>
+                        </span>
                     </Link>
 
-                    {/* Navigation — pages variant (/mentors, /projects) */}
+                    {/* Navigation — pages variant (/mentors, /projects, /cohort) */}
                     {isPagesVariant && (
                         <div className="hidden md:flex items-center gap-6">
-                            <Link
-                                href="/"
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                Home
-                            </Link>
-                            <Link
-                                href={crossLink.href}
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                {crossLink.label}
-                            </Link>
+                            {pagesNavLinks.map((link) => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
                         </div>
                     )}
 
                     {/* Navigation — default home variant */}
                     {!isApplyPage && !isPagesVariant && (
                         <div className="hidden md:flex items-center gap-6">
-                            <button
-                                onClick={() => scrollTo("how-it-works")}
+                            <Link
+                                href="/cohort"
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                             >
-                                How It Works
-                            </button>
+                                Cohort
+                            </Link>
                             <button
                                 onClick={() => scrollTo("mentors-showcase")}
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -82,12 +125,6 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 Projects
-                            </button>
-                            <button
-                                onClick={() => scrollTo("for-you")}
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                Is this for You?
                             </button>
                         </div>
                     )}
@@ -102,7 +139,7 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                         </Button>
                     ) : (
                         <Button size="sm" className="rounded-full" asChild>
-                            <Link href="/apply">Apply to Cohort</Link>
+                            <Link href="/login">Login</Link>
                         </Button>
                     )}
                 </nav>

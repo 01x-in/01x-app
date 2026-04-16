@@ -21,9 +21,9 @@ const stageConfig: Record<Stage, { label: string; tooltip: string; dotClass: str
     x: {
         label: "Scale",
         tooltip: "Scale — live product with traction",
-        dotClass: "bg-[#d7ff00]",
+        dotClass: "bg-brand",
         badgeClass:
-            "border-[#d7ff00]/40 bg-[#d7ff00]/10 text-foreground dark:border-[#d7ff00]/30 dark:bg-[#d7ff00]/5",
+            "border-brand/40 bg-brand/10 text-foreground dark:border-brand/30 dark:bg-brand/5",
     },
 };
 

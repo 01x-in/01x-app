@@ -90,7 +90,7 @@ export function AppSidebar({
             >
               <Link href="/app">
                 <div className="flex size-7 shrink-0 items-center justify-center">
-                  <O1XLogo size={28} color="#d7ff00" />
+                  <O1XLogo size={28} color="var(--brand)" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">01X</span>

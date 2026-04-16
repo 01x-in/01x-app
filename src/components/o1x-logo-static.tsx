@@ -8,7 +8,7 @@ interface O1XLogoStaticProps {
 
 export default function O1XLogoStatic({
     height = 40,
-    color = "#d7ff00",
+    color = "var(--brand)",
     className
 }: O1XLogoStaticProps) {
     return (

@@ -176,7 +176,7 @@ export default function ProjectsPage() {
                                     Start private, ship when ready, stay on the record forever.
                                 </p>
                                 <Button asChild>
-                                    <Link href="/apply">Apply for access</Link>
+                                    <Link href="/cohort/apply">Apply for access</Link>
                                 </Button>
                             </div>
                         </section>

@@ -14,7 +14,7 @@ export function SignupForm({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <FieldGroup>
                 <div className="flex flex-col items-center gap-3 text-center">
-                    <O1XLogoStatic height={48} color="#d7ff00" />
+                    <O1XLogoStatic height={48} color="var(--brand)" />
                     <div className="flex flex-col gap-1">
                         <h1 className="text-2xl font-bold">Join 01X</h1>
                         <p className="text-muted-foreground text-sm text-balance">
@@ -26,7 +26,7 @@ export function SignupForm({
 
                 <Field>
                     <Button asChild>
-                        <Link href="/apply">Apply to a Cohort</Link>
+                        <Link href="/cohort/apply">Apply to a Cohort</Link>
                     </Button>
                 </Field>
 

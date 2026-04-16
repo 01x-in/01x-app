@@ -132,7 +132,7 @@ export function LoginForm({
       >
         <FieldGroup>
           <div className="flex flex-col items-center gap-3 text-center">
-            <O1XLogoStatic height={48} color="#d7ff00" />
+            <O1XLogoStatic height={48} color="var(--brand)" />
             <div className="flex flex-col gap-1">
               <h1 className="text-2xl font-bold">Check your email</h1>
               <p className="text-muted-foreground text-sm text-balance">
@@ -198,7 +198,7 @@ export function LoginForm({
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-3 text-center">
-          <O1XLogoStatic height={48} color="#d7ff00" />
+          <O1XLogoStatic height={48} color="var(--brand)" />
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl font-bold">Login to your account</h1>
           </div>
@@ -247,7 +247,7 @@ export function LoginForm({
         <Field>
           <FieldDescription className="text-center">
             Want to join?{" "}
-            <a href="/apply" className="underline underline-offset-4">
+            <a href="/cohort/apply" className="underline underline-offset-4">
               Apply to Cohort
             </a>
           </FieldDescription>

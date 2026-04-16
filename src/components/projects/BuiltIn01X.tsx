@@ -4,9 +4,28 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel";
 import { StageBadge } from "./StageBadge";
 import { ProjectCardSkeleton } from "./ProjectCardSkeleton";
 import type { ProjectWithRelations } from "@/types/projects";
+
+function useReducedMotion() {
+    const [reduced, setReduced] = useState(false);
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        setReduced(mq.matches);
+        const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+        mq.addEventListener("change", handler);
+        return () => mq.removeEventListener("change", handler);
+    }, []);
+    return reduced;
+}
 
 // Maps tech keywords → a concise domain label shown as a chip
 const DOMAIN_MAP: [RegExp, string][] = [
@@ -38,7 +57,6 @@ function getDomainTags(techStack?: string[]): string[] {
 }
 
 function ProjectMini({ project }: { project: ProjectWithRelations }) {
-    // Combine creator + collaborators into one ordered list of builders
     const allBuilders = [
         ...(project.creator ? [project.creator] : []),
         ...(project.collaborators ?? []),
@@ -68,7 +86,6 @@ function ProjectMini({ project }: { project: ProjectWithRelations }) {
 
             {/* Content */}
             <div className="p-4 flex flex-col gap-2 flex-1">
-                {/* Stage + domain tags row */}
                 <div className="flex items-center gap-1.5 flex-wrap">
                     <StageBadge stage={project.stage} size="sm" />
                     {getDomainTags(project.techStack).map((tag) => (
@@ -93,7 +110,6 @@ function ProjectMini({ project }: { project: ProjectWithRelations }) {
 
                 {/* Footer */}
                 <div className="mt-auto pt-2 flex items-center justify-between">
-                    {/* Builder avatar stack */}
                     <div className="flex items-center">
                         {allBuilders.slice(0, 3).map((builder, i) => {
                             const name = builder.fullName ?? "Builder";
@@ -144,6 +160,7 @@ export function BuiltIn01X() {
     const [projects, setProjects] = useState<ProjectWithRelations[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const reducedMotion = useReducedMotion();
 
     useEffect(() => {
         fetch("/api/v1/projects/featured?limit=8")
@@ -158,7 +175,7 @@ export function BuiltIn01X() {
     return (
         <section id="built-in-01x" className="section-full">
             <div className="w-full max-w-7xl mx-auto px-6">
-                {/* Header — centered like MentorsShowcase */}
+                {/* Header */}
                 <div className="text-center mb-10">
                     <h2 className="text-3xl md:text-4xl font-semibold mb-4">Built in 01X</h2>
                     <p className="text-muted-foreground text-lg max-w-xl mx-auto mb-6">
@@ -170,7 +187,7 @@ export function BuiltIn01X() {
                     </Button>
                 </div>
 
-                {/* Loading state */}
+                {/* Loading */}
                 {loading && (
                     <div className="flex gap-4 justify-center">
                         {Array.from({ length: 4 }).map((_, i) => (
@@ -179,7 +196,7 @@ export function BuiltIn01X() {
                     </div>
                 )}
 
-                {/* Error state */}
+                {/* Error */}
                 {error && (
                     <div className="flex flex-col items-center justify-center py-12 gap-3">
                         <p className="text-sm text-muted-foreground">Could not load projects.</p>
@@ -200,44 +217,50 @@ export function BuiltIn01X() {
                     </div>
                 )}
 
-                {/* Empty state */}
+                {/* Empty */}
                 {!loading && !error && projects.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
                         <p className="text-muted-foreground">No published projects yet.</p>
                         <Button asChild>
-                            <Link href="/apply">Be the first to ship an MVP →</Link>
+                            <Link href="/cohort/apply">Be the first to ship an MVP →</Link>
                         </Button>
                     </div>
                 )}
 
-                {/* Marquee carousel */}
-                {!loading && !error && projects.length > 0 && (() => {
-                    const duplicated = [...projects, ...projects];
-                    return (
+                {!loading && !error && projects.length > 0 && (
+                    reducedMotion ? (
+                        /* ── shadcn Carousel — Reduce Motion ON ── */
+                        /* px-12 wrapper gives the absolutely-positioned buttons their 48px lane */
+                        <div className="px-12">
+                            <Carousel
+                                opts={{ align: "start", dragFree: true, loop: true }}
+                                className="w-full"
+                            >
+                                <CarouselContent className="-ml-4">
+                                    {projects.map((project) => (
+                                        <CarouselItem key={project.id} className="pl-4 basis-auto">
+                                            <ProjectMini project={project} />
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                                <CarouselPrevious />
+                                <CarouselNext />
+                            </Carousel>
+                        </div>
+                    ) : (
+                        /* ── Animated marquee — Reduce Motion OFF ── */
                         <div className="relative overflow-hidden">
-                            {/* Gradient fades */}
                             <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
                             <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-
-                            {/* Scrolling track */}
                             <div className="group flex">
-                                <div className="flex gap-4 animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:flex-wrap motion-reduce:justify-center">
-                                    {duplicated.map((project, idx) => (
+                                <div className="flex gap-4 animate-marquee group-hover:[animation-play-state:paused]">
+                                    {[...projects, ...projects].map((project, idx) => (
                                         <ProjectMini key={`${project.id}-${idx}`} project={project} />
                                     ))}
                                 </div>
                             </div>
                         </div>
-                    );
-                })()}
-
-                {/* Fallback grid for reduced motion */}
-                {!loading && !error && projects.length > 0 && (
-                    <div className="hidden motion-reduce:grid motion-reduce:grid-cols-2 motion-reduce:md:grid-cols-3 motion-reduce:lg:grid-cols-4 gap-4 mt-8">
-                        {projects.slice(0, 4).map((project) => (
-                            <ProjectMini key={project.id} project={project} />
-                        ))}
-                    </div>
+                    )
                 )}
             </div>
         </section>

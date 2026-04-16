@@ -6,21 +6,21 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/navbar";
 import { ConversationalFlow } from "@/components/conversational-flow";
 import type { FlowConfig } from "@/components/conversational-flow";
-import { mentorQuestions } from "./lib/questions";
+import { questions } from "./lib/questions";
 
-const DRAFT_KEY = "01x-mentor-application-draft";
-const COMPLETED_KEY = "01x-mentor-application";
+const DRAFT_KEY = "01x-application-draft";
+const COMPLETED_KEY = "01x-application";
 
 const flowConfig: FlowConfig = {
     draftKey: DRAFT_KEY,
     completedKey: COMPLETED_KEY,
-    accentColor: "#d7ff00",
+    accentColor: "var(--brand)",
 
     completionMessage: (data) =>
-        `Thank you, ${data.fullName?.split(" ")[0] || "friend"}! 🙌\n\nWe review every mentor application personally and keep the community intentionally small.\n\nWe'll be in touch within a few days. In the meantime, check out the builders you'd be working with at 01x.in/apply.`,
+        `Thank you for applying, ${data.fullName?.split(" ")[0] || "friend"}! 🎉\n\nWe've received your application and will review it carefully. Expect to hear from us within a few days.\n\nIn the meantime, follow us on Twitter/X for updates!`,
 
     onComplete: async (formData) => {
-        const response = await fetch("/api/mentor/apply", {
+        const response = await fetch("/api/apply", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
@@ -55,29 +55,24 @@ function showConsentToast(questionId: string) {
     );
 }
 
-export default function MentorApplyPage() {
+export default function ApplyPage() {
     return (
         <div className="flex flex-col h-[100dvh] bg-background">
-            <Navbar variant="apply" backHref="/mentors" />
+            <Navbar variant="apply" />
 
             <ConversationalFlow
-                questions={mentorQuestions}
+                questions={questions}
                 config={flowConfig}
                 onFirstInteraction={showConsentToast}
                 chatClassName="container-narrow"
                 completionSlot={
-                    <div className="text-center space-y-3">
-                        <p className="text-sm text-muted-foreground">
-                            Application submitted — we&apos;ll be in touch soon.
+                    <div className="text-center">
+                        <p className="text-sm text-muted-foreground mb-3">
+                            Application submitted successfully!
                         </p>
-                        <div className="flex gap-3 justify-center">
-                            <Button variant="outline" asChild>
-                                <Link href="/mentors">Back to Mentors</Link>
-                            </Button>
-                            <Button asChild>
-                                <Link href="/">Go Home</Link>
-                            </Button>
-                        </div>
+                        <Button variant="outline" asChild>
+                            <Link href="/">Return to Home</Link>
+                        </Button>
                     </div>
                 }
             />

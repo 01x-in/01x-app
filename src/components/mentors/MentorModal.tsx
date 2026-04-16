@@ -163,7 +163,7 @@ export function MentorModal({ mentor, open, onOpenChange }: MentorModalProps) {
                     {/* CTA */}
                     <div className="pt-2">
                         <Button size="lg" className="w-full" asChild>
-                            <Link href="/apply">Apply to Cohort</Link>
+                            <Link href="/cohort/apply">Apply to Cohort</Link>
                         </Button>
                     </div>
                 </div>

@@ -27,7 +27,7 @@ interface ChatMessageProps {
     accentColor?: string;
 }
 
-export function ChatMessage({ message, isLatest: _isLatest, accentColor = "#d7ff00" }: ChatMessageProps) {
+export function ChatMessage({ message, isLatest: _isLatest, accentColor = "var(--brand)" }: ChatMessageProps) {
     const isBot = message.type === "bot";
     const messageRef = useRef<HTMLDivElement>(null);
 

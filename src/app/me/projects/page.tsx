@@ -146,7 +146,7 @@ export default function MyProjectsPage() {
                             You need to be a member to view your projects.
                         </p>
                         <Button asChild>
-                            <Link href="/apply">Apply for access</Link>
+                            <Link href="/cohort/apply">Apply for access</Link>
                         </Button>
                     </div>
                 </main>
