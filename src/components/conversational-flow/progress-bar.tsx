@@ -14,7 +14,7 @@ interface ProgressBarProps {
 
 export function ProgressBar({
     progress,
-    accentColor = "var(--brand)",
+    accentColor = "var(--primary)",
     actions,
     className,
 }: ProgressBarProps) {

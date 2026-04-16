@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { MentorFilters } from "@/components/mentors/MentorFilters";
 import { MentorsGrid } from "@/components/mentors/MentorsGrid";
 import Footer from "@/components/footer";

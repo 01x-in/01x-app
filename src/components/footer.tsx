@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
 import O1XLogoStatic from "@/components/o1x-logo-static";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +24,6 @@ export default function Footer({ className }: FooterProps) {
                         <span className="text-border">|</span>
                         <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
                         <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-                        <ThemeToggle />
                     </div>
                     <p className="text-xs text-muted-foreground/60 mt-2">
                         &copy; {currentYear} 01X. All rights reserved.
@@ -44,15 +42,13 @@ export default function Footer({ className }: FooterProps) {
                             </p>
                         </div>
 
-                        {/* Right side: Links + Theme Toggle */}
+                        {/* Right side: Links */}
                         <div className="flex items-center gap-4 text-sm">
                             <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
                             <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
                             <span className="text-border">|</span>
                             <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
                             <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-                            <span className="text-border">|</span>
-                            <ThemeToggle />
                         </div>
                     </div>
 

@@ -1,27 +1,18 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
 import { ChatContainer } from "./chat-container";
 import { ChatInput } from "./chat-input";
-import { ProgressBar, RestartButton } from "./progress-bar";
 import { useConversationalFlow } from "./use-conversational-flow";
 import { Question, FlowConfig } from "./types";
 
 interface ConversationalFlowProps {
     questions: Question[];
     config?: FlowConfig;
-    /**
-     * Slot rendered when the flow is complete (after the final bot message).
-     * Defaults to a simple "Back to Home" prompt.
-     */
     completionSlot?: ReactNode;
-    /**
-     * Called when the user selects the FIRST option of the FIRST question.
-     * Useful for showing a consent toast before the flow begins.
-     */
     onFirstInteraction?: (questionId: string) => void;
-    /** Override className of the chat messages container */
     chatClassName?: string;
 }
 
@@ -32,7 +23,7 @@ export function ConversationalFlow({
     onFirstInteraction,
     chatClassName,
 }: ConversationalFlowProps) {
-    const accentColor = config.accentColor ?? "var(--brand)";
+    const accentColor = config.accentColor ?? "var(--primary)";
 
     const {
         messages,
@@ -48,6 +39,14 @@ export function ConversationalFlow({
         startFresh,
     } = useConversationalFlow(questions, config);
 
+    const [confirmingReset, setConfirmingReset] = useState(false);
+    const [inputError, setInputError] = useState<string | null>(null);
+
+    // Dismiss confirm on new message
+    useEffect(() => {
+        setConfirmingReset(false);
+    }, [messages.length]);
+
     // Handle Enter key on draft resume prompt
     useEffect(() => {
         if (!hasDraft || messages.length > 0) return;
@@ -61,21 +60,12 @@ export function ConversationalFlow({
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [hasDraft, messages.length, resumeFromDraft]);
 
+    const showMeta = progress > 0 && !isComplete;
+
     return (
         <>
-            {/* Progress bar */}
-            <ProgressBar
-                progress={progress}
-                accentColor={accentColor}
-                actions={
-                    messages.length > 0 ? (
-                        <RestartButton onClick={restartChat} />
-                    ) : undefined
-                }
-            />
-
-            {/* Spacer for fixed navbar + progress bar */}
-            <div className="h-20 shrink-0" />
+            {/* Spacer for fixed navbar */}
+            <div className="h-16 shrink-0" />
 
             {/* Draft resume prompt */}
             {hasDraft && draftInfo && messages.length === 0 && (
@@ -93,7 +83,7 @@ export function ConversationalFlow({
                             </Button>
                             <Button
                                 onClick={resumeFromDraft}
-                                className="text-black hover:opacity-90"
+                                className="hover:opacity-90"
                                 style={{ backgroundColor: accentColor }}
                             >
                                 Continue
@@ -121,9 +111,10 @@ export function ConversationalFlow({
                         <ChatInput
                             question={currentQuestion}
                             onSubmit={submitAnswer}
-                            disabled={isTyping}
+                            disabled={isTyping || confirmingReset}
                             accentColor={accentColor}
                             onFirstOptionSelect={onFirstInteraction}
+                            onError={setInputError}
                         />
                     ) : isComplete ? (
                         completionSlot ?? (
@@ -134,6 +125,56 @@ export function ConversationalFlow({
                             </div>
                         )
                     ) : null}
+
+                    {/* Sub-input row */}
+                    {showMeta && (
+                        <div className="flex items-center justify-between mt-3 px-1">
+                            {/* Left: error > textarea hint > empty */}
+                            <span className="text-xs">
+                                {inputError ? (
+                                    <span className="text-destructive">{inputError}</span>
+                                ) : currentQuestion?.type === "textarea" && !confirmingReset ? (
+                                    <span className="text-muted-foreground">Press ⌘+Enter to submit</span>
+                                ) : null}
+                            </span>
+
+                            {/* Right: confirm UI or default progress | reset */}
+                            {confirmingReset ? (
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xs text-muted-foreground">
+                                        Reset all progress?
+                                    </span>
+                                    <button
+                                        onClick={() => setConfirmingReset(false)}
+                                        className="text-xs text-muted-foreground hover:text-foreground transition-colors underline-offset-2 hover:underline"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={() => { setConfirmingReset(false); restartChat(); }}
+                                        className="text-xs text-destructive hover:text-destructive/80 transition-colors underline-offset-2 hover:underline"
+                                    >
+                                        Yes, reset
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-muted-foreground tabular-nums">
+                                        {progress}% complete
+                                    </span>
+                                    <span className="text-xs text-muted-foreground/40">|</span>
+                                    <button
+                                        onClick={() => setConfirmingReset(true)}
+                                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                        title="Start over"
+                                    >
+                                        <RotateCcw className="h-3 w-3" />
+                                        Reset
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </>

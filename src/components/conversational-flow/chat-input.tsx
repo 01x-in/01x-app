@@ -16,47 +16,57 @@ interface ChatInputProps {
      * Used by consumers to show e.g. a consent toast.
      */
     onFirstOptionSelect?: (questionId: string) => void;
+    /** Called whenever the validation error changes (null = no error). */
+    onError?: (error: string | null) => void;
 }
 
 export function ChatInput({
     question,
     onSubmit,
     disabled,
-    accentColor = "var(--brand)",
+    accentColor = "var(--primary)",
     onFirstOptionSelect,
+    onError,
 }: ChatInputProps) {
     const [value, setValue] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [isShaking, setIsShaking] = useState(false);
     const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-    // Ensures onFirstOptionSelect fires at most once across all option clicks
     const hasFiredRef = useRef(false);
+
+    const raiseError = (msg: string | null) => {
+        setError(msg);
+        onError?.(msg);
+    };
 
     useEffect(() => {
         if (inputRef.current && !disabled) {
             inputRef.current.focus();
         }
         setValue("");
-        setError(null);
+        raiseError(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [question.id, disabled]);
 
     const handleSubmit = () => {
         if (disabled) return;
         const trimmedValue = value.trim();
-        if (question.required && !trimmedValue) {
-            setError("This field is required");
+        const prefix = question.inputPrefix ?? "";
+        const fullValue = prefix ? (trimmedValue ? prefix + trimmedValue : "") : trimmedValue;
+        if (question.required && !fullValue) {
+            raiseError("This field is required");
             triggerShake();
             return;
         }
-        if (question.validation && trimmedValue) {
-            const validationError = question.validation(trimmedValue);
+        if (question.validation && fullValue) {
+            const validationError = question.validation(fullValue);
             if (validationError) {
-                setError(validationError);
+                raiseError(validationError);
                 triggerShake();
                 return;
             }
         }
-        onSubmit(trimmedValue);
+        onSubmit(fullValue);
     };
 
     const handleOptionSelect = (option: QuestionOption) => {
@@ -212,25 +222,35 @@ export function ChatInput({
                         )}
                     />
                 ) : (
-                    <input
-                        ref={inputRef as React.RefObject<HTMLInputElement>}
-                        type={
-                            question.type === "email"
-                                ? "email"
-                                : question.type === "url"
-                                    ? "url"
-                                    : "text"
-                        }
-                        value={value}
-                        onChange={(e) => { setValue(e.target.value); setError(null); }}
-                        onKeyDown={handleKeyDown}
-                        placeholder={question.placeholder || "Type your answer..."}
-                        disabled={disabled}
-                        className={cn(
-                            "flex-1 bg-transparent border-0 px-3 py-2 text-[15px] placeholder:text-muted-foreground focus:outline-none",
-                            disabled && "opacity-50 cursor-not-allowed"
+                    <div className="flex flex-1 items-center">
+                        {question.inputPrefix && (
+                            <span className="pl-3 text-[15px] text-muted-foreground shrink-0 select-none">
+                                {question.inputPrefix}
+                            </span>
                         )}
-                    />
+                        <input
+                            ref={inputRef as React.RefObject<HTMLInputElement>}
+                            type={
+                                question.type === "email"
+                                    ? "email"
+                                    : question.type === "url"
+                                        ? "url"
+                                        : "text"
+                            }
+                            value={value}
+                            onChange={(e) => { setValue(e.target.value); setError(null); }}
+                            onKeyDown={handleKeyDown}
+                            placeholder={question.inputPrefix
+                                ? (question.placeholder?.replace(question.inputPrefix, "") || "yourprofile")
+                                : (question.placeholder || "Type your answer...")}
+                            disabled={disabled}
+                            className={cn(
+                                "flex-1 bg-transparent border-0 px-2 py-2 text-[15px] placeholder:text-muted-foreground focus:outline-none min-w-0",
+                                !question.inputPrefix && "pl-3",
+                                disabled && "opacity-50 cursor-not-allowed"
+                            )}
+                        />
+                    </div>
                 )}
                 <Button
                     size="icon"
@@ -243,15 +263,9 @@ export function ChatInput({
                 </Button>
             </div>
 
-            {error && (
-                <p className="text-sm text-destructive mt-2 px-3">{error}</p>
-            )}
 
-            {question.type === "textarea" && (
-                <p className="text-xs text-muted-foreground mt-2 px-3">
-                    Press ⌘+Enter to submit
-                </p>
-            )}
+
+
         </div>
     );
 }

@@ -59,9 +59,10 @@ Ready to dive in?`,
     {
         id: "linkedinUrl",
         section: "demographics",
-        type: "url",
+        type: "text",
         message: "Got a LinkedIn or portfolio URL? (Optional, but helps us learn more about you)",
-        placeholder: "https://linkedin.com/in/yourprofile",
+        inputPrefix: "https://linkedin.com/in/",
+        placeholder: "yourprofile",
         required: false,
     },
 

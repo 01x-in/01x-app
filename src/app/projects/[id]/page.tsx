@@ -7,7 +7,6 @@ import {
     Users, ChevronRight, Edit, Globe, Lock, RefreshCw,
 } from "lucide-react";
 import Navbar from "@/components/navbar";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StageBadge } from "@/components/projects/StageBadge";

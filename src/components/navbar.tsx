@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-
-import { ArrowLeft } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArrowLeft, LogIn } from "lucide-react";
 
 interface NavbarProps {
     variant?: "default" | "apply" | "pages" | "cohort";
@@ -138,9 +138,22 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                             </Link>
                         </Button>
                     ) : (
-                        <Button size="sm" className="rounded-full" asChild>
-                            <Link href="/login">Login</Link>
-                        </Button>
+                        <TooltipProvider delayDuration={300}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Link
+                                        href="/login"
+                                        aria-label="Login"
+                                        className="text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                        <LogIn className="h-5 w-5" strokeWidth={2.5} />
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent side="bottom">
+                                    Login
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     )}
                 </nav>
             </div>

@@ -14,7 +14,7 @@ const COMPLETED_KEY = "01x-mentor-application";
 const flowConfig: FlowConfig = {
     draftKey: DRAFT_KEY,
     completedKey: COMPLETED_KEY,
-    accentColor: "var(--brand)",
+    accentColor: "var(--primary)",
 
     completionMessage: (data) =>
         `Thank you, ${data.fullName?.split(" ")[0] || "friend"}! 🙌\n\nWe review every mentor application personally and keep the community intentionally small.\n\nWe'll be in touch within a few days. In the meantime, check out the builders you'd be working with at 01x.in/apply.`,

@@ -26,6 +26,8 @@ export interface Question {
     type: QuestionType;
     message: string | ((formData: FlowFormData) => string);
     placeholder?: string;
+    /** Optional fixed prefix shown inside the input and prepended to the submitted value. */
+    inputPrefix?: string;
     options?: QuestionOption[];
     required?: boolean;
     validation?: (value: string) => string | null;
@@ -76,7 +78,7 @@ export interface FlowConfig {
     onFirstInteraction?: () => void;
     /**
      * Accent colour used for the progress bar and user-bubble background.
-     * Defaults to "var(--brand)".
+     * Defaults to "var(--primary)".
      */
     accentColor?: string;
     /**

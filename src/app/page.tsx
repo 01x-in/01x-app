@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { MentorsShowcase } from "@/components/mentors/MentorsShowcase";
 import { BuiltIn01X } from "@/components/projects/BuiltIn01X";
 import Footer from "@/components/footer";

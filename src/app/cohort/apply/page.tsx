@@ -14,7 +14,7 @@ const COMPLETED_KEY = "01x-application";
 const flowConfig: FlowConfig = {
     draftKey: DRAFT_KEY,
     completedKey: COMPLETED_KEY,
-    accentColor: "var(--brand)",
+    accentColor: "var(--primary)",
 
     completionMessage: (data) =>
         `Thank you for applying, ${data.fullName?.split(" ")[0] || "friend"}! 🎉\n\nWe've received your application and will review it carefully. Expect to hear from us within a few days.\n\nIn the meantime, follow us on Twitter/X for updates!`,

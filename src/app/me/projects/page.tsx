@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Plus, Edit, ArrowUp, Globe, Lock, Users, Eye } from "lucide-react";
 import Navbar from "@/components/navbar";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { StageBadge } from "@/components/projects/StageBadge";
 import { VisibilityBadge } from "@/components/projects/VisibilityBadge";
