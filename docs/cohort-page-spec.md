@@ -292,8 +292,8 @@ heading: "FAQ"
 ### CTA (Bottom of page)
 
 ```
-button_text: "Apply for the next cohort"
-button_link: "/apply"
+button_text: "Apply Now"
+button_link: "/cohort/apply"
 ```
 
 **UI directive:** Use `<Button size="lg" asChild><Link href="/apply">Apply for the next cohort</Link></Button>`. Center it. Add a short line above: "Cohorts are limited. Applications are reviewed manually." in `text-muted-foreground`. Consider also placing a secondary CTA after the Pricing section. Match the CTA section pattern from `src/app/page.tsx` section `#cta`.

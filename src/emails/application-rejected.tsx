@@ -33,11 +33,10 @@ export function ApplicationRejectedEmail({
                     </Text>
                     <Text style={textStyle}>
                         This doesn&apos;t necessarily mean the door is closed — we encourage you to
-                        continue building and re-apply in a future cohort. We&apos;d love to see how
-                        you&apos;ve grown.
+                        re-apply in a future cohort. We&apos;d love to see how you&apos;ve grown.
                     </Text>
                     <Text style={textStyle}>
-                        Keep shipping! 🚀
+                        Keep building! 🚀
                     </Text>
                     <Hr style={hrStyle} />
                     <Text style={footerStyle}>

@@ -247,7 +247,7 @@ export function LoginForm({
         <Field>
           <FieldDescription className="text-center">
             Want to join?{" "}
-            <a href="/apply" className="underline underline-offset-4">
+            <a href="/cohort/apply" className="underline underline-offset-4">
               Apply to Cohort
             </a>
           </FieldDescription>

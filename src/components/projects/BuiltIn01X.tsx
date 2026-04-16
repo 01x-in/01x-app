@@ -222,7 +222,7 @@ export function BuiltIn01X() {
                     <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
                         <p className="text-muted-foreground">No published projects yet.</p>
                         <Button asChild>
-                            <Link href="/apply">Be the first to ship an MVP →</Link>
+                            <Link href="/cohort/apply">Be the first to ship an MVP →</Link>
                         </Button>
                     </div>
                 )}

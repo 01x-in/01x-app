@@ -19,13 +19,6 @@ export const metadata: Metadata = {
     "14 weeks. 4 phases. 3 gates. Enter with an idea, leave with a launched product and real users. 8–12 builders per cohort.",
 };
 
-
-
-
-
-
-
-
 export default function CohortPage() {
   return (
     <>
@@ -53,7 +46,7 @@ export default function CohortPage() {
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-base px-8" asChild>
-                <Link href="/apply">Apply for the Next Cohort</Link>
+                <Link href="/cohort/apply">Apply Now</Link>
               </Button>
               <Button
                 size="lg"
@@ -201,7 +194,7 @@ export default function CohortPage() {
                   If it&rsquo;s a fit, we&rsquo;ll be in touch.
                 </p>
                 <Button size="lg" className="text-base px-10" asChild>
-                  <Link href="/apply">Apply for the Next Cohort</Link>
+                  <Link href="/cohort/apply">Apply Now</Link>
                 </Button>
               </div>
           </div>

@@ -30,7 +30,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-base px-8" asChild>
-                <Link href="/apply">Apply for Access</Link>
+                <Link href="/cohort">Get Started</Link>
               </Button>
               <Button size="lg" variant="outline" className="text-base px-8" asChild>
                 <Link href="#how-it-works">See How It Works</Link>
@@ -405,7 +405,7 @@ export default function Home() {
                 If it&apos;s a fit, we&apos;ll be in touch.
               </p>
               <Button size="lg" className="text-base px-10" asChild>
-                <Link href="/apply">Apply for Access</Link>
+                <Link href="/cohort/apply">Apply for Access</Link>
               </Button>
             </div>
           </div>

@@ -19,7 +19,7 @@ interface ApplicationApprovedEmailProps {
 export function ApplicationApprovedEmail({
     name,
     role,
-    signInUrl = "https://01x.in/sign-in",
+    signInUrl = "https://01x.in/login",
 }: ApplicationApprovedEmailProps) {
     const roleLabel = role === "mentor" ? "Mentor" : "Cohort Member";
 

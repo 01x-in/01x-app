@@ -26,7 +26,7 @@ export function SignupForm({
 
                 <Field>
                     <Button asChild>
-                        <Link href="/apply">Apply to a Cohort</Link>
+                        <Link href="/cohort/apply">Apply to a Cohort</Link>
                     </Button>
                 </Field>
 
