@@ -30,27 +30,27 @@ function PrimaryMentorVisual() {
   return (
     <div
       className={cn(
-        "h-28 bg-muted/50 border-b border-border",
+        "h-28 bg-secondary border-b border-border",
         "flex flex-col items-center justify-center gap-2"
       )}
     >
       {/* Icon with rings */}
       <div className="relative flex items-center justify-center">
         {/* Dashed outer circle */}
-        <div className="w-20 h-20 rounded-full border border-dashed border-[#d7ff00]/25 absolute" />
+        <div className="w-20 h-20 rounded-full border border-dashed border-brand/25 absolute" />
         {/* Inner ring with icon */}
-        <div className="w-14 h-14 rounded-full border border-[#d7ff00]/60 bg-[#d7ff00]/5 flex items-center justify-center">
-          <User size={18} stroke="#d7ff00" />
+        <div className="w-14 h-14 rounded-full border border-brand/60 bg-brand/5 flex items-center justify-center">
+          <User size={18} stroke="var(--brand)" />
         </div>
       </div>
 
       {/* 5 presence dots */}
       <div className="flex items-center gap-1.5 mt-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#d7ff00] opacity-40" />
-        <span className="w-1.5 h-1.5 rounded-full bg-[#d7ff00] opacity-40" />
-        <span className="w-1.5 h-1.5 rounded-full bg-[#d7ff00]" />
-        <span className="w-1.5 h-1.5 rounded-full bg-[#d7ff00] opacity-40" />
-        <span className="w-1.5 h-1.5 rounded-full bg-[#d7ff00] opacity-40" />
+        <span className="w-1.5 h-1.5 rounded-full bg-brand opacity-40" />
+        <span className="w-1.5 h-1.5 rounded-full bg-brand opacity-40" />
+        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+        <span className="w-1.5 h-1.5 rounded-full bg-brand opacity-40" />
+        <span className="w-1.5 h-1.5 rounded-full bg-brand opacity-40" />
       </div>
     </div>
   );
@@ -67,7 +67,7 @@ function PhaseSpecialistVisual() {
   return (
     <div
       className={cn(
-        "h-28 bg-muted/50 border-b border-border",
+        "h-28 bg-secondary border-b border-border",
         "flex items-center justify-center"
       )}
     >
@@ -84,7 +84,7 @@ function PhaseSpecialistVisual() {
                   "w-7 h-7 rounded-full flex items-center justify-center",
                   "text-[9px] font-medium tracking-wide border",
                   phase.active
-                    ? "bg-[#d7ff00]/10 border-[#d7ff00]/40 text-[#d7ff00]"
+                    ? "bg-brand/10 border-brand/40 text-brand"
                     : "bg-muted border-border text-muted-foreground"
                 )}
               >

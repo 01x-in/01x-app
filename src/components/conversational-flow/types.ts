@@ -76,7 +76,7 @@ export interface FlowConfig {
     onFirstInteraction?: () => void;
     /**
      * Accent colour used for the progress bar and user-bubble background.
-     * Defaults to "#d7ff00".
+     * Defaults to "var(--brand)".
      */
     accentColor?: string;
     /**

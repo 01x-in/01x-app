@@ -39,7 +39,7 @@ function TechnicalBuildersVisual() {
   return (
     <div
       className={cn(
-        "h-28 bg-muted/50 border-b border-border",
+        "h-28 bg-secondary border-b border-border",
         "flex items-center justify-center"
       )}
     >
@@ -48,15 +48,15 @@ function TechnicalBuildersVisual() {
         <div
           className={cn(
             "w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0",
-            "bg-[#d7ff00]/10 border border-[#d7ff00]/30"
+            "bg-brand/10 border border-brand/30"
           )}
         >
-          <Code2 size={22} stroke="#d7ff00" />
+          <Code2 size={22} stroke="var(--brand)" />
         </div>
 
         {/* Code lines */}
         <div className="flex flex-col gap-1.5">
-          <div className="h-1.5 w-24 rounded-full bg-[#d7ff00]/20" />
+          <div className="h-1.5 w-24 rounded-full bg-brand/20" />
           <div className="h-1.5 w-20 rounded-full bg-border" />
           <div className="h-1.5 w-16 rounded-full bg-border" />
           <div className="h-1.5 w-12 rounded-full bg-border" />
@@ -70,7 +70,7 @@ function ProductDesignVisual() {
   return (
     <div
       className={cn(
-        "h-28 bg-muted/50 border-b border-border",
+        "h-28 bg-secondary border-b border-border",
         "flex items-center justify-center"
       )}
     >
@@ -80,7 +80,7 @@ function ProductDesignVisual() {
         <div
           className={cn(
             "h-3.5 w-full rounded-sm border",
-            "bg-[#d7ff00]/20 border-[#d7ff00]/30"
+            "bg-brand/20 border-brand/30"
           )}
         />
         {/* Body: sidebar + content */}
@@ -93,7 +93,7 @@ function ProductDesignVisual() {
             <div
               className={cn(
                 "h-3 rounded-sm border",
-                "bg-[#d7ff00]/15 border-border"
+                "bg-brand/15 border-border"
               )}
             />
             <div className="h-3 rounded-sm border border-border bg-transparent" />
@@ -108,7 +108,7 @@ function GrowthOperatorsVisual() {
   return (
     <div
       className={cn(
-        "h-28 bg-muted/50 border-b border-border",
+        "h-28 bg-secondary border-b border-border",
         "flex items-center justify-center"
       )}
     >
@@ -117,10 +117,10 @@ function GrowthOperatorsVisual() {
         <div className="flex items-end gap-1.5">
           <div className="w-4 h-6 rounded-sm bg-border" />
           <div className="w-4 h-10 rounded-sm bg-border" />
-          <div className="w-4 h-14 rounded-sm bg-[#d7ff00]" />
+          <div className="w-4 h-14 rounded-sm bg-brand" />
         </div>
         {/* TrendingUp icon */}
-        <TrendingUp size={16} stroke="#d7ff00" className="mb-0.5" />
+        <TrendingUp size={16} stroke="var(--brand)" className="mb-0.5" />
       </div>
     </div>
   );
@@ -149,7 +149,7 @@ export function CohortComposition() {
 
           {/* Content zone */}
           <div className="p-5">
-            <p className="text-3xl font-semibold text-[#d7ff00] leading-none mb-1.5">
+            <p className="text-3xl font-semibold text-brand leading-none mb-1.5">
               {segment.percentage}
             </p>
             <p className="text-sm font-semibold text-foreground mb-1">

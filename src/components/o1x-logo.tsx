@@ -11,7 +11,7 @@ interface O1XLogoProps {
 
 export default function O1XLogo({
     size = 40,
-    color = "#d7ff00",
+    color = "var(--brand)",
     background = "transparent"
 }: O1XLogoProps) {
     const circleRef = useRef<HTMLDivElement>(null);

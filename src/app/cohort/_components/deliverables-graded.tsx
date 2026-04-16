@@ -4,7 +4,7 @@ type Grade = {
   level: "L1" | "L2" | "L3";
   name: string;
   description: string;
-  theme: "green" | "neutral" | "red";
+  theme: "green" | "red";
 };
 
 const grades: Grade[] = [
@@ -20,7 +20,7 @@ const grades: Grade[] = [
     name: "Draft-grade",
     description:
       "Good attempt. Gaps remain. Shows engagement but needs refinement.",
-    theme: "neutral",
+    theme: "green",
   },
   {
     level: "L3",
@@ -34,22 +34,15 @@ const grades: Grade[] = [
 const themeConfig = {
   green: {
     // Outer card border
-    cardBorder: "border-[#d7ff00]/70",
+    cardBorder: "border-brand/70",
     // 2px top accent bar
-    accentBar: "bg-[#d7ff00]",
+    accentBar: "bg-brand",
     // Large grade number text
-    levelText: "text-[#d7ff00]",
+    levelText: "text-brand",
     // Left cell tinted background (~10% opacity)
-    leftBg: "bg-[#d7ff00]/10",
+    leftBg: "bg-brand/10",
     // "GRADE" label text (~60% opacity)
-    gradeLabel: "text-[#d7ff00]/60",
-  },
-  neutral: {
-    cardBorder: "border-border/60",
-    accentBar: "bg-border",
-    levelText: "text-foreground",
-    leftBg: "bg-muted/30",
-    gradeLabel: "text-muted-foreground/60",
+    gradeLabel: "text-brand/60",
   },
   red: {
     cardBorder: "border-destructive/40",

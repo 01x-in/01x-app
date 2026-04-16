@@ -11,7 +11,7 @@ export default function LoginPage() {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <Link href="/" className="flex items-center gap-2.5 font-medium">
-            <O1XLogo size={32} color="#d7ff00" />
+            <O1XLogo size={32} color="var(--brand)" />
             <span className="font-semibold text-base tracking-tight">01X</span>
           </Link>
         </div>

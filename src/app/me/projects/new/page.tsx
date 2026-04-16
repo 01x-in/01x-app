@@ -98,7 +98,7 @@ export default function NewProjectPage() {
 
                     {/* Stage info callout */}
                     <div className="rounded-xl border bg-muted/20 p-4 mb-8 flex gap-3">
-                        <span className="text-[#d7ff00] mt-0.5 shrink-0">→</span>
+                        <span className="text-brand mt-0.5 shrink-0">→</span>
                         <div className="text-sm text-muted-foreground space-y-1">
                             <p>Your project will be created at <strong className="text-foreground">Stage Zero</strong> — private and only visible to you.</p>
                             <p>Promote to <strong className="text-foreground">Stage One (MVP)</strong> once you have something working, then publish to share it publicly.</p>

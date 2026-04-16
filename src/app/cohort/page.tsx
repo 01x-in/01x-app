@@ -39,7 +39,7 @@ export default function CohortPage() {
               variant="outline"
               className="mb-6 rounded-full px-4 py-1.5 text-xs font-medium border-border/50"
             >
-              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#d7ff00]" />
+              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-brand" />
               Limited Seats
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6 leading-[1.3]">

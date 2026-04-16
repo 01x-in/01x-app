@@ -67,7 +67,7 @@ export function PricingCards() {
               className={cn(
                 "inline-block text-[9px] font-medium tracking-widest uppercase px-2 py-0.5 rounded mt-3",
                 step.prominent
-                  ? "bg-[#d7ff00]/10 text-[#d7ff00]"
+                  ? "bg-brand/10 text-brand"
                   : "bg-muted text-muted-foreground"
               )}
             >

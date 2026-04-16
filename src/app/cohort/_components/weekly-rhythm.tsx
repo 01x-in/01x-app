@@ -75,8 +75,8 @@ export function WeeklyRhythm() {
               className={cn(
                 "flex flex-col items-center gap-1 py-2.5 px-1 rounded-lg",
                 isStructured
-                  ? "border border-[#d7ff00] bg-[#d7ff00]/5"
-                  : "bg-muted/50"
+                  ? "border border-brand bg-brand/5"
+                  : "border border-border bg-muted/50"
               )}
             >
               {/* Day abbreviation */}
@@ -85,7 +85,7 @@ export function WeeklyRhythm() {
                   "text-[10px] font-medium tracking-wide uppercase",
                   !isStructured && "text-muted-foreground"
                 )}
-                style={isStructured ? { color: "#d7ff00" } : undefined}
+                style={isStructured ? { color: "var(--brand)" } : undefined}
               >
                 {day.abbr}
               </span>
@@ -94,13 +94,13 @@ export function WeeklyRhythm() {
               <div
                 className={cn(
                   "w-6 h-6 rounded-full flex items-center justify-center",
-                  isStructured ? "bg-[#d7ff00]/10" : "bg-muted"
+                  isStructured ? "bg-brand/10" : "bg-muted"
                 )}
               >
                 <Icon
                   size={13}
                   className={cn(
-                    isStructured ? "text-[#d7ff00]" : "text-muted-foreground"
+                    isStructured ? "text-brand" : "text-muted-foreground"
                   )}
                 />
               </div>

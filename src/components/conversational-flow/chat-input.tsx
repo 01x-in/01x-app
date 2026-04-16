@@ -22,7 +22,7 @@ export function ChatInput({
     question,
     onSubmit,
     disabled,
-    accentColor = "#d7ff00",
+    accentColor = "var(--brand)",
     onFirstOptionSelect,
 }: ChatInputProps) {
     const [value, setValue] = useState("");

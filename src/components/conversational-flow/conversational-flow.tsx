@@ -32,7 +32,7 @@ export function ConversationalFlow({
     onFirstInteraction,
     chatClassName,
 }: ConversationalFlowProps) {
-    const accentColor = config.accentColor ?? "#d7ff00";
+    const accentColor = config.accentColor ?? "var(--brand)";
 
     const {
         messages,

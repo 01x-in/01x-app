@@ -140,7 +140,7 @@ export function CohortStructure() {
                     className="font-mono text-2xl font-semibold leading-none transition-colors duration-150"
                     style={
                       isSelected
-                        ? { color: "#d7ff00" }
+                        ? { color: "var(--brand)" }
                         : undefined
                     }
                   >
@@ -158,7 +158,7 @@ export function CohortStructure() {
                       {p.name}
                     </p>
                     {p.gate && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide bg-[#d7ff00]/10 text-[#d7ff00]">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide bg-brand/10 text-brand">
                         {p.gate.label}
                       </span>
                     )}
@@ -192,7 +192,7 @@ export function CohortStructure() {
                   className="font-mono text-base font-semibold leading-none transition-colors duration-150"
                   style={
                     isSelected
-                      ? { color: "#d7ff00" }
+                      ? { color: "var(--brand)" }
                       : undefined
                   }
                 >
@@ -230,8 +230,8 @@ function DetailPanel({ phase }: { phase: Phase }) {
 
       {/* Gate callout */}
       {phase.gate && (
-        <div className="border-l-2 border-[#d7ff00] pl-3 mt-4 bg-[#d7ff00]/5 py-2 pr-3 rounded-r-md">
-          <p className="text-[10px] font-medium tracking-widest text-[#d7ff00] uppercase mb-1">
+        <div className="border-l-2 border-brand pl-3 mt-4 bg-brand/5 py-2 pr-3 rounded-r-md">
+          <p className="text-[10px] font-medium tracking-widest text-brand uppercase mb-1">
             {phase.gate.label}
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed">

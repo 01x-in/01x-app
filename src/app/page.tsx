@@ -18,7 +18,7 @@ export default function Home() {
         <section id="hero" className="section-full min-h-screen pt-24 md:pt-16">
           <div className="container-narrow text-center md:-mt-8">
             <Badge variant="outline" className="mb-6 rounded-full px-4 py-1.5 text-xs font-medium border-border/50">
-              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#d7ff00]"></span>
+              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-brand"></span>
               Coming Soon!
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6">
