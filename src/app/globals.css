@@ -289,6 +289,8 @@
 
 .animate-marquee {
   animation: marquee 30s linear infinite;
+  width: max-content;
+  will-change: transform;
 }
 
 /* Respect reduced motion preference */

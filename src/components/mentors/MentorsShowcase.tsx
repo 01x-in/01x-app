@@ -3,14 +3,34 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel";
 import { MentorCard } from "./MentorCard";
 import { MentorModal } from "./MentorModal";
 import type { Mentor } from "@/data/mentors";
+
+function useReducedMotion() {
+    const [reduced, setReduced] = useState(false);
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        setReduced(mq.matches);
+        const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+        mq.addEventListener("change", handler);
+        return () => mq.removeEventListener("change", handler);
+    }, []);
+    return reduced;
+}
 
 export function MentorsShowcase() {
     const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
     const [featuredMentors, setFeaturedMentors] = useState<Mentor[]>([]);
     const [loading, setLoading] = useState(true);
+    const reducedMotion = useReducedMotion();
 
     useEffect(() => {
         fetch("/api/v1/mentors?featured=1")
@@ -37,10 +57,7 @@ export function MentorsShowcase() {
                     </div>
                     <div className="flex gap-4 justify-center">
                         {[1, 2, 3, 4].map((i) => (
-                            <div
-                                key={i}
-                                className="shrink-0 w-[280px] h-[200px] rounded-lg bg-muted/50 animate-pulse"
-                            />
+                            <div key={i} className="shrink-0 w-[280px] h-[200px] rounded-lg bg-muted/50 animate-pulse" />
                         ))}
                     </div>
                 </div>
@@ -50,7 +67,6 @@ export function MentorsShowcase() {
 
     if (featuredMentors.length === 0) return null;
 
-    // Duplicate for seamless infinite scroll
     const duplicatedMentors = [...featuredMentors, ...featuredMentors];
 
     return (
@@ -67,39 +83,49 @@ export function MentorsShowcase() {
                     </Button>
                 </div>
 
-                {/* Marquee container */}
-                <div className="relative overflow-hidden">
-                    {/* Gradient fades */}
-                    <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-                    <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-
-                    {/* Scrolling track */}
-                    <div className="group flex">
-                        <div className="flex gap-4 animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:flex-wrap motion-reduce:justify-center">
-                            {duplicatedMentors.map((mentor, idx) => (
-                                <div key={`${mentor.id}-${idx}`} className="shrink-0 w-[280px]">
-                                    <MentorCard
-                                        mentor={mentor}
-                                        compact
-                                        onClick={() => setSelectedMentor(mentor)}
-                                    />
-                                </div>
-                            ))}
+                {reducedMotion ? (
+                    /* ── shadcn Carousel — Reduce Motion ON ── */
+                    /* px-12 wrapper gives the absolutely-positioned buttons their 48px lane */
+                    <div className="px-12">
+                        <Carousel
+                            opts={{ align: "start", dragFree: true, loop: true }}
+                            className="w-full"
+                        >
+                            <CarouselContent className="-ml-4">
+                                {featuredMentors.map((mentor) => (
+                                    <CarouselItem key={mentor.id} className="pl-4 basis-auto">
+                                        <MentorCard
+                                            mentor={mentor}
+                                            compact
+                                            onClick={() => setSelectedMentor(mentor)}
+                                        />
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            <CarouselPrevious />
+                            <CarouselNext />
+                        </Carousel>
+                    </div>
+                ) : (
+                    /* ── Animated marquee — Reduce Motion OFF ── */
+                    <div className="relative overflow-hidden">
+                        <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+                        <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+                        <div className="group flex">
+                            <div className="flex gap-4 animate-marquee group-hover:[animation-play-state:paused]">
+                                {duplicatedMentors.map((mentor, idx) => (
+                                    <div key={`${mentor.id}-${idx}`} className="shrink-0 w-[280px]">
+                                        <MentorCard
+                                            mentor={mentor}
+                                            compact
+                                            onClick={() => setSelectedMentor(mentor)}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                {/* Fallback for reduced motion - just show first set */}
-                <div className="hidden motion-reduce:grid motion-reduce:grid-cols-2 motion-reduce:md:grid-cols-3 motion-reduce:lg:grid-cols-4 gap-4 mt-8">
-                    {featuredMentors.slice(0, 4).map((mentor) => (
-                        <MentorCard
-                            key={mentor.id}
-                            mentor={mentor}
-                            compact
-                            onClick={() => setSelectedMentor(mentor)}
-                        />
-                    ))}
-                </div>
+                )}
             </div>
 
             <MentorModal
