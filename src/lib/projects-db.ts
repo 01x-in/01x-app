@@ -89,6 +89,7 @@ export function parseProjectRow(row: Record<string, unknown>): Project {
     lookingForCollaborators: row.looking_for_collaborators === 1,
     isFeatured: row.is_featured === 1,
     featuredRank: row.featured_rank as number | undefined,
+    founderQuote: row.founder_quote as string | undefined,
   };
 }
 

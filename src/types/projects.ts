@@ -168,6 +168,9 @@ export interface Project {
 
   // Ranking
   featuredRank?: number;
+
+  // Showcase
+  founderQuote?: string; // Short founder story shown on login page
 }
 
 export interface ProjectInput {
@@ -196,6 +199,7 @@ export interface ProjectInput {
   lookingForCollaborators?: boolean;
   isFeatured?: boolean;
   featuredRank?: number;
+  founderQuote?: string;
 }
 
 export interface ProjectUpdate {
@@ -222,6 +226,7 @@ export interface ProjectUpdate {
   lookingForCollaborators?: boolean;
   isFeatured?: boolean;
   featuredRank?: number;
+  founderQuote?: string;
 }
 
 // ============================================================================

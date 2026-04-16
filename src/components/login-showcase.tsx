@@ -1,159 +1,147 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import type { ProjectWithRelations } from "@/types/projects"
+import { StageBadge } from "@/components/projects/StageBadge"
+import { getDomainTags } from "@/lib/project-utils"
+import { Quote } from "lucide-react"
 
-interface ShowcaseItem {
-    id: string
-    title: string
-    tagline: string | null
-    stage: string
-    cover_image_url: string | null
-    product_url: string | null
-    tech_stack: string | null
-    creator_name: string | null
-}
+const FALLBACK_QUOTES = [
+    "01X gave me the structure I needed to stop ideating and start shipping. I went from a napkin sketch to a live MVP in six weeks.",
+    "The cohort format kept me accountable. Having mentors and peers who genuinely cared made all the difference.",
+    "I built more in six weeks with 01X than I had in the previous year solo. The environment just removes all the excuses.",
+]
 
-const STAGE_LABELS: Record<string, string> = {
-    zero: "Idea",
-    one: "MVP",
-    x: "Scale",
-}
 
-const STAGE_COLORS: Record<string, string> = {
-    zero: "bg-yellow-500/20 text-yellow-400",
-    one: "bg-green-500/20 text-green-400",
-    x: "bg-blue-500/20 text-blue-400",
+function PosterCard({ project }: { project: ProjectWithRelations }) {
+    const initials = project.title.slice(0, 2).toUpperCase()
+
+
+    return (
+        <Link
+            href={`/projects/${project.id}`}
+            className="group relative aspect-[3/4] rounded-xl border overflow-hidden block transition-all duration-300 hover:shadow-xl hover:border-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+            {/* Full-bleed cover */}
+            <div className="absolute inset-0 bg-muted/60">
+                {project.coverImageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                        src={project.coverImageUrl}
+                        alt={`${project.title} cover`}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                ) : (
+                    <div className="h-full w-full flex items-center justify-center">
+                        <span className="text-5xl font-bold text-muted-foreground/20 select-none">
+                            {initials}
+                        </span>
+                    </div>
+                )}
+            </div>
+
+            {/* Bottom gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+            {/* Info overlaid at the bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-2">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                    <StageBadge stage={project.stage} size="sm" />
+                    {getDomainTags(project.techStack).map((tag) => (
+                        <span
+                            key={tag}
+                            className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-sm px-2 py-0.5 text-[10px] font-medium text-white/80"
+                        >
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+
+                <h3 className="font-semibold text-sm text-white leading-snug line-clamp-1">
+                    {project.title}
+                </h3>
+
+                {project.tagline && (
+                    <p className="text-[11px] text-white/60 line-clamp-2 leading-relaxed">
+                        {project.tagline}
+                    </p>
+                )}
+
+
+            </div>
+        </Link>
+    )
 }
 
 export function LoginShowcase() {
-    const [items, setItems] = useState<ShowcaseItem[]>([])
-    const [current, setCurrent] = useState(0)
+    const [project, setProject] = useState<ProjectWithRelations | null>(null)
+    const [loading, setLoading] = useState(true)
+    const [fallbackQuote] = useState(
+        () => FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]
+    )
 
     useEffect(() => {
-        fetch("/api/v1/showcase")
-            .then((r) => r.json())
-            .then((data) => {
-                if (data.items?.length) setItems(data.items)
+        fetch("/api/v1/projects/featured?limit=5")
+            .then((r) => { if (!r.ok) throw new Error(); return r.json() })
+            .then((data: { projects?: ProjectWithRelations[] }) => {
+                const projects = data.projects ?? []
+                if (projects.length > 0) {
+                    setProject(projects[Math.floor(Math.random() * projects.length)])
+                }
+                setLoading(false)
             })
-            .catch(() => { })
+            .catch(() => setLoading(false))
     }, [])
 
-    // Auto-advance every 5 seconds
-    useEffect(() => {
-        if (items.length <= 1) return
-        const timer = setInterval(() => {
-            setCurrent((prev) => (prev + 1) % items.length)
-        }, 5000)
-        return () => clearInterval(timer)
-    }, [items.length])
-
-    const goTo = useCallback((index: number) => {
-        setCurrent(index)
-    }, [])
-
-    // Fallback when no showcase items exist
-    if (items.length === 0) {
-        return (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-gradient-to-br from-primary/5 via-background to-primary/10 p-12">
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground text-3xl font-bold shadow-lg">
-                    01X
-                </div>
-                <div className="text-center space-y-2 max-w-sm">
-                    <h2 className="text-2xl font-semibold tracking-tight">
-                        From Zero to One to Scale
-                    </h2>
-                    <p className="text-muted-foreground">
-                        A paid builder environment. Join a cohort, explore an idea, use AI
-                        to accelerate, and ship an MVP.
-                    </p>
-                </div>
-            </div>
-        )
-    }
-
-    const item = items[current]
-    const techStack = item.tech_stack ? JSON.parse(item.tech_stack) as string[] : []
+    const quote = project?.founderQuote ?? fallbackQuote
 
     return (
-        <div className="absolute inset-0 flex flex-col">
-            {/* Cover image area */}
-            <div className="relative flex-1">
-                {item.cover_image_url ? (
-                    <img
-                        src={item.cover_image_url}
-                        alt={item.title}
-                        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
-                    />
-                ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-primary/20" />
-                )}
-                {/* Gradient overlay at bottom for text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-10 bg-gradient-to-br from-muted/60 via-background to-muted/30">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/8 via-transparent to-transparent pointer-events-none" />
 
-            {/* Text overlay at bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-8 space-y-4">
-                {/* Stage badge */}
-                <div className="flex items-center gap-2">
-                    <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${STAGE_COLORS[item.stage] || "bg-muted text-muted-foreground"}`}
-                    >
-                        {STAGE_LABELS[item.stage] || item.stage}
+            <div className="relative w-full max-w-[280px] flex flex-col gap-6">
+                {/* Label */}
+                <div className="flex items-center gap-3">
+                    <span className="h-px flex-1 bg-border/60" />
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/50">
+                        Built on 01X
                     </span>
-                    {item.creator_name && (
-                        <span className="text-xs text-white/60">
-                            by {item.creator_name}
-                        </span>
-                    )}
+                    <span className="h-px flex-1 bg-border/60" />
                 </div>
 
-                {/* Title and tagline */}
-                <div className="space-y-1">
-                    <h3 className="text-xl font-semibold text-white leading-tight">
-                        {item.title}
-                    </h3>
-                    {item.tagline && (
-                        <p className="text-sm text-white/70 line-clamp-2">
-                            {item.tagline}
+                {/* Poster card */}
+                {loading ? (
+                    <div className="aspect-[3/4] rounded-xl border bg-muted/60 animate-pulse" />
+                ) : project ? (
+                    <PosterCard project={project} />
+                ) : (
+                    <div className="rounded-xl border bg-card p-8 flex flex-col items-center gap-3 text-center">
+                        <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-xl font-bold text-primary">
+                            01X
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            Featured projects will appear here once builders publish their work.
                         </p>
+                    </div>
+                )}
+
+                {/* Quote + founder attribution */}
+                <div className="flex flex-col gap-2 px-1">
+                    <Quote className="h-3.5 w-3.5 text-muted-foreground/30" />
+                    <p className="text-xs text-muted-foreground leading-relaxed italic">
+                        {quote}
+                    </p>
+                    {project?.creator && (
+                        <div className="flex items-center gap-2 pt-0.5">
+                            <span className="h-px w-4 bg-border" />
+                            <span className="text-[11px] text-muted-foreground/50 font-medium">
+                                {project.creator.fullName}
+                                {project.cohort?.cohortNumber ? ` · Cohort ${project.cohort.cohortNumber}` : " · Cohort Builder"}
+                            </span>
+                        </div>
                     )}
                 </div>
-
-                {/* Tech stack pills */}
-                {techStack.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                        {techStack.slice(0, 4).map((tech) => (
-                            <span
-                                key={tech}
-                                className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/80 backdrop-blur-sm"
-                            >
-                                {tech}
-                            </span>
-                        ))}
-                        {techStack.length > 4 && (
-                            <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/60">
-                                +{techStack.length - 4}
-                            </span>
-                        )}
-                    </div>
-                )}
-
-                {/* Dot indicators */}
-                {items.length > 1 && (
-                    <div className="flex items-center gap-2 pt-1">
-                        {items.map((_, i) => (
-                            <button
-                                key={i}
-                                onClick={() => goTo(i)}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${i === current
-                                        ? "w-6 bg-white"
-                                        : "w-1.5 bg-white/40 hover:bg-white/60"
-                                    }`}
-                                aria-label={`Go to slide ${i + 1}`}
-                            />
-                        ))}
-                    </div>
-                )}
             </div>
         </div>
     )
