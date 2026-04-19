@@ -19,8 +19,8 @@ export default function Footer({ className }: FooterProps) {
                         Built by people who build. For people who want to.
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-4 text-sm mt-2">
-                        <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-                        <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
+                        <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
+                        <Link href="mailto:hello@01x.in" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
                         <span className="text-border">|</span>
                         <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
                         <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
@@ -44,8 +44,8 @@ export default function Footer({ className }: FooterProps) {
 
                         {/* Right side: Links */}
                         <div className="flex items-center gap-4 text-sm">
-                            <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-                            <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
+                            <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
+                            <Link href="mailto:hello@01x.in" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
                             <span className="text-border">|</span>
                             <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
                             <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
