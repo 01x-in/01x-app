@@ -73,60 +73,17 @@ export default function AboutPage() {
               className="mb-6 rounded-full px-4 py-1.5 text-xs font-medium border-border/50"
             >
               <span className="mr-2 inline-block h-2 w-2 rounded-full bg-brand" />
-              India
+              The story
             </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6 leading-[1.3]">
-              We shipped an idea<br />
-              every week.
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6 leading-[1.15]">
+              2 Builders. 1 Year.<br />
+              <span className="text-muted-foreground">Everything we learned.</span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mx-auto">
-              We were three full-stack builders from India who believed that somewhere in our weekly experiments lived a million-dollar idea. We used Claude, Codex, and Cline to build faster than we could think.
-            </p>
-          </div>
-        </section>
-
-        {/* ── STORY ── */}
-        <section className="section-full">
-          <div className="container-narrow">
-            <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
-              <div>
-                <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase mb-4">
-                  The story
-                </p>
-                <h2 className="text-3xl md:text-4xl font-semibold mb-6 leading-tight">
-                  Zero to one, week after week.
-                </h2>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    01X (India) started as a simple premise: what if we treated every week like a micro-startup? Pick an idea Monday, ship it Friday.
-                  </p>
-                  <p>
-                    We were early adopters of AI coding tools — Claude, Codex, Cline — and we used them aggressively. Not as a shortcut, but as a force multiplier. The kind that lets a small team move at a pace that would otherwise require ten people.
-                  </p>
-                  <p>
-                    We built fintech tools, health apps, productivity experiments, B2B SaaS concepts, consumer utilities. Most were duds. A few had real signal. All of them taught us something.
-                  </p>
-                  <p>
-                    We never hit a million dollars. But we built something more useful: a repeatable system for taking an idea from zero to working software in days — and the hard-won judgment to know which ideas deserve more than a week.
-                  </p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { value: "50+", label: "Ideas shipped" },
-                  { value: "3", label: "Founders" },
-                  { value: "1yr+", label: "Of weekly builds" },
-                  { value: "∞", label: "Lessons learned" },
-                ].map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="rounded-2xl border bg-card p-6 flex flex-col gap-1"
-                  >
-                    <span className="text-3xl font-semibold text-brand">{stat.value}</span>
-                    <span className="text-sm text-muted-foreground">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
+            <div className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto space-y-1">
+              <p>We used Claude, Codex, and every AI tool we could get.</p>
+              <p>Trying to compress months of work into days.</p>
+              <p>Obsessing over how fast we could actually build.</p>
+              <p>01X is us sharing what we figured out.</p>
             </div>
           </div>
         </section>
