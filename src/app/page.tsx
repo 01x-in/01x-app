@@ -57,7 +57,7 @@ export default function Home() {
               </div>
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold">
-                  Shipping is the only real education.
+                  Shipping is the only real way.
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
                   You don&apos;t learn product thinking from a framework. You learn it by
@@ -72,7 +72,7 @@ export default function Home() {
                 <p className="text-muted-foreground leading-relaxed">
                   We were using AI to build products before it was mainstream. That
                   experience — the dead ends, the breakthroughs, the changed workflows —
-                  is what we share. You don&apos;t have to learn it all the hard way.
+                  is what we share.
                 </p>
               </div>
             </div>
@@ -86,16 +86,15 @@ export default function Home() {
         <section id="cohort" className="section-full">
           <div className="container-wide">
             <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
-              The 01x Cohort.
+              The Cohort.
             </h2>
             <p className="text-muted-foreground text-center mb-12 max-w-lg mx-auto">
-              This is how we share what we know. 100 days of structured mentorship,
-              graded deliverables, and peer accountability — to take you from idea
-              to shipped product.
+              This is how we share what we know, through structured mentorship,
+              graded deliverables, and peer accountability.
             </p>
 
-            {/* 3-column stat summary */}
-            <div className="grid md:grid-cols-3 gap-8 md:gap-12 mb-12">
+            {/* 2-column stat summary */}
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 mb-12">
               <div className="space-y-2 text-center">
                 <p className="text-2xl font-semibold">100 days</p>
                 <p className="text-sm text-muted-foreground">Structured, not open-ended</p>
@@ -104,27 +103,15 @@ export default function Home() {
                 <p className="text-2xl font-semibold">8–12 builders</p>
                 <p className="text-sm text-muted-foreground">Small cohorts, by design</p>
               </div>
-              <div className="space-y-2 text-center">
-                <p className="text-2xl font-semibold">AI-first</p>
-                <p className="text-sm text-muted-foreground">From day one</p>
-              </div>
             </div>
 
             {/* CTA card */}
-            <Card className="bg-card/50 max-w-xl mx-auto text-center">
-              <CardHeader>
-                <CardTitle className="text-2xl">Zero → One. In 100 days.</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <p className="text-muted-foreground leading-relaxed">
-                  14 weeks. 4 phases. 3 gates. You enter with an idea and leave
-                  with a shipped product.
-                </p>
-                <Button size="lg" className="text-base px-8" asChild>
-                  <Link href="/cohort">Explore the Cohort →</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="text-base px-8" asChild>
+                <Link href="/cohort">Explore the Cohort →</Link>
+              </Button>
+            </div>
+            
           </div>
         </section>
 
@@ -135,7 +122,7 @@ export default function Home() {
         <section id="community" className="section-full">
           <div className="container-wide">
             <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-center">
-              The 01x community.
+              The Community.
             </h2>
             <p className="text-muted-foreground text-center mb-12 max-w-lg mx-auto">
               The cohort is the program. The community is everything around it.
@@ -152,7 +139,7 @@ export default function Home() {
                     about shipping with AI — all in one place.
                   </p>
                   <Button variant="outline" asChild>
-                    <Link href="https://join.slack.com/t/01xcommunity/shared_invite" target="_blank" rel="noopener noreferrer">
+                    <Link href="https://join.slack.com/t/01x-in/shared_invite/zt-3wqje5guf-M8eLft9J3VDjLIVwcKr1HQ" target="_blank" rel="noopener noreferrer">
                       Join the Slack →
                     </Link>
                   </Button>
@@ -162,7 +149,7 @@ export default function Home() {
               <Card className="bg-card/50">
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <CardTitle className="text-xl">The 01x Dispatch</CardTitle>
+                    <CardTitle className="text-xl">Newsletter</CardTitle>
                     <Badge variant="outline" className="text-xs font-normal">Starting soon</Badge>
                   </div>
                 </CardHeader>
@@ -251,15 +238,16 @@ export default function Home() {
               <h2 className="text-3xl md:text-4xl font-semibold mb-6">
                 Ready to build with us?
               </h2>
-              <p className="text-lg text-muted-foreground mb-10 max-w-md mx-auto">
-                Start with the cohort. Or join the community. Either way, you&apos;re among builders.
-              </p>
+              <div className="text-lg text-muted-foreground mb-10 max-w-md mx-auto">
+                <p>Start with the cohort. Or join the community.</p>
+                <p>Either way, you&apos;re among builders.</p>
+              </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" className="text-base px-10" asChild>
                   <Link href="/cohort/apply">Apply to the Cohort</Link>
                 </Button>
                 <Button size="lg" variant="outline" className="text-base px-10" asChild>
-                  <Link href="https://join.slack.com/t/01xcommunity/shared_invite" target="_blank" rel="noopener noreferrer">
+                  <Link href="https://join.slack.com/t/01x-in/shared_invite/zt-3wqje5guf-M8eLft9J3VDjLIVwcKr1HQ" target="_blank" rel="noopener noreferrer">
                     Join the Slack
                   </Link>
                 </Button>
