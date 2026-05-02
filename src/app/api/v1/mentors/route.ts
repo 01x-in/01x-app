@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 
 /**
- * GET /api/v1/mentors              → all approved mentors
- * GET /api/v1/mentors?featured=1   → only featured (and approved) mentors
- * GET /api/v1/mentors?id=xyz       → single mentor by id (must be approved)
+ * GET /api/v1/mentors            → all approved mentors
+ * GET /api/v1/mentors?featured=1 → only featured (and approved) mentors
+ * GET /api/v1/mentors?team=1     → only 01x core team members
+ * GET /api/v1/mentors?id=xyz     → single mentor by id (must be approved)
  */
 export async function GET(request: NextRequest) {
     try {
@@ -12,6 +13,7 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
         const id = searchParams.get("id");
         const featured = searchParams.get("featured");
+        const team = searchParams.get("team");
 
         // Single mentor by ID
         if (id) {
@@ -28,6 +30,17 @@ export async function GET(request: NextRequest) {
             }
 
             return NextResponse.json(parseMentorRow(mentor));
+        }
+
+        // 01x core team members only
+        if (team === "1") {
+            const { results } = await db
+                .prepare(
+                    "SELECT * FROM mentors WHERE is_approved = 1 AND is_team = 1 ORDER BY sort_rank ASC, name ASC"
+                )
+                .all();
+
+            return NextResponse.json(results.map(parseMentorRow));
         }
 
         // Featured only
@@ -80,6 +93,7 @@ function parseMentorRow(row: Record<string, unknown>) {
         },
         isApproved: row.is_approved === 1,
         isFeatured: row.is_featured === 1,
+        isTeam: row.is_team === 1,
         sortRank: row.sort_rank,
     };
 }
