@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { Badge } from "@/components/ui/badge";
+import { WhatWorks } from "./_components/what-works";
+import { WhatCosts } from "./_components/what-costs";
 
 export const metadata: Metadata = {
   title: "About — 01X",
   description:
-    "We're a group of full-stack builders from India who used AI to ship a new idea every week. This is the story of what we learned.",
+    "We're a group of full-stack builders from India who used AI to ship a new idea every month. This is the story of what we learned.",
 };
 
 const founders = [
@@ -28,34 +30,6 @@ const founders = [
     role: "Co-founder",
     bio: "Engineer who thinks in systems. Brings the technical depth that turns quick prototypes into products that actually hold up. The one who asks the hard questions.",
     initials: "AG",
-  },
-];
-
-const lessons = [
-  {
-    number: "01",
-    title: "Speed is a moat.",
-    body: "The biggest advantage AI gives you isn't just code generation — it's the ability to validate ideas before your conviction fades. Ship in hours, not weeks.",
-  },
-  {
-    number: "02",
-    title: "Vibes are not a product.",
-    body: "We built a lot of things nobody wanted. The tool writes the code; you still have to figure out whether the problem is real. AI accelerates both good bets and bad ones.",
-  },
-  {
-    number: "03",
-    title: "Context is the bottleneck.",
-    body: "The hardest part of AI-assisted development isn't prompting — it's keeping your mental model of the codebase sharp enough to direct the AI well. Review everything.",
-  },
-  {
-    number: "04",
-    title: "Weekly deadlines are forcing functions.",
-    body: "Shipping on a schedule forces hard decisions. You can't gold-plate when the week ends on Friday. Constraints produce clarity.",
-  },
-  {
-    number: "05",
-    title: "Small teams move faster than they think.",
-    body: "Three opinionated builders arguing in a group chat is worth more than a 10-person company in a planning sprint. Stay small, stay sharp.",
   },
 ];
 
@@ -88,31 +62,39 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── LESSONS ── */}
+        {/* ── WHAT WORKS ── */}
         <section className="section-full">
-          <div className="container-narrow">
-            <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase mb-4">
-              What we learned
-            </p>
-            <h2 className="text-3xl md:text-4xl font-semibold mb-12 max-w-lg leading-tight">
-              How to build fast with AI — and what not to do.
-            </h2>
-            <div className="space-y-6">
-              {lessons.map((lesson) => (
-                <div
-                  key={lesson.number}
-                  className="flex gap-6 md:gap-10 p-6 rounded-2xl border bg-card/50 hover:bg-card transition-colors"
-                >
-                  <span className="text-brand font-mono text-sm font-semibold shrink-0 mt-0.5">
-                    {lesson.number}
-                  </span>
-                  <div>
-                    <h3 className="font-semibold mb-1">{lesson.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{lesson.body}</p>
-                  </div>
-                </div>
-              ))}
+          <div className="container-wide">
+            <div className="text-center mb-12">
+              <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase mb-3">
+                What works
+              </p>
+              <h2 className="text-3xl md:text-4xl font-semibold leading-tight">
+                Things we&rsquo;d do again.
+              </h2>
+              <p className="text-muted-foreground mt-3 max-w-sm mx-auto text-sm">
+                Patterns that consistently moved us forward.
+              </p>
             </div>
+            <WhatWorks />
+          </div>
+        </section>
+
+        {/* ── WHAT COSTS YOU ── */}
+        <section className="section-full">
+          <div className="container-wide">
+            <div className="text-center mb-12">
+              <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase mb-3">
+                What to avoid
+              </p>
+              <h2 className="text-3xl md:text-4xl font-semibold leading-tight">
+                Things that cost us.
+              </h2>
+              <p className="text-muted-foreground mt-3 max-w-sm mx-auto text-sm">
+                Mistakes we made so you don&rsquo;t have to.
+              </p>
+            </div>
+            <WhatCosts />
           </div>
         </section>
 
