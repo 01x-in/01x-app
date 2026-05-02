@@ -149,10 +149,9 @@ export function BuiltIn01X() {
             <div className="w-full max-w-7xl mx-auto px-6">
                 {/* Header */}
                 <div className="text-center mb-10">
-                    <h2 className="text-3xl md:text-4xl font-semibold mb-4">Built in 01X</h2>
+                    <h2 className="text-3xl md:text-4xl font-semibold mb-4">Built with 01x.</h2>
                     <p className="text-muted-foreground text-lg max-w-xl mx-auto mb-6">
-                        Real products shipped by real builders. From MVPs to growing products,
-                        these live here permanently.
+                        Real products from real builders. This is what the approach produces.
                     </p>
                     <Button variant="outline" asChild>
                         <Link href="/projects">View all projects</Link>
