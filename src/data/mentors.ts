@@ -49,6 +49,7 @@ export interface Mentor {
   image: MentorImage;
   isApproved: boolean;
   isFeatured: boolean;
+  isTeam: boolean;
   sortRank?: number;
 }
 
