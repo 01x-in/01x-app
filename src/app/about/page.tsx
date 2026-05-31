@@ -11,27 +11,6 @@ export const metadata: Metadata = {
     "We're a group of full-stack builders from India who used AI to ship a new idea every month. This is the story of what we learned.",
 };
 
-const founders = [
-  {
-    name: "Tushar Sarang",
-    role: "Co-founder",
-    bio: "Full-stack engineer and product thinker. Obsessed with finding the shortest path from idea to working software. Believes the best way to learn is to ship, break, and ship again.",
-    x: "https://x.com/tusharsarang",
-    initials: "TS",
-  },
-  {
-    name: "Ankit Mishra",
-    role: "Co-founder",
-    bio: "Builder at heart with a sharp eye for product and UX. Has an uncanny ability to identify what matters in an early-stage product and ruthlessly cut everything else.",
-    initials: "AM",
-  },
-  {
-    name: "Ankit Gupta",
-    role: "Co-founder",
-    bio: "Engineer who thinks in systems. Brings the technical depth that turns quick prototypes into products that actually hold up. The one who asks the hard questions.",
-    initials: "AG",
-  },
-];
 
 export default function AboutPage() {
   return (
@@ -98,41 +77,80 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── TEAM ── */}
+        {/* ── TUSHAR ── */}
         <section className="section-full">
-          <div className="container-narrow">
-            <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase mb-4">
-              The team
-            </p>
-            <h2 className="text-3xl md:text-4xl font-semibold mb-12 leading-tight">
-              Three builders.<br />One shared obsession.
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {founders.map((founder) => (
-                <div
-                  key={founder.name}
-                  className="rounded-2xl border bg-card p-6 flex flex-col gap-4"
-                >
-                  <div className="h-12 w-12 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-brand">{founder.initials}</span>
-                  </div>
-                  <div>
-                    <p className="font-semibold">{founder.name}</p>
-                    <p className="text-xs text-muted-foreground">{founder.role}</p>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">{founder.bio}</p>
-                  {founder.x && (
-                    <a
-                      href={founder.x}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      X / Twitter →
-                    </a>
-                  )}
+          <div className="container-wide">
+            <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+              <div>
+                <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase mb-4">
+                  Engineering
+                </p>
+                <h2 className="text-4xl md:text-5xl font-semibold leading-tight">
+                  &ldquo;We could<br />build it!&rdquo;
+                </h2>
+              </div>
+              <div className="rounded-2xl border bg-card p-6 flex flex-col gap-5">
+                <div className="h-20 w-20 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center">
+                  <span className="text-xl font-semibold text-brand">TS</span>
                 </div>
-              ))}
+                <div>
+                  <p className="font-semibold text-base">Tushar Sarang</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Engineering Leader · Co-founder</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Full-stack engineer obsessed with finding the shortest path from idea to working software. Believes the only way to learn is to ship, break, and ship again — faster each time. Spent the last year pushing AI tooling to its absolute limits so others don&rsquo;t have to figure it out the hard way.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {["Next.js", "AI Tooling", "Full-stack", "Rapid Prototyping"].map((tag) => (
+                    <span key={tag} className="text-[10px] font-medium tracking-wide uppercase px-2.5 py-1 rounded-full border border-border text-muted-foreground">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <a
+                  href="https://x.com/tusharsarang"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  X / Twitter →
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── ANKIT ── */}
+        <section className="section-full">
+          <div className="container-wide">
+            <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+              <div>
+                <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase mb-4">
+                  Product
+                </p>
+                <h2 className="text-4xl md:text-5xl font-semibold leading-tight">
+                  &ldquo;Should we<br />build it?&rdquo;
+                </h2>
+              </div>
+              <div className="rounded-2xl border bg-card p-6 flex flex-col gap-5">
+                <div className="h-20 w-20 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center">
+                  <span className="text-xl font-semibold text-brand">AM</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-base">Ankit Mishra</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Product Leader · Co-founder</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Product thinker with a sharp eye for what actually matters in an early-stage build. The one who asks whether the problem is real before a single line of code gets written. Has a rare ability to see past the excitement of a new idea and find the thing worth betting on.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {["Product Strategy", "User Research", "Validation", "0→1"].map((tag) => (
+                    <span key={tag} className="text-[10px] font-medium tracking-wide uppercase px-2.5 py-1 rounded-full border border-border text-muted-foreground">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
