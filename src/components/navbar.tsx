@@ -51,6 +51,13 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                 { label: "Projects", href: "/projects" },
             ];
         }
+        if (pathname?.startsWith("/about")) {
+            return [
+                { label: "Home", href: "/" },
+                { label: "Cohort", href: "/cohort" },
+                { label: "Projects", href: "/projects" },
+            ];
+        }
         // Fallback for other pages using the pages variant
         return [
             { label: "Home", href: "/" },
