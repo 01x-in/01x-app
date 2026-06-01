@@ -113,24 +113,47 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── WHY 01X COHORT ── */}
+        {/* ── CTA ── */}
         <section className="section-full">
-          <div className="container-narrow text-center">
-            <h2 className="text-3xl md:text-4xl font-semibold mb-6 leading-tight">
-              I turned the playbook into a cohort.
+          <div className="container-narrow">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-12 text-center leading-tight">
+              Come build with me.
             </h2>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-4 leading-relaxed">
-              Everything I learned about shipping fast, validating early, and using AI as a serious leverage tool — distilled into a 100-day program for builders who are serious about going from zero to one.
-            </p>
-            <p className="text-muted-foreground max-w-md mx-auto mb-10 text-sm">
-              Not a course. Not a community. A structured sprint with real accountability, real mentors, and a real deadline.
-            </p>
-            <a
-              href="/cohort"
-              className="inline-flex items-center gap-2 rounded-full bg-brand text-background px-8 py-3 text-sm font-semibold hover:bg-brand/90 transition-colors"
-            >
-              See the Cohort →
-            </a>
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Cohort */}
+              <div className="rounded-2xl border bg-card p-6 flex flex-col gap-4">
+                <div>
+                  <p className="text-xs font-medium tracking-widest uppercase text-brand mb-2">The Cohort</p>
+                  <p className="font-semibold text-lg leading-snug">For builders ready to commit.</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                  100 days. Structure, accountability, mentors, and a real deadline. For people who are serious about shipping something from zero to one.
+                </p>
+                <a
+                  href="/cohort"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand text-background px-6 py-2.5 text-sm font-semibold hover:bg-brand/90 transition-colors self-start"
+                >
+                  See the Cohort →
+                </a>
+              </div>
+
+              {/* Community */}
+              <div className="rounded-2xl border bg-card p-6 flex flex-col gap-4">
+                <div>
+                  <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground mb-2">The Community</p>
+                  <p className="font-semibold text-lg leading-snug">For builders who want to stay sharp.</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                  A Slack for people actively building with AI. Share what&rsquo;s working, ask what isn&rsquo;t, and stay close to what&rsquo;s being built.
+                </p>
+                <a
+                  href="https://slack.com"
+                  className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-2.5 text-sm font-semibold hover:bg-card transition-colors self-start"
+                >
+                  Join the Community →
+                </a>
+              </div>
+            </div>
           </div>
         </section>
 
