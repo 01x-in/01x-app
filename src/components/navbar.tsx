@@ -64,7 +64,7 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                             {isHome && (
                                 <>
                                     <button onClick={() => scrollTo("cohort")} className={linkClass}>Cohort</button>
-                                    <button onClick={() => scrollTo("community")} className={linkClass}>Community</button>
+                                    <button onClick={() => scrollTo("built-in-01x")} className={linkClass}>Projects</button>
                                 </>
                             )}
                             {isOnCohort && (
