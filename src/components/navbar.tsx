@@ -129,12 +129,6 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                                     >
                                         Projects
                                     </button>
-                                    <button
-                                        onClick={() => scrollTo("community")}
-                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                        Community
-                                    </button>
                                 </>
                             ) : (
                                 <>
@@ -143,9 +137,6 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                                     </Link>
                                     <Link href="/projects" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                                         Projects
-                                    </Link>
-                                    <Link href="/#community" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                        Community
                                     </Link>
                                 </>
                             )}
