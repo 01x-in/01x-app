@@ -115,24 +115,40 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                     {/* Navigation — default home variant */}
                     {!isApplyPage && !isPagesVariant && (
                         <div className="hidden md:flex items-center gap-6">
-                            <button
-                                onClick={() => scrollTo("cohort")}
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                Cohort
-                            </button>
-                            <button
-                                onClick={() => scrollTo("built-in-01x")}
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                Projects
-                            </button>
-                            <button
-                                onClick={() => scrollTo("community")}
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                Community
-                            </button>
+                            {pathname === "/" ? (
+                                <>
+                                    <button
+                                        onClick={() => scrollTo("cohort")}
+                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                        Cohort
+                                    </button>
+                                    <button
+                                        onClick={() => scrollTo("built-in-01x")}
+                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                        Projects
+                                    </button>
+                                    <button
+                                        onClick={() => scrollTo("community")}
+                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                        Community
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link href="/cohort" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                        Cohort
+                                    </Link>
+                                    <Link href="/projects" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                        Projects
+                                    </Link>
+                                    <Link href="/#community" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                        Community
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     )}
 
