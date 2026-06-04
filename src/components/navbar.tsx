@@ -28,26 +28,17 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
     const isApplyPage = variant === "apply";
     const isPagesVariant = variant === "pages";
 
-    // Context-aware nav links for the pages variant — each page shows the other three destinations
+    // Context-aware nav links for the pages variant
     const pagesNavLinks = (() => {
-        if (pathname?.startsWith("/mentors")) {
-            return [
-                { label: "Home", href: "/" },
-                { label: "Cohort", href: "/cohort" },
-                { label: "Projects", href: "/projects" },
-            ];
-        }
         if (pathname?.startsWith("/projects")) {
             return [
                 { label: "Home", href: "/" },
                 { label: "Cohort", href: "/cohort" },
-                { label: "Mentors", href: "/mentors" },
             ];
         }
         if (pathname?.startsWith("/cohort")) {
             return [
                 { label: "Home", href: "/" },
-                { label: "Mentors", href: "/mentors" },
                 { label: "Projects", href: "/projects" },
             ];
         }
@@ -58,11 +49,11 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                 { label: "Projects", href: "/projects" },
             ];
         }
-        // Fallback for other pages using the pages variant
+        // Fallback
         return [
             { label: "Home", href: "/" },
             { label: "Cohort", href: "/cohort" },
-            { label: "Mentors", href: "/mentors" },
+            { label: "Projects", href: "/projects" },
         ];
     })();
 
