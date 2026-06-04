@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
-import { MentorsShowcase } from "@/components/mentors/MentorsShowcase";
 import { BuiltIn01X } from "@/components/projects/BuiltIn01X";
 import Footer from "@/components/footer";
 
@@ -78,9 +77,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* ── THE 01X TEAM ── */}
-        <MentorsShowcase variant="team" />
 
         {/* ── THE COHORT ── */}
         <section id="cohort" className="section-full">

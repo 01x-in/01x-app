@@ -115,23 +115,23 @@ export default function Navbar({ variant = "default", backHref = "/" }: NavbarPr
                     {/* Navigation — default home variant */}
                     {!isApplyPage && !isPagesVariant && (
                         <div className="hidden md:flex items-center gap-6">
-                            <Link
-                                href="/cohort"
+                            <button
+                                onClick={() => scrollTo("cohort")}
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 Cohort
-                            </Link>
-                            <button
-                                onClick={() => scrollTo("mentors-showcase")}
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                Mentors
                             </button>
                             <button
                                 onClick={() => scrollTo("built-in-01x")}
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 Projects
+                            </button>
+                            <button
+                                onClick={() => scrollTo("community")}
+                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                Community
                             </button>
                         </div>
                     )}
