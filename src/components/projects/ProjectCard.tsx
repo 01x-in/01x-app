@@ -5,7 +5,6 @@ import { ArrowUp, MessageSquare, Users } from "lucide-react";
 import { getDomainTags } from "@/lib/project-utils";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { StageBadge } from "./StageBadge";
 import type { ProjectWithRelations } from "@/types/projects";
 
 
@@ -97,9 +96,8 @@ export function ProjectCard({ project, variant = "standard", className }: Projec
 
                 {/* Content */}
                 <div className="p-4 flex flex-col gap-2 flex-1">
-                    {/* Stage + domain tags row */}
+                    {/* Domain tags row */}
                     <div className="flex items-center gap-1.5 flex-wrap">
-                        <StageBadge stage={project.stage} size="sm" />
                         {getDomainTags(project.techStack).map((tag) => (
                             <span
                                 key={tag}
@@ -157,7 +155,6 @@ export function ProjectCard({ project, variant = "standard", className }: Projec
             <div className="p-5 flex flex-col gap-3 flex-1">
                 {/* Badges */}
                 <div className="flex flex-wrap items-center gap-2">
-                    <StageBadge stage={project.stage} />
                     {getDomainTags(project.techStack).map((tag) => (
                         <span
                             key={tag}

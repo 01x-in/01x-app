@@ -20,8 +20,6 @@ export function ProjectCardSkeleton({ variant = "standard", className }: Project
                 {/* Cover image */}
                 <div className="h-36 bg-muted/60" />
                 <div className="p-4 flex flex-col gap-3 flex-1">
-                    {/* Stage badge */}
-                    <div className="h-4 w-10 rounded-full bg-muted/60" />
                     {/* Title */}
                     <div className="h-4 w-4/5 rounded bg-muted/60" />
                     {/* Tagline */}
@@ -50,11 +48,6 @@ export function ProjectCardSkeleton({ variant = "standard", className }: Project
             {/* Cover image */}
             <div className="h-44 bg-muted/60" />
             <div className="p-5 flex flex-col gap-4 flex-1">
-                {/* Badges row */}
-                <div className="flex gap-2">
-                    <div className="h-5 w-12 rounded-full bg-muted/60" />
-                    <div className="h-5 w-14 rounded-full bg-muted/60" />
-                </div>
                 {/* Title */}
                 <div className="h-5 w-4/5 rounded bg-muted/60" />
                 {/* Tagline */}
