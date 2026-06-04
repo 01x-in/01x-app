@@ -25,7 +25,7 @@ export default function Home() {
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl mx-auto">
               We build with AI. We build every day.<br />
-              We are builders who adopted AI early, share what we learn.
+              We are builders who adopted AI early.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-base px-8" asChild>
