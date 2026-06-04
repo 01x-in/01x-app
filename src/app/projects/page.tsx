@@ -12,7 +12,6 @@ import { Boxes, RefreshCw } from "lucide-react";
 import type { ProjectWithRelations } from "@/types/projects";
 import Footer from "@/components/footer";
 
-type StageFilter = "all" | "one" | "x";
 type SortOption = "newest" | "most_upvoted";
 
 const PAGE_SIZE = 12;
@@ -24,7 +23,6 @@ export default function ProjectsPage() {
     const [displayed, setDisplayed] = useState(PAGE_SIZE);
 
     // Filters
-    const [stage, setStage] = useState<StageFilter>("all");
     const [sort, setSort] = useState<SortOption>("newest");
     const [search, setSearch] = useState("");
 
@@ -36,13 +34,8 @@ export default function ProjectsPage() {
             visibility: "public",
             published: "1",
             sortBy: sort === "newest" ? "newest" : "most_upvoted",
+            stage: "one,x",
         });
-        if (stage !== "all") {
-            params.set("stage", stage);
-        } else {
-            // Only show ONE and X on public page
-            params.set("stage", "one,x");
-        }
 
         fetch(`/api/v1/projects?${params}`)
             .then((res) => {
@@ -62,7 +55,7 @@ export default function ProjectsPage() {
     useEffect(() => {
         fetchProjects();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sort, stage]);
+    }, [sort]);
 
     const filtered = useMemo(() => {
         if (!search.trim()) return allProjects;
@@ -95,8 +88,6 @@ export default function ProjectsPage() {
                     {/* Filters */}
                     <div className="mb-8">
                         <FilterBar
-                            stage={stage}
-                            onStageChange={(s) => { setStage(s); setDisplayed(PAGE_SIZE); }}
                             sort={sort}
                             onSortChange={setSort}
                             search={search}
@@ -129,15 +120,15 @@ export default function ProjectsPage() {
                     {!loading && !error && filtered.length === 0 && (
                         <EmptyState
                             icon={<Boxes className="h-7 w-7" />}
-                            title={search || stage !== "all" ? "No projects match your filters" : "No published projects yet"}
+                            title={search ? "No projects match your search" : "No published projects yet"}
                             description={
-                                search || stage !== "all"
-                                    ? "Try clearing your filters to see all projects."
+                                search
+                                    ? "Try a different search term."
                                     : "Be the first to ship an MVP and get featured here."
                             }
                             action={
-                                search || stage !== "all"
-                                    ? { label: "Clear filters", onClick: () => { setStage("all"); setSearch(""); } }
+                                search
+                                    ? { label: "Clear search", onClick: () => setSearch("") }
                                     : { label: "Start a project", href: "/me/projects/new" }
                             }
                         />
