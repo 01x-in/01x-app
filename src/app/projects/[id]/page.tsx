@@ -9,7 +9,6 @@ import {
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { StageBadge } from "@/components/projects/StageBadge";
 import { VisibilityBadge } from "@/components/projects/VisibilityBadge";
 import { MediaGallery } from "@/components/projects/MediaGallery";
 import { PeopleStack } from "@/components/projects/PeopleStack";
@@ -279,7 +278,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     <div className="mb-8">
                         {/* Stage + visibility + unpublished banner */}
                         <div className="flex flex-wrap items-center gap-2 mb-4">
-                            <StageBadge stage={project.stage} />
                             {isOwner && <VisibilityBadge visibility={project.visibility} />}
                             {isOwner && project.stage !== "zero" && !project.published && (
                                 <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-400">

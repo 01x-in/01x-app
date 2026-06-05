@@ -11,7 +11,6 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
-import { StageBadge } from "./StageBadge";
 import { ProjectCardSkeleton } from "./ProjectCardSkeleton";
 import { getDomainTags } from "@/lib/project-utils";
 import type { ProjectWithRelations } from "@/types/projects";
@@ -59,7 +58,6 @@ function ProjectMini({ project }: { project: ProjectWithRelations }) {
             {/* Content */}
             <div className="p-4 flex flex-col gap-2 flex-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                    <StageBadge stage={project.stage} size="sm" />
                     {getDomainTags(project.techStack).map((tag) => (
                         <span
                             key={tag}
