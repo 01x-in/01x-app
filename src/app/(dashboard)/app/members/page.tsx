@@ -10,14 +10,13 @@ const PAGE_SIZE = 20
 export default async function MembersPage({
     searchParams,
 }: {
-    searchParams: Promise<{ q?: string; type?: string; status?: string; page?: string }>
+    searchParams: Promise<{ q?: string; status?: string; page?: string }>
 }) {
     await requireRole("admin")
     const params = await searchParams
     const db = getDB()
 
     const q = params.q || ""
-    const typeFilter = params.type || ""
     const statusFilter = params.status || ""
     const page = Math.max(1, parseInt(params.page || "1", 10))
     const offset = (page - 1) * PAGE_SIZE
@@ -30,11 +29,6 @@ export default async function MembersPage({
     if (q) {
         conditions.push(`(full_name LIKE ?${bindIdx} OR email LIKE ?${bindIdx})`)
         bindings.push(`%${q}%`)
-        bindIdx++
-    }
-    if (typeFilter) {
-        conditions.push(`member_type = ?${bindIdx}`)
-        bindings.push(typeFilter)
         bindIdx++
     }
     if (statusFilter) {
@@ -70,15 +64,6 @@ export default async function MembersPage({
                 <SearchInput placeholder="Search members…" />
                 <div className="flex items-center gap-2">
                     <FilterSelect
-                        paramName="type"
-                        label="All Types"
-                        options={[
-                            { value: "student", label: "Student" },
-                            { value: "mentor", label: "Mentor" },
-                            { value: "both", label: "Both" },
-                        ]}
-                    />
-                    <FilterSelect
                         paramName="status"
                         label="All Status"
                         options={[
@@ -96,7 +81,6 @@ export default async function MembersPage({
                             <tr className="border-b bg-muted/50">
                                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
                                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Email</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Type</th>
                                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Location</th>
                                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
                                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Joined</th>
@@ -105,8 +89,8 @@ export default async function MembersPage({
                         <tbody>
                             {results.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                                        {q || typeFilter || statusFilter ? "No matching members" : "No members yet"}
+                                    <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                                        {q || statusFilter ? "No matching members" : "No members yet"}
                                     </td>
                                 </tr>
                             ) : (
@@ -118,11 +102,6 @@ export default async function MembersPage({
                                             </Link>
                                         </td>
                                         <td className="px-4 py-3 text-muted-foreground">{member.email as string}</td>
-                                        <td className="px-4 py-3">
-                                            <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                                                {member.member_type as string}
-                                            </span>
-                                        </td>
                                         <td className="px-4 py-3 text-muted-foreground">{(member.location as string) || "—"}</td>
                                         <td className="px-4 py-3">
                                             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${member.is_active ? "bg-green-500/10 text-green-600 dark:text-green-400" : "bg-red-500/10 text-red-600 dark:text-red-400"

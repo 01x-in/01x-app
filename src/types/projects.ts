@@ -5,7 +5,6 @@
 // Enums
 export type ProjectStage = 'zero' | 'one' | 'x';
 export type ProjectVisibility = 'private' | 'collaborators' | 'public';
-export type MemberType = 'student' | 'mentor' | 'both';
 export type CohortStatus = 'upcoming' | 'active' | 'completed' | 'archived';
 
 // ============================================================================
@@ -23,9 +22,6 @@ export interface Member {
   avatarUrl?: string;
   bio?: string;
   location?: string;
-
-  // Member Type
-  memberType: MemberType;
 
   // Links
   mentorId?: string;
@@ -48,7 +44,6 @@ export interface MemberInput {
   avatarUrl?: string;
   bio?: string;
   location?: string;
-  memberType?: MemberType;
   mentorId?: string;
   linkedinUrl?: string;
   githubUrl?: string;
