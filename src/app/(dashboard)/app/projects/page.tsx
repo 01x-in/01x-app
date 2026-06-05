@@ -31,17 +31,18 @@ export default async function ProjectsPage({
     const bindings: (string | number)[] = []
     let bindIdx = 1
 
-    if (user.role === "member" && user.memberId) {
+    if (user.memberId && !user.isAdmin && !user.mentorId) {
         conditions.push(`p.creator_id = ?${bindIdx}`)
         bindings.push(user.memberId)
         bindIdx++
         baseTable = "projects p"
-    } else if (user.role === "mentor" && user.mentorId) {
+    } else if (user.mentorId && !user.isAdmin) {
         baseTable = "projects p INNER JOIN project_mentors pm ON pm.project_id = p.id"
         conditions.push(`pm.mentor_id = ?${bindIdx}`)
         bindings.push(user.mentorId)
         bindIdx++
-    } else if (user.role === "admin") {
+    } else {
+        // admin: sees all
         baseTable = "projects p"
     }
 
@@ -92,11 +93,11 @@ export default async function ProjectsPage({
     return (
         <div className="space-y-4">
             <PageHeader
-                title={user.role === "member" ? "My Projects" : "Projects"}
+                title={user.memberId && !user.isAdmin && !user.mentorId ? "My Projects" : "Projects"}
                 description={
-                    user.role === "member"
+                    user.memberId && !user.isAdmin && !user.mentorId
                         ? "Manage your projects and track progress"
-                        : user.role === "mentor"
+                        : user.mentorId && !user.isAdmin
                             ? "Projects assigned to you"
                             : "All projects on the platform"
                 }
@@ -114,7 +115,7 @@ export default async function ProjectsPage({
                             { value: "x", label: "X — Scale" },
                         ]}
                     />
-                    {user.role === "admin" && (
+                    {user.isAdmin && (
                         <FilterSelect
                             paramName="visibility"
                             label="All Visibility"
@@ -133,7 +134,7 @@ export default async function ProjectsPage({
                     <p className="text-muted-foreground">
                         {q || stageFilter || visibilityFilter ? "No matching projects" : "No projects yet"}
                     </p>
-                    {user.role === "member" && !q && !stageFilter && (
+                    {user.memberId && !user.isAdmin && !user.mentorId && !q && !stageFilter && (
                         <p className="text-sm text-muted-foreground mt-1">
                             Start by creating your first project
                         </p>

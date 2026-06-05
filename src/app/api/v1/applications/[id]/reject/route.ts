@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getDB } from "@/lib/db"
-import { requireRole } from "@/lib/auth"
+import { requireAdmin } from "@/lib/auth"
 import { getResend, EMAIL_FROM } from "@/lib/email"
 import { ApplicationRejectedEmail } from "@/emails/application-rejected"
 
@@ -13,7 +13,7 @@ export async function POST(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        await requireRole("admin")
+        await requireAdmin()
         const db = getDB()
         const { id } = await params
         const body = await request.json()

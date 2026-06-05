@@ -1,5 +1,5 @@
 import { getDB } from "@/lib/db"
-import { requireRole } from "@/lib/auth"
+import { requireAdmin } from "@/lib/auth"
 import { notFound } from "next/navigation"
 import {
     DetailSection,
@@ -11,7 +11,7 @@ export default async function MentorApplicationDetailPage({
 }: {
     params: Promise<{ id: string }>
 }) {
-    await requireRole("admin")
+    await requireAdmin()
     const { id } = await params
     const db = getDB()
 

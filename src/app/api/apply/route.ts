@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
         await db
             .prepare(
                 `INSERT INTO applications (
+                    id,
                     full_name, email, location, linkedin_url,
                     what_building, why_matters, current_approach, problem_solved,
                     current_stage, product_link,
@@ -21,20 +22,22 @@ export async function POST(request: NextRequest) {
                     comfortable_public, willing_to_help,
                     biggest_fear, specific_help
                 ) VALUES (
-                    ?1, ?2, ?3, ?4,
-                    ?5, ?6, ?7, ?8,
-                    ?9, ?10,
-                    ?11, ?12,
-                    ?13, ?14, ?15,
-                    ?16, ?17,
-                    ?18, ?19, ?20,
-                    ?21, ?22, ?23,
-                    ?24, ?25, ?26,
-                    ?27, ?28,
-                    ?29, ?30
+                    ?1,
+                    ?2, ?3, ?4, ?5,
+                    ?6, ?7, ?8, ?9,
+                    ?10, ?11,
+                    ?12, ?13,
+                    ?14, ?15, ?16,
+                    ?17, ?18,
+                    ?19, ?20, ?21,
+                    ?22, ?23, ?24,
+                    ?25, ?26, ?27,
+                    ?28, ?29,
+                    ?30, ?31
                 )`
             )
             .bind(
+                crypto.randomUUID(),
                 formData.fullName || "",
                 formData.email || "",
                 formData.location || "",

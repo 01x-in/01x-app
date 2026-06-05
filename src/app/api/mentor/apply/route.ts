@@ -54,20 +54,23 @@ export async function POST(request: NextRequest) {
         await db
             .prepare(
                 `INSERT INTO mentor_applications (
+                    id,
                     full_name, email, title, location, linkedin_url, twitter_url,
                     domains, years_experience, bio_short, biggest_win, best_at,
                     mentoring_approach, why_mentor, ideal_mentee,
                     one_on_one_frequency, async_feedback, weekend_sessions,
                     heard_about_us, anything_else
                 ) VALUES (
-                    ?1, ?2, ?3, ?4, ?5, ?6,
-                    ?7, ?8, ?9, ?10, ?11,
-                    ?12, ?13, ?14,
-                    ?15, ?16, ?17,
-                    ?18, ?19
+                    ?1,
+                    ?2, ?3, ?4, ?5, ?6, ?7,
+                    ?8, ?9, ?10, ?11, ?12,
+                    ?13, ?14, ?15,
+                    ?16, ?17, ?18,
+                    ?19, ?20
                 )`
             )
             .bind(
+                crypto.randomUUID(),
                 fullName, email, title, location, linkedinUrl, twitterUrl,
                 domains, yearsExperience, bioShort, biggestWin, bestAt,
                 mentoringApproach, whyMentor, idealMentee,

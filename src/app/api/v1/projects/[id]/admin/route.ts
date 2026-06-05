@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getDB } from "@/lib/db"
-import { requireRole } from "@/lib/auth"
+import { requireAdmin } from "@/lib/auth"
 
 /**
  * PATCH /api/v1/projects/[id]/admin
@@ -11,7 +11,7 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        await requireRole("admin")
+        await requireAdmin()
         const db = getDB()
         const { id } = await params
         const body = await request.json()

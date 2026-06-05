@@ -11,6 +11,12 @@ import { redirect } from "next/navigation"
 import { currentUser } from "@clerk/nextjs/server"
 import type { UserRole } from "./_components/nav-config"
 
+function getNavRole(user: { isAdmin: boolean; mentorId: string | null }): UserRole {
+    if (user.isAdmin) return "admin"
+    if (user.mentorId) return "mentor"
+    return "member"
+}
+
 export default async function DashboardLayout({
     children,
 }: {
@@ -35,7 +41,7 @@ export default async function DashboardLayout({
 
     return (
         <SidebarProvider>
-            <AppSidebar role={dbUser.role as UserRole} user={user} />
+            <AppSidebar role={getNavRole(dbUser)} user={user} />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">

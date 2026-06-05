@@ -1,5 +1,5 @@
 import { getDB } from "@/lib/db"
-import { requireRole } from "@/lib/auth"
+import { requireAdmin } from "@/lib/auth"
 import { PageHeader } from "../../_components/page-header"
 import { SearchInput, FilterSelect, ListToolbar } from "../../_components/list-controls"
 import { Pagination } from "../../_components/pagination"
@@ -12,7 +12,7 @@ export default async function MentorsAdminPage({
 }: {
     searchParams: Promise<{ q?: string; approved?: string; featured?: string; page?: string }>
 }) {
-    await requireRole("admin")
+    await requireAdmin()
     const params = await searchParams
     const db = getDB()
 

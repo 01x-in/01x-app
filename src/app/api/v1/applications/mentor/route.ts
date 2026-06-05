@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { getDB } from "@/lib/db"
-import { requireRole } from "@/lib/auth"
+import { requireAdmin } from "@/lib/auth"
 
 /**
  * GET /api/v1/applications/mentor
@@ -8,7 +8,7 @@ import { requireRole } from "@/lib/auth"
  */
 export async function GET() {
     try {
-        await requireRole("admin")
+        await requireAdmin()
         const db = getDB()
 
         const { results } = await db

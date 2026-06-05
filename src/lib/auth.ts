@@ -1,17 +1,15 @@
 import { auth } from '@clerk/nextjs/server'
 import { getDB } from './db'
 
-export type UserRole = 'admin' | 'member' | 'mentor'
-
 export interface AppUser {
     id: string
     clerkId: string
     email: string
     fullName: string
     avatarUrl: string | null
-    role: UserRole
-    memberId: string | null
-    mentorId: string | null
+    isAdmin: boolean
+    memberId: string | null   // set → this user is a member/student
+    mentorId: string | null   // set → this user is a mentor
     isActive: boolean
     createdAt: string
     updatedAt: string
@@ -39,7 +37,7 @@ export async function getCurrentUser(): Promise<AppUser | null> {
         email: row.email as string,
         fullName: row.full_name as string,
         avatarUrl: (row.avatar_url as string) || null,
-        role: row.role as UserRole,
+        isAdmin: row.is_admin === 1,
         memberId: (row.member_id as string) || null,
         mentorId: (row.mentor_id as string) || null,
         isActive: row.is_active === 1,
@@ -61,12 +59,13 @@ export async function requireUser(): Promise<AppUser> {
 }
 
 /**
- * Require the current user to have the specified role.
+ * Require the current user to be an admin.
+ * Throws if not authenticated or not an admin.
  */
-export async function requireRole(role: UserRole): Promise<AppUser> {
+export async function requireAdmin(): Promise<AppUser> {
     const user = await requireUser()
-    if (user.role !== role) {
-        throw new Error(`Forbidden: Requires ${role} role`)
+    if (!user.isAdmin) {
+        throw new Error('Forbidden: Admin access required')
     }
     return user
 }

@@ -5,7 +5,7 @@ import { PageHeader } from "../../_components/page-header"
 
 export default async function MenteesPage() {
     const user = await getCurrentUser()
-    if (!user || user.role !== "mentor" || !user.mentorId) redirect("/app")
+    if (!user || !user.mentorId) redirect("/app")
 
     const db = getDB()
 
