@@ -112,8 +112,8 @@ export async function POST(
             await db.batch([
                 db
                     .prepare(`
-          INSERT INTO members (id, full_name, email, member_type, location, linkedin_url)
-          VALUES (?1, ?2, ?3, 'student', ?4, ?5)
+          INSERT INTO members (id, full_name, email, location, linkedin_url)
+          VALUES (?1, ?2, ?3, ?4, ?5)
         `)
                     .bind(
                         roleId,

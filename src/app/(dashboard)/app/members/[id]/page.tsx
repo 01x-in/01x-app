@@ -56,14 +56,6 @@ export default async function MemberDetailPage({
                 <DetailField label="Location" value={member.location as string} />
                 <DetailField label="Bio" value={member.bio as string} />
                 <DetailField
-                    label="Type"
-                    value={
-                        <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                            {member.member_type as string}
-                        </span>
-                    }
-                />
-                <DetailField
                     label="Status"
                     value={
                         <AdminToggle

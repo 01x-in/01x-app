@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
-import { parseProjectRow, parseMemberRow } from "@/lib/projects-db";
+import { parseProjectRow } from "@/lib/projects-db";
 import type { Project } from "@/types/projects";
 
 /**
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 
         // Fetch creator (basic info only for homepage)
         const creator = await db
-          .prepare("SELECT id, full_name, avatar_url, member_type FROM members WHERE id = ?1")
+          .prepare("SELECT id, full_name, avatar_url FROM members WHERE id = ?1")
           .bind(project.creatorId)
           .first();
         if (creator) {
@@ -56,14 +56,13 @@ export async function GET(request: NextRequest) {
             id: creator.id,
             fullName: creator.full_name,
             avatarUrl: creator.avatar_url,
-            memberType: creator.member_type,
           };
         }
 
         // Fetch collaborators (co-builders, whether students or mentors)
         const { results: collabRows } = await db
           .prepare(`
-            SELECT m.id, m.full_name, m.avatar_url, m.member_type
+            SELECT m.id, m.full_name, m.avatar_url
             FROM project_collaborators pc
             JOIN members m ON m.id = pc.member_id
             WHERE pc.project_id = ?1
@@ -76,7 +75,6 @@ export async function GET(request: NextRequest) {
             id: m.id,
             fullName: m.full_name,
             avatarUrl: m.avatar_url,
-            memberType: m.member_type,
           }));
         }
 

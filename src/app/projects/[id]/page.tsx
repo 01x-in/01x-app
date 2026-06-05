@@ -384,7 +384,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         </span>
                                         <div>
                                             <p className="text-sm font-medium">{project.creator.fullName}</p>
-                                            <p className="text-xs text-muted-foreground capitalize">{project.creator.memberType}</p>
                                         </div>
                                     </div>
                                 </div>
