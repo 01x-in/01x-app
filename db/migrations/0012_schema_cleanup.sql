@@ -118,6 +118,22 @@ CREATE INDEX IF NOT EXISTS idx_project_upvotes_project
 CREATE INDEX IF NOT EXISTS idx_project_upvotes_member
   ON project_upvotes(member_id);
 
+-- Recreate upvote count triggers — they were attached to the old table and
+-- dropped with it; must be recreated on the renamed table.
+CREATE TRIGGER IF NOT EXISTS trigger_project_upvote_added
+AFTER INSERT ON project_upvotes
+FOR EACH ROW
+BEGIN
+  UPDATE projects SET upvotes_count = upvotes_count + 1 WHERE id = NEW.project_id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS trigger_project_upvote_removed
+AFTER DELETE ON project_upvotes
+FOR EACH ROW
+BEGIN
+  UPDATE projects SET upvotes_count = MAX(0, upvotes_count - 1) WHERE id = OLD.project_id;
+END;
+
 -- cohort_memberships
 CREATE TABLE cohort_memberships_new (
   cohort_id  TEXT NOT NULL,

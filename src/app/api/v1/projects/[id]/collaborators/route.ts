@@ -104,7 +104,7 @@ export async function POST(
 
     // Check if already a collaborator
     const existing = await db
-      .prepare("SELECT id FROM project_collaborators WHERE project_id = ?1 AND member_id = ?2")
+      .prepare("SELECT 1 FROM project_collaborators WHERE project_id = ?1 AND member_id = ?2")
       .bind(projectId, memberId)
       .first();
 

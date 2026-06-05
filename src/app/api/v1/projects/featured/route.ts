@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
         // Check if current member has upvoted
         if (memberId) {
           const upvote = await db
-            .prepare("SELECT id FROM project_upvotes WHERE project_id = ?1 AND member_id = ?2")
+            .prepare("SELECT 1 FROM project_upvotes WHERE project_id = ?1 AND member_id = ?2")
             .bind(project.id, memberId)
             .first();
           relations.hasUpvoted = !!upvote;
