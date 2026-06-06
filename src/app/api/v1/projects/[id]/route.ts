@@ -50,7 +50,7 @@ export async function GET(
       if (project.creatorId !== memberId) {
         // Check if member is a collaborator
         const collaborator = await db
-          .prepare("SELECT id FROM project_collaborators WHERE project_id = ?1 AND member_id = ?2")
+          .prepare("SELECT 1 FROM project_collaborators WHERE project_id = ?1 AND member_id = ?2")
           .bind(id, memberId)
           .first();
 
@@ -114,7 +114,7 @@ export async function GET(
     // Check if current member has upvoted
     if (memberId) {
       const upvote = await db
-        .prepare("SELECT id FROM project_upvotes WHERE project_id = ?1 AND member_id = ?2")
+        .prepare("SELECT 1 FROM project_upvotes WHERE project_id = ?1 AND member_id = ?2")
         .bind(id, memberId)
         .first();
       response.hasUpvoted = !!upvote;

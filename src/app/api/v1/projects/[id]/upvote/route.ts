@@ -49,7 +49,7 @@ export async function POST(
 
     // Check if upvote already exists
     const existingUpvote = await db
-      .prepare("SELECT id FROM project_upvotes WHERE project_id = ?1 AND member_id = ?2")
+      .prepare("SELECT 1 FROM project_upvotes WHERE project_id = ?1 AND member_id = ?2")
       .bind(projectId, memberId)
       .first();
 

@@ -91,10 +91,10 @@ export async function POST(request: NextRequest) {
       .prepare(`
         INSERT INTO members (
           id, full_name, email, avatar_url, bio, location,
-          mentor_id, linkedin_url, github_url, website_url,
+          linkedin_url, github_url, website_url,
           tech_stack, areas_of_interest
         ) VALUES (
-          ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12
+          ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11
         )
       `)
       .bind(
@@ -104,7 +104,6 @@ export async function POST(request: NextRequest) {
         input.avatarUrl || null,
         input.bio || null,
         input.location || null,
-        input.mentorId || null,
         input.linkedinUrl || null,
         input.githubUrl || null,
         input.websiteUrl || null,

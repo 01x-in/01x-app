@@ -11,7 +11,7 @@ export default async function DashboardPage() {
 
     const db = getDB()
 
-    if (user.role === "admin") {
+    if (user.isAdmin) {
         // Admin dashboard: show platform stats
         const membersCount = await db.prepare("SELECT COUNT(*) as count FROM members WHERE is_active = 1").first<{ count: number }>()
         const mentorsCount = await db.prepare("SELECT COUNT(*) as count FROM mentors").first<{ count: number }>()
@@ -52,7 +52,7 @@ export default async function DashboardPage() {
         )
     }
 
-    if (user.role === "mentor") {
+    if (user.mentorId) {
         // Mentor dashboard
         const assignedProjects = user.mentorId
             ? await db.prepare("SELECT COUNT(*) as count FROM project_mentors WHERE mentor_id = ?1").bind(user.mentorId).first<{ count: number }>()

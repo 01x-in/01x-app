@@ -6,7 +6,7 @@ export default async function CalendarPage() {
     const user = await getCurrentUser()
     if (!user) redirect("/")
 
-    const ismentor = user.role === "mentor"
+    const ismentor = !!user.mentorId
 
     return (
         <div className="space-y-6">

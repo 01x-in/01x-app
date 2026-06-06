@@ -29,7 +29,6 @@ export function parseMemberRow(row: Record<string, unknown>): Member {
     avatarUrl: row.avatar_url as string | undefined,
     bio: row.bio as string | undefined,
     location: row.location as string | undefined,
-    mentorId: row.mentor_id as string | undefined,
     linkedinUrl: row.linkedin_url as string | undefined,
     githubUrl: row.github_url as string | undefined,
     websiteUrl: row.website_url as string | undefined,

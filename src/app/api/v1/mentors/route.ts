@@ -89,7 +89,7 @@ function parseMentorRow(row: Record<string, unknown>) {
         location: row.location || undefined,
         image: {
             src: row.image_src,
-            alt: row.image_alt,
+            alt: row.name,
         },
         isApproved: row.is_approved === 1,
         isFeatured: row.is_featured === 1,

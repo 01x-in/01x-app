@@ -24,7 +24,6 @@ export interface Member {
   location?: string;
 
   // Links
-  mentorId?: string;
   linkedinUrl?: string;
   githubUrl?: string;
   websiteUrl?: string;

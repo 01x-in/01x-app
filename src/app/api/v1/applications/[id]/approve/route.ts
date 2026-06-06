@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { clerkClient } from "@clerk/nextjs/server"
 import { getDB } from "@/lib/db"
-import { requireRole } from "@/lib/auth"
+import { requireAdmin } from "@/lib/auth"
 import { getResend, EMAIL_FROM } from "@/lib/email"
 import { ApplicationApprovedEmail } from "@/emails/application-approved"
 
@@ -19,7 +19,7 @@ export async function POST(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        await requireRole("admin")
+        await requireAdmin()
         const db = getDB()
         const { id } = await params
         let body: any = {}
@@ -87,8 +87,8 @@ export async function POST(
             await db.batch([
                 db
                     .prepare(`
-          INSERT INTO mentors (id, name, title, domains, bio_short, highlights, mentoring_style, availability, location, image_src, image_alt, is_approved, is_featured)
-          VALUES (?1, ?2, ?3, ?4, ?5, '[]', '[]', '{}', ?6, '/mentors/default.jpg', ?7, 1, 0)
+          INSERT INTO mentors (id, name, title, domains, bio_short, highlights, mentoring_style, availability, location, image_src, is_approved, is_featured)
+          VALUES (?1, ?2, ?3, ?4, ?5, '[]', '[]', '{}', ?6, '/mentors/default.jpg', 1, 0)
         `)
                     .bind(
                         roleId,
@@ -97,12 +97,11 @@ export async function POST(
                         JSON.stringify([(application.domains as string) || "General"]),
                         (application.bio_short as string) || "",
                         (application.location as string) || null,
-                        `${fullName} avatar`
                     ),
                 db
                     .prepare(`
-          INSERT INTO users (id, clerk_id, email, full_name, role, mentor_id)
-          VALUES (?1, ?2, ?3, ?4, 'mentor', ?5)
+          INSERT INTO users (id, clerk_id, email, full_name, mentor_id)
+          VALUES (?1, ?2, ?3, ?4, ?5)
         `)
                     .bind(userId, clerkUser.id, email, fullName, roleId),
             ])
@@ -124,8 +123,8 @@ export async function POST(
                     ),
                 db
                     .prepare(`
-          INSERT INTO users (id, clerk_id, email, full_name, role, member_id)
-          VALUES (?1, ?2, ?3, ?4, 'member', ?5)
+          INSERT INTO users (id, clerk_id, email, full_name, member_id)
+          VALUES (?1, ?2, ?3, ?4, ?5)
         `)
                     .bind(userId, clerkUser.id, email, fullName, roleId),
             ])

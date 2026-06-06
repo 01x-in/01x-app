@@ -28,9 +28,16 @@ export default async function ProjectDetailPage({
 
     if (!project) notFound()
 
-    // Access control: admin sees all, member sees own, mentor sees assigned
-    if (user.role === "member") {
-        if (!user.memberId) notFound()
+    // Access control: admin sees all, member sees own/collaborated, mentor sees assigned
+    if (user.isAdmin) {
+        // Admin sees all projects — no additional check needed
+    } else if (user.mentorId) {
+        const pm = await db
+            .prepare("SELECT 1 FROM project_mentors WHERE project_id = ?1 AND mentor_id = ?2")
+            .bind(id, user.mentorId)
+            .first()
+        if (!pm) notFound()
+    } else if (user.memberId) {
         if (project.creator_id !== user.memberId) {
             // Check if collaborator
             const collab = await db
@@ -39,15 +46,6 @@ export default async function ProjectDetailPage({
                 .first()
             if (!collab) notFound()
         }
-    } else if (user.role === "mentor") {
-        if (!user.mentorId) notFound()
-        const pm = await db
-            .prepare("SELECT 1 FROM project_mentors WHERE project_id = ?1 AND mentor_id = ?2")
-            .bind(id, user.mentorId)
-            .first()
-        if (!pm) notFound()
-    } else if (user.role === "admin") {
-        // Admin sees all projects — no additional check needed
     } else {
         notFound()
     }
@@ -133,7 +131,7 @@ export default async function ProjectDetailPage({
                 )}
             </DetailSection>
 
-            {user.role === "admin" && (
+            {user.isAdmin && (
                 <DetailSection title="Admin Controls">
                     <DetailField
                         label="Published"
@@ -219,7 +217,7 @@ export default async function ProjectDetailPage({
                     <DetailField
                         label="Creator"
                         value={creator.full_name as string}
-                        href={user.role === "admin" ? `/app/members/${creator.id}` : undefined}
+                        href={user.isAdmin ? `/app/members/${creator.id}` : undefined}
                     />
                 )}
                 {collaborators.length > 0 && (
@@ -228,7 +226,7 @@ export default async function ProjectDetailPage({
                         <div className="space-y-1">
                             {collaborators.map((c: Record<string, unknown>) => (
                                 <div key={c.id as string} className="flex items-center gap-2">
-                                    {user.role === "admin" ? (
+                                    {user.isAdmin ? (
                                         <Link href={`/app/members/${c.id}`} className="text-primary underline underline-offset-4 hover:text-primary/80">
                                             {c.full_name as string}
                                         </Link>
@@ -247,7 +245,7 @@ export default async function ProjectDetailPage({
                         <div className="space-y-1">
                             {mentors.map((m: Record<string, unknown>) => (
                                 <div key={m.id as string} className="flex items-center gap-2">
-                                    {user.role === "admin" ? (
+                                    {user.isAdmin ? (
                                         <Link href={`/app/mentors/${m.id}`} className="text-primary underline underline-offset-4 hover:text-primary/80">
                                             {m.name as string}
                                         </Link>
