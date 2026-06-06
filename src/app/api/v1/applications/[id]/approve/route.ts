@@ -4,6 +4,7 @@ import { getDB } from "@/lib/db"
 import { requireAdmin } from "@/lib/auth"
 import { getResend, EMAIL_FROM } from "@/lib/email"
 import { ApplicationApprovedEmail } from "@/emails/application-approved"
+import { generateInboxAddress } from "@/lib/inbox-address"
 
 /**
  * POST /api/v1/applications/[id]/approve
@@ -78,9 +79,10 @@ export async function POST(
             return NextResponse.json({ error: "Failed to create user" }, { status: 500 })
         }
 
-        // 3. Generate internal IDs
+        // 3. Generate internal IDs + a unique branded @01x.in inbox address
         const userId = crypto.randomUUID()
         const roleId = crypto.randomUUID()
+        const inboxEmail = await generateInboxAddress(fullName, type === "mentor" ? "mentor" : "member")
 
         if (type === "mentor") {
             // Atomically create mentor + user rows via D1 batch (single transaction)
@@ -100,10 +102,10 @@ export async function POST(
                     ),
                 db
                     .prepare(`
-          INSERT INTO users (id, clerk_id, email, full_name, mentor_id)
-          VALUES (?1, ?2, ?3, ?4, ?5)
+          INSERT INTO users (id, clerk_id, email, full_name, mentor_id, inbox_email)
+          VALUES (?1, ?2, ?3, ?4, ?5, ?6)
         `)
-                    .bind(userId, clerkUser.id, email, fullName, roleId),
+                    .bind(userId, clerkUser.id, email, fullName, roleId, inboxEmail),
             ])
 
         } else {
@@ -123,10 +125,10 @@ export async function POST(
                     ),
                 db
                     .prepare(`
-          INSERT INTO users (id, clerk_id, email, full_name, member_id)
-          VALUES (?1, ?2, ?3, ?4, ?5)
+          INSERT INTO users (id, clerk_id, email, full_name, member_id, inbox_email)
+          VALUES (?1, ?2, ?3, ?4, ?5, ?6)
         `)
-                    .bind(userId, clerkUser.id, email, fullName, roleId),
+                    .bind(userId, clerkUser.id, email, fullName, roleId, inboxEmail),
             ])
 
         }
