@@ -11,6 +11,7 @@ import {
   User,
   FolderKanban,
   Calendar,
+  Mail,
   type LucideIcon,
 } from "lucide-react"
 
@@ -48,6 +49,7 @@ const navConfig: Record<UserRole, NavItem[]> = {
   ],
   member: [
     { title: "Dashboard", url: "/app", icon: LayoutDashboard },
+    { title: "Inbox", url: "/app/inbox", icon: Mail },
     { title: "My Profile", url: "/app/profile", icon: User },
     { title: "My Projects", url: "/app/projects", icon: FolderKanban },
     { title: "My Mentors", url: "/app/my-mentors", icon: GraduationCap },
@@ -55,6 +57,7 @@ const navConfig: Record<UserRole, NavItem[]> = {
   ],
   mentor: [
     { title: "Dashboard", url: "/app", icon: LayoutDashboard },
+    { title: "Inbox", url: "/app/inbox", icon: Mail },
     { title: "My Mentees", url: "/app/mentees", icon: Users },
     { title: "Projects", url: "/app/projects", icon: FolderKanban },
     { title: "Calendar", url: "/app/calendar", icon: Calendar },
