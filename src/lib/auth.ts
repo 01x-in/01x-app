@@ -10,6 +10,7 @@ export interface AppUser {
     isAdmin: boolean
     memberId: string | null   // set → this user is a member/student
     mentorId: string | null   // set → this user is a mentor
+    inboxEmail: string | null // assigned @01x.in inbox address (null if not provisioned)
     isActive: boolean
     createdAt: string
     updatedAt: string
@@ -40,6 +41,7 @@ export async function getCurrentUser(): Promise<AppUser | null> {
         isAdmin: row.is_admin === 1,
         memberId: (row.member_id as string) || null,
         mentorId: (row.mentor_id as string) || null,
+        inboxEmail: (row.inbox_email as string) || null,
         isActive: row.is_active === 1,
         createdAt: row.created_at as string,
         updatedAt: row.updated_at as string,
