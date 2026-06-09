@@ -42,6 +42,7 @@ type UserRole = "admin" | "member" | "mentor"
 const navConfig: Record<UserRole, NavItem[]> = {
   admin: [
     { title: "Dashboard", url: "/app", icon: LayoutDashboard },
+    { title: "Inbox", url: "/app/inbox", icon: Mail },
     { title: "Members", url: "/app/members", icon: Users },
     { title: "Mentors", url: "/app/mentors", icon: GraduationCap },
     { title: "Projects", url: "/app/projects", icon: FolderKanban },
