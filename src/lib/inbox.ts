@@ -1,30 +1,22 @@
 /**
- * On-demand retrieval of a received email's body from the Resend
- * Received Emails API: GET https://api.resend.com/emails/receiving/:email_id
+ * On-demand retrieval of a received email's body via the Resend SDK.
  *
- * Webhooks carry metadata only, so the html/text body is fetched here when a
- * user opens a message. The `html` field may be returned as a data URI
- * (html_format === "data_uri"), which we decode to plain HTML.
+ * Resend inbound webhooks carry metadata only — the html/text body must be
+ * fetched separately using resend.emails.receiving.get(email_id).
  */
 
-const RESEND_API_BASE = "https://api.resend.com"
+import { getResend } from "@/lib/email"
 
 export interface ReceivedEmailBody {
     html: string | null
     text: string | null
 }
 
-interface ReceivedEmailResponse {
-    html?: string | null
-    html_format?: string | null
-    text?: string | null
-}
-
 function decodeMaybeDataUri(html: string | null | undefined): string | null {
     if (!html) return null
-    // Resend sets html_format="data_uri" to describe the original email format,
-    // but the html field itself is already decoded plain HTML. Only attempt data
-    // URI decoding when the string literally starts with "data:".
+    // Only decode when the string is literally a data URI (starts with "data:").
+    // Resend may set html_format="data_uri" even when the html field is already
+    // plain HTML — do not use html_format as the trigger.
     if (!html.startsWith("data:")) return html
     try {
         const comma = html.indexOf(",")
@@ -43,25 +35,28 @@ function decodeMaybeDataUri(html: string | null | undefined): string | null {
 }
 
 /**
- * Fetch the html/text body for a received email. Returns nulls if the API
- * call fails (the caller can still render metadata).
+ * Fetch the html/text body for a received email using the Resend SDK.
+ * Returns nulls if the fetch fails so the caller can still render metadata.
  */
 export async function getReceivedEmailBody(emailId: string): Promise<ReceivedEmailBody> {
-    const apiKey = process.env.RESEND_API_KEY
-    if (!apiKey) return { html: null, text: null }
+    try {
+        const resend = getResend()
+        // resend.emails.receiving.get is available in resend v4+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result = await (resend.emails as any).receiving.get(emailId)
 
-    const res = await fetch(`${RESEND_API_BASE}/emails/receiving/${emailId}`, {
-        headers: { Authorization: `Bearer ${apiKey}` },
-    })
+        if (result.error) {
+            console.error("[inbox] ⚠️ Resend receiving.get error:", result.error)
+            return { html: null, text: null }
+        }
 
-    if (!res.ok) {
-        console.error("[inbox] ⚠️ Received email fetch failed:", res.status, await res.text())
+        const data = result.data ?? result
+        return {
+            html: decodeMaybeDataUri(data?.html as string | null | undefined),
+            text: (data?.text as string | null) ?? null,
+        }
+    } catch (err) {
+        console.error("[inbox] ⚠️ getReceivedEmailBody failed:", err)
         return { html: null, text: null }
-    }
-
-    const data = (await res.json()) as ReceivedEmailResponse
-    return {
-        html: decodeMaybeDataUri(data.html),
-        text: data.text ?? null,
     }
 }
