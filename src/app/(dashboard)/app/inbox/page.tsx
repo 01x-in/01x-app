@@ -1,7 +1,6 @@
 import { getCurrentUser } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { Inbox as InboxIcon } from "lucide-react"
-import { PageHeader } from "../../_components/page-header"
 import { InboxClient } from "./_components/inbox-client"
 
 export default async function InboxPage() {
@@ -24,10 +23,5 @@ export default async function InboxPage() {
         )
     }
 
-    return (
-        <div className="space-y-6">
-            <PageHeader title="Inbox" description={`Incoming mail for ${user.inboxEmail}`} />
-            <InboxClient inboxEmail={user.inboxEmail} />
-        </div>
-    )
+    return <InboxClient inboxEmail={user.inboxEmail} />
 }

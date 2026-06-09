@@ -1,15 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Mail, MailOpen, Paperclip, Loader2 } from "lucide-react"
+import { useEffect, useState, useMemo } from "react"
+import { Mail, MailOpen, Paperclip, Loader2, Inbox } from "lucide-react"
 import { toast } from "sonner"
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 
 interface InboxListItem {
     id: string
@@ -31,6 +27,7 @@ interface InboxMessageDetail {
     receivedAt: string | null
     hasAttachments: boolean
     attachments: { id: string; filename?: string }[]
+    isRead: boolean
     html: string | null
     text: string | null
 }
@@ -39,7 +36,21 @@ function formatDate(value: string | null): string {
     if (!value) return ""
     const d = new Date(value)
     if (Number.isNaN(d.getTime())) return value
+    const now = new Date()
+    const diff = now.getTime() - d.getTime()
+    const days = Math.floor(diff / 86_400_000)
+    if (days === 0) return d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
+    if (days === 1) return "Yesterday"
+    if (days < 7) return `${days} days ago`
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" })
+}
+
+function formatFullDate(value: string | null): string {
+    if (!value) return ""
+    const d = new Date(value)
+    if (Number.isNaN(d.getTime())) return value
     return d.toLocaleString(undefined, {
+        weekday: "short",
         month: "short",
         day: "numeric",
         hour: "2-digit",
@@ -52,6 +63,8 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
     const [loading, setLoading] = useState(true)
     const [selected, setSelected] = useState<InboxMessageDetail | null>(null)
     const [detailLoading, setDetailLoading] = useState(false)
+    const [search, setSearch] = useState("")
+    const [unreadOnly, setUnreadOnly] = useState(false)
 
     useEffect(() => {
         let active = true
@@ -64,20 +77,32 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
             })
             .catch((err) => toast.error(err instanceof Error ? err.message : "Failed to load inbox"))
             .finally(() => active && setLoading(false))
-        return () => {
-            active = false
-        }
+        return () => { active = false }
     }, [])
 
+    const filtered = useMemo(() => {
+        return messages.filter((m) => {
+            if (unreadOnly && m.is_read === 1) return false
+            if (search) {
+                const q = search.toLowerCase()
+                const inFrom = (m.from_name ?? m.from_address ?? "").toLowerCase().includes(q)
+                const inSubject = (m.subject ?? "").toLowerCase().includes(q)
+                if (!inFrom && !inSubject) return false
+            }
+            return true
+        })
+    }, [messages, search, unreadOnly])
+
     async function openMessage(id: string) {
-        setDetailLoading(true)
+        // Optimistically select from list while loading detail
+        if (selected?.id === id) return
         setSelected(null)
+        setDetailLoading(true)
         try {
             const res = await fetch(`/api/v1/inbox/${id}`)
             const data = await res.json()
             if (data.error) throw new Error(data.error)
             setSelected(data.message)
-            // Reflect read state in the list.
             setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, is_read: 1 } : m)))
         } catch (err) {
             toast.error(err instanceof Error ? err.message : "Failed to open message")
@@ -86,92 +111,119 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
         }
     }
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center rounded-xl border bg-card p-12">
-                <Loader2 className="size-5 animate-spin text-muted-foreground" />
-            </div>
-        )
-    }
-
-    if (messages.length === 0) {
-        return (
-            <div className="flex flex-col items-center justify-center rounded-xl border bg-card p-12 text-center">
-                <Mail className="mb-3 size-8 text-muted-foreground" />
-                <h3 className="font-semibold">No messages yet</h3>
-                <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-                    Mail sent to <span className="font-medium text-foreground">{inboxEmail}</span>{" "}
-                    will appear here.
-                </p>
-            </div>
-        )
-    }
-
     return (
-        <>
-            <div className="overflow-hidden rounded-xl border bg-card">
-                <ul className="divide-y">
-                    {messages.map((m) => {
-                        const unread = m.is_read !== 1
-                        return (
-                            <li key={m.id}>
+        <div className="flex h-[calc(100vh-10rem)] overflow-hidden rounded-xl border bg-card">
+            {/* Left panel — message list */}
+            <div className="flex w-80 shrink-0 flex-col border-r">
+                {/* List header */}
+                <div className="flex flex-col gap-3 border-b p-4">
+                    <div className="flex items-center justify-between">
+                        <span className="text-base font-medium">Inbox</span>
+                        <Label className="flex items-center gap-2 text-sm">
+                            <span className="text-muted-foreground">Unreads</span>
+                            <Switch
+                                checked={unreadOnly}
+                                onCheckedChange={setUnreadOnly}
+                                className="shadow-none"
+                            />
+                        </Label>
+                    </div>
+                    <Input
+                        placeholder="Type to search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="h-8 text-sm"
+                    />
+                </div>
+
+                {/* Message list */}
+                <div className="flex-1 overflow-y-auto">
+                    {loading ? (
+                        <div className="flex items-center justify-center py-12">
+                            <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                        </div>
+                    ) : filtered.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-12 text-center">
+                            <Inbox className="mb-2 size-6 text-muted-foreground" />
+                            <p className="text-sm text-muted-foreground">
+                                {search || unreadOnly ? "No matching messages" : "No messages yet"}
+                            </p>
+                            {!search && !unreadOnly && (
+                                <p className="mt-1 max-w-[200px] text-xs text-muted-foreground">
+                                    Mail sent to{" "}
+                                    <span className="font-medium text-foreground">{inboxEmail}</span>{" "}
+                                    will appear here.
+                                </p>
+                            )}
+                        </div>
+                    ) : (
+                        filtered.map((m) => {
+                            const unread = m.is_read !== 1
+                            const isActive = selected?.id === m.id
+                            return (
                                 <button
+                                    key={m.id}
                                     type="button"
                                     onClick={() => openMessage(m.id)}
-                                    className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50"
+                                    className={`flex w-full flex-col items-start gap-1.5 border-b p-4 text-left text-sm last:border-b-0 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                                        isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                                    }`}
                                 >
-                                    {unread ? (
-                                        <Mail className="size-4 shrink-0 text-primary" />
-                                    ) : (
-                                        <MailOpen className="size-4 shrink-0 text-muted-foreground" />
-                                    )}
-                                    <span className={`w-44 shrink-0 truncate text-sm ${unread ? "font-semibold" : ""}`}>
-                                        {m.from_name || m.from_address || "Unknown sender"}
-                                    </span>
-                                    <span className={`flex-1 truncate text-sm ${unread ? "font-medium" : "text-muted-foreground"}`}>
+                                    <div className="flex w-full items-center gap-2">
+                                        {unread ? (
+                                            <Mail className="size-3.5 shrink-0 text-primary" />
+                                        ) : (
+                                            <MailOpen className="size-3.5 shrink-0 text-muted-foreground" />
+                                        )}
+                                        <span className={`truncate ${unread ? "font-semibold" : ""}`}>
+                                            {m.from_name || m.from_address || "Unknown sender"}
+                                        </span>
+                                        <span className="ml-auto shrink-0 text-xs text-muted-foreground">
+                                            {formatDate(m.received_at)}
+                                        </span>
+                                    </div>
+                                    <span className={`truncate w-full ${unread ? "font-medium" : "text-muted-foreground"}`}>
                                         {m.subject || "(no subject)"}
                                     </span>
                                     {m.has_attachments === 1 && (
-                                        <Paperclip className="size-3.5 shrink-0 text-muted-foreground" />
+                                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                                            <Paperclip className="size-3" /> Attachment
+                                        </span>
                                     )}
-                                    <span className="shrink-0 text-xs text-muted-foreground">
-                                        {formatDate(m.received_at)}
-                                    </span>
                                 </button>
-                            </li>
-                        )
-                    })}
-                </ul>
+                            )
+                        })
+                    )}
+                </div>
             </div>
 
-            <Dialog open={detailLoading || selected !== null} onOpenChange={(open) => !open && setSelected(null)}>
-                <DialogContent className="max-w-2xl">
-                    {detailLoading || !selected ? (
-                        <>
-                            <DialogTitle className="sr-only">Loading message</DialogTitle>
-                            <DialogDescription className="sr-only">Fetching email content</DialogDescription>
-                            <div className="flex items-center justify-center py-16">
-                                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+            {/* Right panel — message detail */}
+            <div className="flex flex-1 flex-col overflow-hidden">
+                {detailLoading ? (
+                    <div className="flex flex-1 items-center justify-center">
+                        <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                    </div>
+                ) : selected ? (
+                    <>
+                        {/* Detail header */}
+                        <div className="border-b p-6">
+                            <h2 className="text-lg font-semibold">{selected.subject || "(no subject)"}</h2>
+                            <div className="mt-1.5 space-y-0.5 text-sm text-muted-foreground">
+                                <div>
+                                    From:{" "}
+                                    <span className="text-foreground">
+                                        {selected.fromName
+                                            ? `${selected.fromName} <${selected.fromAddress}>`
+                                            : selected.fromAddress}
+                                    </span>
+                                </div>
+                                <div>
+                                    To: <span className="text-foreground">{selected.toAddress}</span>
+                                </div>
+                                <div>{formatFullDate(selected.receivedAt)}</div>
                             </div>
-                        </>
-                    ) : (
-                        <>
-                            <DialogHeader>
-                                <DialogTitle className="pr-6">{selected.subject || "(no subject)"}</DialogTitle>
-                                <DialogDescription asChild>
-                                    <div className="space-y-0.5">
-                                        <div>
-                                            From: {selected.fromName ? `${selected.fromName} ` : ""}
-                                            {selected.fromAddress ? `<${selected.fromAddress}>` : ""}
-                                        </div>
-                                        <div>To: {selected.toAddress}</div>
-                                        <div>{formatDate(selected.receivedAt)}</div>
-                                    </div>
-                                </DialogDescription>
-                            </DialogHeader>
-
                             {selected.attachments.length > 0 && (
-                                <div className="flex flex-wrap gap-2">
+                                <div className="mt-3 flex flex-wrap gap-2">
                                     {selected.attachments.map((a) => (
                                         <span
                                             key={a.id}
@@ -183,25 +235,32 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
                                     ))}
                                 </div>
                             )}
+                        </div>
 
-                            <div className="max-h-[55vh] overflow-auto rounded-md border bg-background">
-                                {selected.html ? (
-                                    <iframe
-                                        title="Email content"
-                                        sandbox=""
-                                        srcDoc={selected.html}
-                                        className="h-[50vh] w-full"
-                                    />
-                                ) : selected.text ? (
-                                    <pre className="whitespace-pre-wrap p-4 text-sm">{selected.text}</pre>
-                                ) : (
-                                    <p className="p-4 text-sm text-muted-foreground">No content.</p>
-                                )}
-                            </div>
-                        </>
-                    )}
-                </DialogContent>
-            </Dialog>
-        </>
+                        {/* Detail body */}
+                        <div className="flex-1 overflow-auto">
+                            {selected.html ? (
+                                <iframe
+                                    title="Email content"
+                                    sandbox=""
+                                    srcDoc={selected.html}
+                                    className="h-full w-full"
+                                />
+                            ) : selected.text ? (
+                                <pre className="whitespace-pre-wrap p-6 text-sm">{selected.text}</pre>
+                            ) : (
+                                <p className="p-6 text-sm text-muted-foreground">No content.</p>
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center">
+                        <Mail className="size-8 text-muted-foreground" />
+                        <p className="text-sm font-medium">Select a message to read</p>
+                        <p className="text-xs text-muted-foreground">{inboxEmail}</p>
+                    </div>
+                )}
+            </div>
+        </div>
     )
 }
