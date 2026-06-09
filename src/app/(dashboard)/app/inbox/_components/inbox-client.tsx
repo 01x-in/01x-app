@@ -147,9 +147,13 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
             <Dialog open={detailLoading || selected !== null} onOpenChange={(open) => !open && setSelected(null)}>
                 <DialogContent className="max-w-2xl">
                     {detailLoading || !selected ? (
-                        <div className="flex items-center justify-center py-16">
-                            <Loader2 className="size-5 animate-spin text-muted-foreground" />
-                        </div>
+                        <>
+                            <DialogTitle className="sr-only">Loading message</DialogTitle>
+                            <DialogDescription className="sr-only">Fetching email content</DialogDescription>
+                            <div className="flex items-center justify-center py-16">
+                                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                            </div>
+                        </>
                     ) : (
                         <>
                             <DialogHeader>
