@@ -20,25 +20,26 @@ interface ReceivedEmailResponse {
     text?: string | null
 }
 
-function decodeMaybeDataUri(html: string | null | undefined, format: string | null | undefined): string | null {
+function decodeMaybeDataUri(html: string | null | undefined): string | null {
     if (!html) return null
-    if (format === "data_uri" || html.startsWith("data:")) {
-        try {
-            const comma = html.indexOf(",")
-            const meta = html.slice(0, comma)
-            const payload = html.slice(comma + 1)
-            if (meta.includes(";base64")) {
-                const binary = atob(payload)
-                const bytes = new Uint8Array(binary.length)
-                for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
-                return new TextDecoder().decode(bytes)
-            }
-            return decodeURIComponent(payload)
-        } catch {
-            return html
+    // Resend sets html_format="data_uri" to describe the original email format,
+    // but the html field itself is already decoded plain HTML. Only attempt data
+    // URI decoding when the string literally starts with "data:".
+    if (!html.startsWith("data:")) return html
+    try {
+        const comma = html.indexOf(",")
+        const meta = html.slice(0, comma)
+        const payload = html.slice(comma + 1)
+        if (meta.includes(";base64")) {
+            const binary = atob(payload)
+            const bytes = new Uint8Array(binary.length)
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+            return new TextDecoder().decode(bytes)
         }
+        return decodeURIComponent(payload)
+    } catch {
+        return html
     }
-    return html
 }
 
 /**
@@ -60,7 +61,7 @@ export async function getReceivedEmailBody(emailId: string): Promise<ReceivedEma
 
     const data = (await res.json()) as ReceivedEmailResponse
     return {
-        html: decodeMaybeDataUri(data.html, data.html_format),
+        html: decodeMaybeDataUri(data.html),
         text: data.text ?? null,
     }
 }
