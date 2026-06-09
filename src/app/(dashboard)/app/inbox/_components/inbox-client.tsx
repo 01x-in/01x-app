@@ -238,7 +238,7 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
                         </div>
 
                         {/* Detail body */}
-                        <div className="flex-1 overflow-auto">
+                        <div className="flex-1 overflow-auto bg-white">
                             {selected.html ? (
                                 <iframe
                                     title="Email content"
@@ -247,9 +247,9 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
                                     className="h-full w-full"
                                 />
                             ) : selected.text ? (
-                                <pre className="whitespace-pre-wrap p-6 text-sm">{selected.text}</pre>
+                                <pre className="whitespace-pre-wrap p-6 text-sm text-neutral-900">{selected.text}</pre>
                             ) : (
-                                <p className="p-6 text-sm text-muted-foreground">No content.</p>
+                                <p className="p-6 text-sm text-neutral-500">No content.</p>
                             )}
                         </div>
                     </>
