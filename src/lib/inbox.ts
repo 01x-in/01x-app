@@ -3,6 +3,7 @@
  *
  * Resend inbound webhooks carry metadata only — the html/text body must be
  * fetched separately using resend.emails.receiving.get(email_id).
+ * Requires resend v6+.
  */
 
 import { getResend } from "@/lib/email"
@@ -40,20 +41,16 @@ function decodeMaybeDataUri(html: string | null | undefined): string | null {
  */
 export async function getReceivedEmailBody(emailId: string): Promise<ReceivedEmailBody> {
     try {
-        const resend = getResend()
-        // resend.emails.receiving.get is available in resend v4+
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = await (resend.emails as any).receiving.get(emailId)
+        const { data, error } = await getResend().emails.receiving.get(emailId)
 
-        if (result.error) {
-            console.error("[inbox] ⚠️ Resend receiving.get error:", result.error)
+        if (error) {
+            console.error("[inbox] ⚠️ Resend receiving.get error:", error)
             return { html: null, text: null }
         }
 
-        const data = result.data ?? result
         return {
-            html: decodeMaybeDataUri(data?.html as string | null | undefined),
-            text: (data?.text as string | null) ?? null,
+            html: decodeMaybeDataUri(data?.html),
+            text: data?.text ?? null,
         }
     } catch (err) {
         console.error("[inbox] ⚠️ getReceivedEmailBody failed:", err)
