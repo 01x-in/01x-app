@@ -112,7 +112,7 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
     }
 
     return (
-        <div className="flex h-[calc(100vh-10rem)] overflow-hidden rounded-xl border bg-card">
+        <div className="flex h-full flex-1 overflow-hidden bg-card">
             {/* Left panel — message list */}
             <div className="flex w-80 shrink-0 flex-col border-r">
                 {/* List header */}
