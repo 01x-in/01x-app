@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
+import { requireAdmin } from "@/lib/auth";
+import { parseMentorInput } from "@/lib/mentor-input";
+import { createMentorUser, DuplicateUserError, ClerkUserCreationError } from "@/lib/create-mentor-user";
 
 /**
- * GET /api/v1/mentors            → all approved mentors
+ * GET /api/v1/mentors            → all approved mentors (public)
  * GET /api/v1/mentors?featured=1 → only featured (and approved) mentors
  * GET /api/v1/mentors?team=1     → only 01x core team members
  * GET /api/v1/mentors?id=xyz     → single mentor by id (must be approved)
+ *
+ * POST /api/v1/mentors           → admin-only: create a mentor user directly
  */
 export async function GET(request: NextRequest) {
     try {
@@ -68,6 +73,61 @@ export async function GET(request: NextRequest) {
             { error: "Failed to fetch mentors" },
             { status: 500 }
         );
+    }
+}
+
+/**
+ * POST /api/v1/mentors — admin creates a mentor user directly,
+ * bypassing the public application journey. Note the asymmetry:
+ * GET above stays public, POST requires an admin.
+ */
+export async function POST(request: NextRequest) {
+    try {
+        await requireAdmin();
+
+        let body: unknown;
+        try {
+            body = await request.json();
+        } catch {
+            return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+        }
+
+        const parsed = parseMentorInput(body);
+        if (!parsed.ok) {
+            return NextResponse.json({ error: parsed.errors.join("; ") }, { status: 400 });
+        }
+
+        const sendWelcomeEmail =
+            (body as Record<string, unknown>).sendWelcomeEmail !== false;
+
+        const result = await createMentorUser(parsed.value, { sendWelcomeEmail });
+
+        return NextResponse.json(
+            {
+                success: true,
+                mentorId: result.mentorId,
+                userId: result.userId,
+                clerkUserId: result.clerkUserId,
+                inboxEmail: result.inboxEmail,
+                emailSent: result.emailSent,
+            },
+            { status: 201 }
+        );
+    } catch (error) {
+        if (error instanceof DuplicateUserError) {
+            return NextResponse.json(
+                { error: "A user with this email already exists" },
+                { status: 409 }
+            );
+        }
+        if (error instanceof ClerkUserCreationError) {
+            return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
+        }
+        console.error("[mentors:POST] ❌ Error:", error);
+        const message = error instanceof Error ? error.message : "Creation failed";
+        const status = message.includes("Unauthorized") || message.includes("Forbidden") ? 403 : 500;
+        const displayMessage = status === 403 ? "Unauthorized access" : "Internal server error";
+        return NextResponse.json({ error: displayMessage }, { status });
     }
 }
 
