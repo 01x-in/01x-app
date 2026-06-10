@@ -4,6 +4,9 @@ import { PageHeader } from "../../_components/page-header"
 import { SearchInput, FilterSelect, ListToolbar } from "../../_components/list-controls"
 import { Pagination } from "../../_components/pagination"
 import Link from "next/link"
+import { Mail } from "lucide-react"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { getInitials } from "@/lib/utils"
 
 const PAGE_SIZE = 20
 
@@ -27,12 +30,12 @@ export default async function MembersPage({
     let bindIdx = 1
 
     if (q) {
-        conditions.push(`(full_name LIKE ?${bindIdx} OR email LIKE ?${bindIdx})`)
+        conditions.push(`(mb.full_name LIKE ?${bindIdx} OR mb.email LIKE ?${bindIdx})`)
         bindings.push(`%${q}%`)
         bindIdx++
     }
     if (statusFilter) {
-        conditions.push(`is_active = ?${bindIdx}`)
+        conditions.push(`mb.is_active = ?${bindIdx}`)
         bindings.push(statusFilter === "active" ? 1 : 0)
         bindIdx++
     }
@@ -41,7 +44,7 @@ export default async function MembersPage({
 
     // Count total
     const countResult = await db
-        .prepare(`SELECT COUNT(*) as count FROM members ${whereClause}`)
+        .prepare(`SELECT COUNT(*) as count FROM members mb ${whereClause}`)
         .bind(...bindings)
         .first()
     const totalItems = (countResult?.count as number) || 0
@@ -49,7 +52,14 @@ export default async function MembersPage({
 
     // Fetch page
     const { results } = await db
-        .prepare(`SELECT * FROM members ${whereClause} ORDER BY created_at DESC LIMIT ?${bindIdx} OFFSET ?${bindIdx + 1}`)
+        .prepare(`
+            SELECT mb.*, u.inbox_email
+            FROM members mb
+            LEFT JOIN users u ON u.member_id = mb.id
+            ${whereClause}
+            ORDER BY mb.created_at DESC
+            LIMIT ?${bindIdx} OFFSET ?${bindIdx + 1}
+        `)
         .bind(...bindings, PAGE_SIZE, offset)
         .all()
 
@@ -79,17 +89,18 @@ export default async function MembersPage({
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b bg-muted/50">
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Email</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Location</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Joined</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Name</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Email</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Location</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Status</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Joined</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Inbox</th>
                             </tr>
                         </thead>
                         <tbody>
                             {results.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                                    <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                                         {q || statusFilter ? "No matching members" : "No members yet"}
                                     </td>
                                 </tr>
@@ -97,7 +108,11 @@ export default async function MembersPage({
                                 results.map((member: Record<string, unknown>) => (
                                     <tr key={member.id as string} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                                         <td className="px-4 py-3 font-medium">
-                                            <Link href={`/app/members/${member.id}`} className="text-primary underline-offset-4 hover:underline">
+                                            <Link href={`/app/members/${member.id}`} className="flex items-center gap-3 text-primary underline-offset-4 hover:underline">
+                                                <Avatar size="sm">
+                                                    <AvatarImage src={(member.avatar_url as string) || undefined} alt="" />
+                                                    <AvatarFallback>{getInitials(member.full_name as string)}</AvatarFallback>
+                                                </Avatar>
                                                 {member.full_name as string}
                                             </Link>
                                         </td>
@@ -111,6 +126,16 @@ export default async function MembersPage({
                                         </td>
                                         <td className="px-4 py-3 text-muted-foreground text-xs">
                                             {new Date(member.created_at as string).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {member.inbox_email ? (
+                                                <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
+                                                    <Mail className="size-3.5" />
+                                                    {member.inbox_email as string}
+                                                </span>
+                                            ) : (
+                                                <span className="text-muted-foreground">—</span>
+                                            )}
                                         </td>
                                     </tr>
                                 ))

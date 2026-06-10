@@ -8,6 +8,8 @@ import {
     DetailBadges,
 } from "../../../_components/detail-field"
 import { AdminToggle } from "../../../_components/admin-toggles"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { getInitials } from "@/lib/utils"
 
 export default async function MemberDetailPage({
     params,
@@ -24,6 +26,13 @@ export default async function MemberDetailPage({
         .first()
 
     if (!member) notFound()
+
+    // Get the linked user account's branded inbox address, if any
+    const userRow = await db
+        .prepare("SELECT inbox_email FROM users WHERE member_id = ?1")
+        .bind(id)
+        .first<{ inbox_email: string | null }>()
+    const inboxEmail = userRow?.inbox_email ?? null
 
     // Get projects created by this member
     const { results: projects } = await db
@@ -50,9 +59,31 @@ export default async function MemberDetailPage({
 
     return (
         <div className="space-y-6 max-w-3xl">
+            <div className="flex items-center gap-4">
+                <Avatar size="lg">
+                    <AvatarImage src={(member.avatar_url as string) || undefined} alt="" />
+                    <AvatarFallback>{getInitials(member.full_name as string)}</AvatarFallback>
+                </Avatar>
+                <div>
+                    <h1 className="text-lg font-semibold">{member.full_name as string}</h1>
+                    <p className="text-sm text-muted-foreground">{member.email as string}</p>
+                </div>
+            </div>
+
             <DetailSection title="Profile">
                 <DetailField label="Full Name" value={member.full_name as string} />
                 <DetailField label="Email" value={member.email as string} href={`mailto:${member.email}`} />
+                <DetailField
+                    label="Inbox Email"
+                    value={
+                        inboxEmail ? (
+                            <span className="font-mono text-xs">{inboxEmail}</span>
+                        ) : (
+                            <span className="text-muted-foreground">Not provisioned</span>
+                        )
+                    }
+                    href={inboxEmail ? `mailto:${inboxEmail}` : undefined}
+                />
                 <DetailField label="Location" value={member.location as string} />
                 <DetailField label="Bio" value={member.bio as string} />
                 <DetailField
