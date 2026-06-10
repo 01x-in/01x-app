@@ -4,6 +4,8 @@ import { PageHeader } from "../../_components/page-header"
 import { SearchInput, FilterSelect, ListToolbar } from "../../_components/list-controls"
 import { Pagination } from "../../_components/pagination"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ImportMentorsDialog } from "./_components/import-mentors-dialog"
 
 const PAGE_SIZE = 20
 
@@ -65,7 +67,12 @@ export default async function MentorsAdminPage({
             <PageHeader
                 title="Mentors"
                 description="Manage mentors and their approval status"
-            />
+            >
+                <ImportMentorsDialog />
+                <Button asChild size="sm">
+                    <Link href="/app/mentors/new">Add mentor</Link>
+                </Button>
+            </PageHeader>
 
             <ListToolbar>
                 <SearchInput placeholder="Search mentors…" />

@@ -5,6 +5,7 @@ import { requireAdmin } from "@/lib/auth"
 import { getResend, EMAIL_FROM } from "@/lib/email"
 import { ApplicationApprovedEmail } from "@/emails/application-approved"
 import { generateInboxAddress } from "@/lib/inbox-address"
+import { createMentorUser, DuplicateUserError, ClerkUserCreationError } from "@/lib/create-mentor-user"
 
 /**
  * POST /api/v1/applications/[id]/approve
@@ -59,6 +60,44 @@ export async function POST(
             return NextResponse.json({ error: "Application is missing a valid full name" }, { status: 422 })
         }
 
+        if (type === "mentor") {
+            // 2–4. Clerk user + mentor/user rows + approval email via shared helper
+            let result
+            try {
+                result = await createMentorUser(
+                    {
+                        fullName,
+                        email,
+                        title: (application.title as string) || undefined,
+                        domains: [(application.domains as string) || "General"],
+                        bioShort: (application.bio_short as string) || undefined,
+                        location: (application.location as string) || null,
+                    },
+                    { sendWelcomeEmail: true, isApproval: true },
+                )
+            } catch (err) {
+                if (err instanceof DuplicateUserError) {
+                    return NextResponse.json({ error: "A user with this email already exists" }, { status: 409 })
+                }
+                if (err instanceof ClerkUserCreationError) {
+                    return NextResponse.json({ error: "Failed to create user" }, { status: 500 })
+                }
+                throw err
+            }
+
+            // 5. All side effects succeeded — now mark the application as approved
+            await db
+                .prepare(`UPDATE ${table} SET status = 'approved' WHERE id = ?1`)
+                .bind(id)
+                .run()
+
+            return NextResponse.json({
+                success: true,
+                userId: result.userId,
+                clerkUserId: result.clerkUserId,
+            })
+        }
+
         const nameParts = fullName.split(" ").filter(Boolean)
         const firstName = nameParts[0] || undefined
         const lastName = nameParts.slice(1).join(" ") || undefined
@@ -82,56 +121,29 @@ export async function POST(
         // 3. Generate internal IDs + a unique branded @01x.in inbox address
         const userId = crypto.randomUUID()
         const roleId = crypto.randomUUID()
-        const inboxEmail = await generateInboxAddress(fullName, type === "mentor" ? "mentor" : "member")
+        const inboxEmail = await generateInboxAddress(fullName, "member")
 
-        if (type === "mentor") {
-            // Atomically create mentor + user rows via D1 batch (single transaction)
-            await db.batch([
-                db
-                    .prepare(`
-          INSERT INTO mentors (id, name, title, domains, bio_short, highlights, mentoring_style, availability, location, image_src, is_approved, is_featured)
-          VALUES (?1, ?2, ?3, ?4, ?5, '[]', '[]', '{}', ?6, '/mentors/default.jpg', 1, 0)
-        `)
-                    .bind(
-                        roleId,
-                        fullName,
-                        (application.title as string) || "Mentor",
-                        JSON.stringify([(application.domains as string) || "General"]),
-                        (application.bio_short as string) || "",
-                        (application.location as string) || null,
-                    ),
-                db
-                    .prepare(`
-          INSERT INTO users (id, clerk_id, email, full_name, mentor_id, inbox_email)
-          VALUES (?1, ?2, ?3, ?4, ?5, ?6)
-        `)
-                    .bind(userId, clerkUser.id, email, fullName, roleId, inboxEmail),
-            ])
-
-        } else {
-            // Atomically create member + user rows via D1 batch (single transaction)
-            await db.batch([
-                db
-                    .prepare(`
+        // Atomically create member + user rows via D1 batch (single transaction)
+        await db.batch([
+            db
+                .prepare(`
           INSERT INTO members (id, full_name, email, location, linkedin_url)
           VALUES (?1, ?2, ?3, ?4, ?5)
         `)
-                    .bind(
-                        roleId,
-                        fullName,
-                        email,
-                        (application.location as string) || null,
-                        (application.linkedin_url as string) || null
-                    ),
-                db
-                    .prepare(`
+                .bind(
+                    roleId,
+                    fullName,
+                    email,
+                    (application.location as string) || null,
+                    (application.linkedin_url as string) || null
+                ),
+            db
+                .prepare(`
           INSERT INTO users (id, clerk_id, email, full_name, member_id, inbox_email)
           VALUES (?1, ?2, ?3, ?4, ?5, ?6)
         `)
-                    .bind(userId, clerkUser.id, email, fullName, roleId, inboxEmail),
-            ])
-
-        }
+                .bind(userId, clerkUser.id, email, fullName, roleId, inboxEmail),
+        ])
 
         // 4. Send approval email (non-blocking)
         try {
@@ -141,7 +153,7 @@ export async function POST(
                 subject: "Your 01X application has been approved! 🎉",
                 react: ApplicationApprovedEmail({
                     name: firstName ?? fullName,
-                    role: type === "mentor" ? "mentor" : "member",
+                    role: "member",
                 }),
             })
         } catch (emailError) {
