@@ -74,7 +74,7 @@ export default async function MentorDetailPage({
         <div className="space-y-6 max-w-3xl">
             <div className="flex items-center gap-4">
                 <Avatar size="lg">
-                    <AvatarImage src={mentor.image_src as string} alt="" />
+                    <AvatarImage src={(mentor.image_src as string) || undefined} alt="" />
                     <AvatarFallback>{getInitials(mentor.name as string)}</AvatarFallback>
                 </Avatar>
                 <div>

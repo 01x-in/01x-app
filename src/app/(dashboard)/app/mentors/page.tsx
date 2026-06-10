@@ -142,7 +142,7 @@ export default async function MentorsAdminPage({
                                             <td className="px-4 py-3 font-medium">
                                                 <Link href={`/app/mentors/${mentor.id}`} className="flex items-center gap-3 text-primary underline-offset-4 hover:underline">
                                                     <Avatar size="sm">
-                                                        <AvatarImage src={mentor.image_src as string} alt="" />
+                                                        <AvatarImage src={(mentor.image_src as string) || undefined} alt="" />
                                                         <AvatarFallback>{getInitials(mentor.name as string)}</AvatarFallback>
                                                     </Avatar>
                                                     {mentor.name as string}
