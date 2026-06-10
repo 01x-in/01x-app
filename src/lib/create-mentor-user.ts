@@ -2,6 +2,7 @@ import { clerkClient } from "@clerk/nextjs/server"
 import { getDB } from "./db"
 import { getResend, EMAIL_FROM } from "./email"
 import { ApplicationApprovedEmail } from "@/emails/application-approved"
+import { MentorInviteEmail } from "@/emails/mentor-invite"
 import { generateInboxAddress } from "./inbox-address"
 import type { MentorProfileInput } from "./mentor-input"
 
@@ -34,17 +35,23 @@ export interface CreateMentorUserResult {
  * Shared by application approval and direct admin creation (single + CSV).
  * Duplicate protection checks users.email only — a pending/rejected
  * application for the same email must not block direct creation.
+ *
+ * The SELECT-then-INSERT duplicate check is not atomic; the unique index
+ * `idx_users_email_unique` (db/migrations/0003_users_email_unique.sql) is
+ * the last-resort guard for concurrent requests with the same email — a
+ * UNIQUE constraint violation on the users insert is also mapped to
+ * DuplicateUserError below.
  */
 export async function createMentorUser(
     input: MentorProfileInput,
-    options: { sendWelcomeEmail: boolean },
+    options: { sendWelcomeEmail: boolean; isApproval?: boolean },
 ): Promise<CreateMentorUserResult> {
     const db = getDB()
-    const email = input.email.trim()
+    const email = input.email.trim().toLowerCase()
     const fullName = input.fullName.trim()
 
     const existing = await db
-        .prepare("SELECT id FROM users WHERE LOWER(email) = LOWER(?1) LIMIT 1")
+        .prepare("SELECT id FROM users WHERE email = ?1 LIMIT 1")
         .bind(email)
         .first()
     if (existing) {
@@ -110,21 +117,36 @@ export async function createMentorUser(
         } catch {
             console.error("[create-mentor-user] ⚠️ Failed to clean up Clerk user after D1 failure:", clerkUser.id)
         }
+        const message = dbError instanceof Error ? dbError.message : String(dbError)
+        if (message.includes("UNIQUE constraint failed: users.email")) {
+            throw new DuplicateUserError(email)
+        }
         throw dbError
     }
 
     let emailSent = false
     if (options.sendWelcomeEmail) {
         try {
-            await getResend().emails.send({
-                from: EMAIL_FROM,
-                to: email,
-                subject: "Your 01X application has been approved! 🎉",
-                react: ApplicationApprovedEmail({
-                    name: firstName ?? fullName,
-                    role: "mentor",
-                }),
-            })
+            if (options.isApproval) {
+                await getResend().emails.send({
+                    from: EMAIL_FROM,
+                    to: email,
+                    subject: "Your 01X application has been approved! 🎉",
+                    react: ApplicationApprovedEmail({
+                        name: firstName ?? fullName,
+                        role: "mentor",
+                    }),
+                })
+            } else {
+                await getResend().emails.send({
+                    from: EMAIL_FROM,
+                    to: email,
+                    subject: "You've been added as a mentor on 01X! 🎉",
+                    react: MentorInviteEmail({
+                        name: firstName ?? fullName,
+                    }),
+                })
+            }
             emailSent = true
         } catch (emailError) {
             console.error("[create-mentor-user] ⚠️ Email send failed (non-blocking):", emailError)

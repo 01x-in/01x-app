@@ -77,7 +77,11 @@ export interface CsvRecords {
  * trimmed; fully empty rows are dropped.
  */
 export function csvRecords(text: string): CsvRecords {
-    const raw = parseCsv(text)
+    // Strip a leading UTF-8 BOM (common in Excel/Sheets exports) so the
+    // first header isn't parsed as "﻿header_name"
+    const withoutBom = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text
+
+    const raw = parseCsv(withoutBom)
     if (raw.length === 0) return { headers: [], rows: [] }
 
     const headers = raw[0].map((h) => h.trim().toLowerCase())

@@ -73,11 +73,11 @@ export async function POST(
                         bioShort: (application.bio_short as string) || undefined,
                         location: (application.location as string) || null,
                     },
-                    { sendWelcomeEmail: true },
+                    { sendWelcomeEmail: true, isApproval: true },
                 )
             } catch (err) {
                 if (err instanceof DuplicateUserError) {
-                    return NextResponse.json({ error: "A user with this email already exists" }, { status: 400 })
+                    return NextResponse.json({ error: "A user with this email already exists" }, { status: 409 })
                 }
                 if (err instanceof ClerkUserCreationError) {
                     return NextResponse.json({ error: "Failed to create user" }, { status: 500 })

@@ -15,7 +15,10 @@ export async function GET() {
                 "Content-Disposition": 'attachment; filename="mentors-template.csv"',
             },
         })
-    } catch {
-        return NextResponse.json({ error: "Unauthorized access" }, { status: 403 })
+    } catch (error) {
+        const message = error instanceof Error ? error.message : ""
+        const status = message.includes("Unauthorized") || message.includes("Forbidden") ? 403 : 500
+        const displayMessage = status === 403 ? "Unauthorized access" : "Internal server error"
+        return NextResponse.json({ error: displayMessage }, { status })
     }
 }
