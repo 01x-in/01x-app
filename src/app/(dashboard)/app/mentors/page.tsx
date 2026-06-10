@@ -4,7 +4,10 @@ import { PageHeader } from "../../_components/page-header"
 import { SearchInput, FilterSelect, ListToolbar } from "../../_components/list-controls"
 import { Pagination } from "../../_components/pagination"
 import Link from "next/link"
+import { Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { getInitials } from "@/lib/utils"
 import { ImportMentorsDialog } from "./_components/import-mentors-dialog"
 
 const PAGE_SIZE = 20
@@ -31,17 +34,17 @@ export default async function MentorsAdminPage({
     let bindIdx = 1
 
     if (q) {
-        conditions.push(`(name LIKE ?${bindIdx} OR title LIKE ?${bindIdx})`)
+        conditions.push(`(m.name LIKE ?${bindIdx} OR m.title LIKE ?${bindIdx})`)
         bindings.push(`%${q}%`)
         bindIdx++
     }
     if (approvedFilter === "approved" || approvedFilter === "pending") {
-        conditions.push(`is_approved = ?${bindIdx}`)
+        conditions.push(`m.is_approved = ?${bindIdx}`)
         bindings.push(approvedFilter === "approved" ? 1 : 0)
         bindIdx++
     }
     if (featuredFilter === "yes" || featuredFilter === "no") {
-        conditions.push(`is_featured = ?${bindIdx}`)
+        conditions.push(`m.is_featured = ?${bindIdx}`)
         bindings.push(featuredFilter === "yes" ? 1 : 0)
         bindIdx++
     }
@@ -50,7 +53,7 @@ export default async function MentorsAdminPage({
 
     // Count total
     const countResult = await db
-        .prepare(`SELECT COUNT(*) as count FROM mentors ${whereClause}`)
+        .prepare(`SELECT COUNT(*) as count FROM mentors m ${whereClause}`)
         .bind(...bindings)
         .first()
     const totalItems = (countResult?.count as number) || 0
@@ -58,7 +61,14 @@ export default async function MentorsAdminPage({
 
     // Fetch page
     const { results } = await db
-        .prepare(`SELECT * FROM mentors ${whereClause} ORDER BY sort_rank ASC, name ASC LIMIT ?${bindIdx} OFFSET ?${bindIdx + 1}`)
+        .prepare(`
+            SELECT m.*, u.inbox_email
+            FROM mentors m
+            LEFT JOIN users u ON u.mentor_id = m.id
+            ${whereClause}
+            ORDER BY m.sort_rank ASC, m.name ASC
+            LIMIT ?${bindIdx} OFFSET ?${bindIdx + 1}
+        `)
         .bind(...bindings, PAGE_SIZE, offset)
         .all()
 
@@ -101,18 +111,19 @@ export default async function MentorsAdminPage({
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b bg-muted/50">
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Title</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Domains</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Location</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
-                                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Featured</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Name</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Title</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Domains</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Location</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Status</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Featured</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Inbox</th>
                             </tr>
                         </thead>
                         <tbody>
                             {results.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                                    <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                                         {q || approvedFilter || featuredFilter ? "No matching mentors" : "No mentors yet"}
                                     </td>
                                 </tr>
@@ -129,7 +140,11 @@ export default async function MentorsAdminPage({
                                     return (
                                         <tr key={mentor.id as string} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                                             <td className="px-4 py-3 font-medium">
-                                                <Link href={`/app/mentors/${mentor.id}`} className="text-primary underline-offset-4 hover:underline">
+                                                <Link href={`/app/mentors/${mentor.id}`} className="flex items-center gap-3 text-primary underline-offset-4 hover:underline">
+                                                    <Avatar size="sm">
+                                                        <AvatarImage src={(mentor.image_src as string) || undefined} alt="" />
+                                                        <AvatarFallback>{getInitials(mentor.name as string)}</AvatarFallback>
+                                                    </Avatar>
                                                     {mentor.name as string}
                                                 </Link>
                                             </td>
@@ -155,6 +170,16 @@ export default async function MentorsAdminPage({
                                                     }`}>
                                                     {mentor.is_featured ? "Featured" : "Standard"}
                                                 </span>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                {mentor.inbox_email ? (
+                                                    <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
+                                                        <Mail className="size-3.5" />
+                                                        {mentor.inbox_email as string}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-muted-foreground">—</span>
+                                                )}
                                             </td>
                                         </tr>
                                     )

@@ -8,6 +8,8 @@ import {
     DetailBadges,
 } from "../../../_components/detail-field"
 import { AdminToggle } from "../../../_components/admin-toggles"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { getInitials } from "@/lib/utils"
 
 export default async function MentorDetailPage({
     params,
@@ -24,6 +26,13 @@ export default async function MentorDetailPage({
         .first()
 
     if (!mentor) notFound()
+
+    // Get the linked user account's branded inbox address, if any
+    const userRow = await db
+        .prepare("SELECT inbox_email FROM users WHERE mentor_id = ?1")
+        .bind(id)
+        .first<{ inbox_email: string | null }>()
+    const inboxEmail = userRow?.inbox_email ?? null
 
     // Get projects this mentor is assigned to
     const { results: projects } = await db
@@ -63,6 +72,17 @@ export default async function MentorDetailPage({
 
     return (
         <div className="space-y-6 max-w-3xl">
+            <div className="flex items-center gap-4">
+                <Avatar size="lg">
+                    <AvatarImage src={(mentor.image_src as string) || undefined} alt="" />
+                    <AvatarFallback>{getInitials(mentor.name as string)}</AvatarFallback>
+                </Avatar>
+                <div>
+                    <h1 className="text-lg font-semibold">{mentor.name as string}</h1>
+                    <p className="text-sm text-muted-foreground">{mentor.title as string}</p>
+                </div>
+            </div>
+
             <DetailSection title="Profile">
                 <DetailField label="Name" value={mentor.name as string} />
                 <DetailField label="Title" value={mentor.title as string} />
@@ -134,6 +154,17 @@ export default async function MentorDetailPage({
                     }
                 />
                 <DetailField label="Sort Rank" value={String(mentor.sort_rank)} />
+                <DetailField
+                    label="Inbox Email"
+                    value={
+                        inboxEmail ? (
+                            <span className="font-mono text-xs">{inboxEmail}</span>
+                        ) : (
+                            <span className="text-muted-foreground">Not provisioned</span>
+                        )
+                    }
+                    href={inboxEmail ? `mailto:${inboxEmail}` : undefined}
+                />
             </DetailSection>
 
             {Object.keys(socials).length > 0 && (
