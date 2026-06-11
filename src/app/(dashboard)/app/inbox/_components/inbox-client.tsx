@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState, useMemo } from "react"
+import { useCallback, useEffect, useRef, useState, useMemo } from "react"
 import { Mail, MailOpen, Paperclip, Loader2, Inbox, RefreshCw } from "lucide-react"
 import { toast } from "sonner"
 import { Input } from "@/components/ui/input"
@@ -69,8 +69,12 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
     const [search, setSearch] = useState("")
     const [unreadOnly, setUnreadOnly] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
+    const fetchInFlight = useRef(false)
 
-    const fetchMessages = useCallback(async (opts: { silent?: boolean } = {}) => {
+    const fetchMessages = useCallback(async (opts: { silent?: boolean; showErrorToast?: boolean } = {}) => {
+        if (fetchInFlight.current) return
+        fetchInFlight.current = true
+        const showErrorToast = opts.showErrorToast ?? !opts.silent
         if (opts.silent) setRefreshing(true)
         else setLoading(true)
         try {
@@ -79,10 +83,11 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
             if (data.error) throw new Error(data.error)
             setMessages(data.messages ?? [])
         } catch (err) {
-            if (!opts.silent) toast.error(err instanceof Error ? err.message : "Failed to load inbox")
+            if (showErrorToast) toast.error(err instanceof Error ? err.message : "Failed to load inbox")
         } finally {
             if (opts.silent) setRefreshing(false)
             else setLoading(false)
+            fetchInFlight.current = false
         }
     }, [])
 
@@ -91,7 +96,7 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
     }, [fetchMessages])
 
     useEffect(() => {
-        const interval = setInterval(() => fetchMessages({ silent: true }), POLL_INTERVAL_MS)
+        const interval = setInterval(() => fetchMessages({ silent: true, showErrorToast: false }), POLL_INTERVAL_MS)
         return () => clearInterval(interval)
     }, [fetchMessages])
 
@@ -148,7 +153,7 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
                                 variant="ghost"
                                 size="icon"
                                 className="size-7"
-                                onClick={() => fetchMessages({ silent: true })}
+                                onClick={() => fetchMessages({ silent: true, showErrorToast: true })}
                                 disabled={refreshing || loading}
                                 aria-label="Refresh inbox"
                             >
