@@ -1,11 +1,14 @@
 "use client"
 
-import { useEffect, useState, useMemo } from "react"
-import { Mail, MailOpen, Paperclip, Loader2, Inbox } from "lucide-react"
+import { useCallback, useEffect, useRef, useState, useMemo } from "react"
+import { Mail, MailOpen, Paperclip, Loader2, Inbox, RefreshCw } from "lucide-react"
 import { toast } from "sonner"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { Button } from "@/components/ui/button"
+
+const POLL_INTERVAL_MS = 30_000
 
 interface InboxListItem {
     id: string
@@ -65,20 +68,37 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
     const [detailLoading, setDetailLoading] = useState(false)
     const [search, setSearch] = useState("")
     const [unreadOnly, setUnreadOnly] = useState(false)
+    const [refreshing, setRefreshing] = useState(false)
+    const fetchInFlight = useRef(false)
+
+    const fetchMessages = useCallback(async (opts: { silent?: boolean; showErrorToast?: boolean } = {}) => {
+        if (fetchInFlight.current) return
+        fetchInFlight.current = true
+        const showErrorToast = opts.showErrorToast ?? !opts.silent
+        if (opts.silent) setRefreshing(true)
+        else setLoading(true)
+        try {
+            const res = await fetch("/api/v1/inbox")
+            const data = await res.json()
+            if (data.error) throw new Error(data.error)
+            setMessages(data.messages ?? [])
+        } catch (err) {
+            if (showErrorToast) toast.error(err instanceof Error ? err.message : "Failed to load inbox")
+        } finally {
+            if (opts.silent) setRefreshing(false)
+            else setLoading(false)
+            fetchInFlight.current = false
+        }
+    }, [])
 
     useEffect(() => {
-        let active = true
-        fetch("/api/v1/inbox")
-            .then((res) => res.json())
-            .then((data) => {
-                if (!active) return
-                if (data.error) throw new Error(data.error)
-                setMessages(data.messages ?? [])
-            })
-            .catch((err) => toast.error(err instanceof Error ? err.message : "Failed to load inbox"))
-            .finally(() => active && setLoading(false))
-        return () => { active = false }
-    }, [])
+        fetchMessages()
+    }, [fetchMessages])
+
+    useEffect(() => {
+        const interval = setInterval(() => fetchMessages({ silent: true, showErrorToast: false }), POLL_INTERVAL_MS)
+        return () => clearInterval(interval)
+    }, [fetchMessages])
 
     const filtered = useMemo(() => {
         return messages.filter((m) => {
@@ -119,14 +139,27 @@ export function InboxClient({ inboxEmail }: { inboxEmail: string }) {
                 <div className="flex flex-col gap-3 border-b p-4">
                     <div className="flex items-center justify-between">
                         <span className="text-base font-medium">Inbox</span>
-                        <Label className="flex items-center gap-2 text-sm">
-                            <span className="text-muted-foreground">Unreads</span>
-                            <Switch
-                                checked={unreadOnly}
-                                onCheckedChange={setUnreadOnly}
-                                className="shadow-none"
-                            />
-                        </Label>
+                        <div className="flex items-center gap-3">
+                            <Label className="flex items-center gap-2 text-sm">
+                                <span className="text-muted-foreground">Unreads</span>
+                                <Switch
+                                    checked={unreadOnly}
+                                    onCheckedChange={setUnreadOnly}
+                                    className="shadow-none"
+                                />
+                            </Label>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="size-7"
+                                onClick={() => fetchMessages({ silent: true, showErrorToast: true })}
+                                disabled={refreshing || loading}
+                                aria-label="Refresh inbox"
+                            >
+                                <RefreshCw className={`size-4 ${refreshing ? "animate-spin" : ""}`} />
+                            </Button>
+                        </div>
                     </div>
                     <Input
                         placeholder="Type to search..."
