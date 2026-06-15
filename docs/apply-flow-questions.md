@@ -15,7 +15,7 @@ Both flows use the `ConversationalFlow` chat UI. Section-transition messages ("c
 
 ## Cohort (member) application — `/cohort/apply`
 
-**Intro message:** "Hey there, builder! 👋 I'm here to learn about what you're creating. This will take about 5-7 minutes. Ready to dive in?" → button **Let's go! 🚀**
+**Intro message:** "Hey there, builder! 👋 I'm here to learn about what you're creating. This will take about 2-3 minutes. Ready to dive in?" → button **Let's go! 🚀**
 
 ### Demographics
 
@@ -32,10 +32,7 @@ Both flows use the `ConversationalFlow` chat UI. Section-transition messages ("c
 
 | ID | Question | Type | Required |
 |---|---|---|---|
-| `whatBuilding` | So, what are you building? Give me the quick pitch. | textarea | Yes |
-| `whyMatters` | Why does this matter to *you* personally? What's driving you? | textarea | Yes |
-| `currentApproach` | How are you approaching it right now? What's your current method or status? | textarea | Yes |
-| `problemSolved` | What specific problem does this solve? | textarea | Yes |
+| `whatBuilding` | Give us your quick pitch! What are you building, and what problem does it solve? | textarea | Yes |
 
 > Transition: "Love the vision! Let me understand where you're at right now."
 
@@ -51,81 +48,20 @@ Both flows use the `ConversationalFlow` chat UI. Section-transition messages ("c
 
 **`productLink`** — "Nice! Got a link to what you've built?" (url, optional) — **skipped when `currentStage` is `zero`**
 
-> Transition: "Got it! A few questions about your team situation..."
+> Transition: "Got it! One more thing about your skillset."
 
-### Team
+### Skillset
 
-**`hasCofounder`** — "Do you have a co-founder or team?" (select, required)
-
-| Value | Label |
-|---|---|
-| `yes` | 👥 Yes, I have a team |
-| `no` | 🦸 No, going solo |
-| `looking` | 🔍 Looking for one |
-
-**`openToConnect`** — "Would you be open to connecting with potential co-founders in the cohort?" (select, required)
+**`superpower`** — "What's your superpower? The thing you're really good at?" (select, required)
 
 | Value | Label |
 |---|---|
-| `yes` | 🤝 Yes, definitely! |
-| `no` | ✓ No, I'm set |
-
-> Transition: "Great! Now let's understand your skills and background."
-
-### Technical profile
-
-**`background`** — "How would you describe your background?" (select, required)
-
-| Value | Label |
-|---|---|
-| `technical` | 💻 Technical |
-| `non-technical` | 📊 Non-technical |
-| `hybrid` | 🔀 Hybrid (bit of both) |
-
-**`primarySkill`** — "What's your primary technical skill?" (select, required) — **skipped when `background` is `non-technical`**
-
-| Value | Label |
-|---|---|
-| `frontend` | 🎨 Frontend |
-| `backend` | ⚙️ Backend |
-| `fullstack` | 🔧 Full-stack |
-| `mobile` | 📱 Mobile |
-| `other` | 🛠️ Other |
-
-**`superpower`** — "What's your superpower? The thing you're really good at?" (select, required) — **skipped when `background` is `technical`**
-
-| Value | Label |
-|---|---|
+| `engineering` | 💻 Engineering |
+| `product` | 📦 Product |
 | `design` | 🎨 Design |
-| `marketing` | 📣 Marketing |
-| `sales` | 💼 Sales |
-| `domain` | 🎯 Domain expertise |
-| `operations` | ⚙️ Operations |
-| `other` | ✨ Something else |
+| `growth` | 📣 Growth & Marketing |
 
-> Transition: "Awesome! Now for the commitment side of things..."
-
-### Commitment
-
-**`hoursPerWeek`** — "Realistically, how many hours per week can you commit?" (select, required)
-
-| Value | Label |
-|---|---|
-| `5-10` | ⏰ 5-10 hours |
-| `10-20` | ⏰ 10-20 hours |
-| `20-30` | 🔥 20-30 hours |
-| `30+` | 💪 30+ hours |
-
-**`investmentRange`** — "What amount are you willing to invest in this cohort?" (select, required)
-
-| Value | Label |
-|---|---|
-| `500-1000` | 💵 $500 - $1,000 |
-| `1000-2000` | 💵 $1,000 - $2,000 |
-| `2000-3000` | 💰 $2,000 - $3,000 |
-| `3000+` | 💎 $3,000+ |
-
-> Transition: "Almost there! Let's talk about your goals and expectations."
+> Transition: "Awesome! Now let's talk about your goals."
 
 ### Expectations
 
@@ -142,79 +78,7 @@ Both flows use the `ConversationalFlow` chat UI. Section-transition messages ("c
 
 **`successLooksLike`** — "By the end of 12 weeks, what does success look like for you?" (textarea, required)
 
-**`wantsMentors`** — "Would you want mentors as advisors for your project beyond the cohort?" (select, required)
-
-| Value | Label |
-|---|---|
-| `yes` | 🙌 Yes, definitely |
-| `maybe` | 🤔 Maybe, depends |
-| `no` | 🙅 No, not needed |
-
-> Transition: "Perfect! A few more questions to help us understand you better."
-
-### Strategic
-
-**`triedBefore`** — "Have you tried building something before?" (select, required)
-
-| Value | Label |
-|---|---|
-| `yes` | ✓ Yes |
-| `no` | 🆕 No, this is my first |
-
-**`whatHappened`** — "What happened with that project?" (textarea, optional) — **skipped unless `triedBefore` is `yes`**
-
-**`biggestBlocker`** — "What's your biggest blocker right now?" (select, required)
-
-| Value | Label |
-|---|---|
-| `technical` | 💻 Technical skills |
-| `time` | ⏰ Time |
-| `direction` | 🧭 Direction/clarity |
-| `accountability` | ✅ Accountability |
-| `funding` | 💰 Funding |
-| `other` | ❓ Something else |
-
-**`heardFrom`** — "How did you hear about 01X?" (select, required)
-
-| Value | Label |
-|---|---|
-| `twitter` | 🐦 Twitter/X |
-| `linkedin` | 💼 LinkedIn |
-| `friend` | 👋 Friend referral |
-| `search` | 🔍 Search/Google |
-| `other` | 🌐 Other |
-
-**`whyNow`** — "Why now? What changed that makes you ready to commit?" (textarea, required)
-
-**`readyToCommit`** — "Have you set aside the time and resources to participate fully?" (select, required)
-
-| Value | Label |
-|---|---|
-| `yes` | ✅ Yes, I'm ready |
-| `working-on-it` | 🔄 Working on it |
-| `no` | ❌ Not yet |
-
-> Transition: "You're doing great! 🎉 Just a couple questions about how you like to work."
-
-### Community
-
-**`comfortablePublic`** — "Are you comfortable working in public? (Sharing progress, getting feedback)" (select, required)
-
-| Value | Label |
-|---|---|
-| `yes` | 📢 Yes, that's the point! |
-| `maybe` | 🤔 Maybe, still warming up |
-| `no` | 🤫 Prefer to stay quiet |
-
-**`willingToHelp`** — "Would you be willing to help other cohort members?" (select, required)
-
-| Value | Label |
-|---|---|
-| `yes` | 🤝 Yes, that's the point! |
-| `maybe` | 🤔 Maybe, when I can |
-| `prefer-focus` | 🎯 Prefer to focus on my project |
-
-> Transition: "Final stretch! Just two optional questions, then we're done."
+> Transition: "Almost there! Just a couple optional questions to wrap up."
 
 ### Closing (optional)
 
@@ -229,7 +93,7 @@ Both flows use the `ConversationalFlow` chat UI. Section-transition messages ("c
 
 ## Mentor application — `/mentors/apply`
 
-**Intro message:** "Hey there! 👋 We're building a community of exceptional mentors for early-stage builders. This takes about 4–5 minutes. We'll ask about your background, how you like to work, and how much time you can give. Ready?" → button **Let's do it 🚀**
+**Intro message:** "Hey there! 👋 We're building a community of exceptional mentors for early-stage builders. This takes about 3–4 minutes. We'll ask about your background and expertise. Ready?" → button **Let's do it 🚀**
 
 ### Profile
 
@@ -281,58 +145,6 @@ Both flows use the `ConversationalFlow` chat UI. Section-transition messages ("c
 | `fundraising` | 💰 Fundraising & investor narrative |
 | `hiring-team` | 👥 Hiring & building early team |
 
-> Transition: "Love it. Tell me about how you mentor — your style matters as much as your skills."
-
-### Mentoring style
-
-**`mentoringApproach`** — "How would you describe your mentoring style?" (select, required)
-
-| Value | Label |
-|---|---|
-| `coach` | 🧭 Coach — I ask questions and guide |
-| `advisor` | 💡 Advisor — I share experience and perspective |
-| `hands-on` | 🔧 Hands-on — I roll up my sleeves and dig in |
-| `challenger` | 🔥 Challenger — I push hard and ask tough questions |
-
-**`whyMentor`** — "Why do you want to mentor builders at 01X? What draws you to this?" (textarea, required)
-
-**`idealMentee`** — "What type of builder do you work best with?" (select, required)
-
-| Value | Label |
-|---|---|
-| `zero-idea` | 💡 Very early — still finding the idea |
-| `building` | 🔨 Building — has an idea, executing |
-| `launched` | 🚀 Launched — looking to grow |
-| `any` | 🔄 Any stage — I adapt well |
-
-> Transition: "Perfect. Let's talk about how much time you're looking to give."
-
-### Availability
-
-**`oneOnOneFrequency`** — "How often can you commit to 1:1 sessions with a mentee?" (select, required)
-
-| Value | Label |
-|---|---|
-| `weekly` | 📅 Weekly 1:1s |
-| `biweekly` | 📆 Bi-weekly 1:1s |
-| `monthly` | 🗓️ Monthly 1:1s |
-
-**`asyncFeedback`** — "Are you open to async feedback? (Slack messages, reviewing docs, quick voice notes)" (select, required)
-
-| Value | Label |
-|---|---|
-| `yes` | ✅ Yes, happy to do async |
-| `sometimes` | 🤔 Occasionally, when I can |
-| `no` | 🙅 Prefer to keep it to scheduled sessions |
-
-**`weekendSessions`** — "01X runs weekend sessions with the cohort. Can you occasionally join?" (select, required)
-
-| Value | Label |
-|---|---|
-| `yes` | ✅ Yes, I can make weekends work |
-| `sometimes` | 🤔 Sometimes — depends on the quarter |
-| `no` | 🙅 Weekdays only for me |
-
 > Transition: "Almost there! 🎉 A couple of final questions to help us set up your profile."
 
 ### Closing
@@ -357,7 +169,7 @@ Both flows use the `ConversationalFlow` chat UI. Section-transition messages ("c
 
 | Flow | Route | Questions (excl. intro/submit/transitions) | Conditional questions |
 |---|---|---|---|
-| Cohort (member) | `/cohort/apply` | 30 | `productLink` (skipped at idea stage), `primarySkill` (technical/hybrid only), `superpower` (non-technical/hybrid only), `whatHappened` (only if built before) |
-| Mentor | `/mentors/apply` | 19 | None |
+| Cohort (member) | `/cohort/apply` | 12 | `productLink` (skipped at idea stage) |
+| Mentor | `/mentors/apply` | 13 | None |
 
 Keep this file in sync when editing either `questions.ts` — it is hand-maintained, not generated.

@@ -43,22 +43,10 @@ export default async function MentorDetailPage({
         socials = mentor.socials ? JSON.parse(mentor.socials as string) : {}
     } catch { /* ignore */ }
 
-    // Parse availability JSON
-    let availability: Record<string, unknown> = {}
-    try {
-        availability = mentor.availability ? JSON.parse(mentor.availability as string) : {}
-    } catch { /* ignore */ }
-
     const stageLabels: Record<string, string> = {
         zero: "Zero — Idea",
         one: "One — MVP",
         x: "X — Scale",
-    }
-
-    const frequencyLabels: Record<string, string> = {
-        weekly: "Weekly 1:1s",
-        biweekly: "Biweekly 1:1s",
-        monthly: "Monthly 1:1s",
     }
 
     return (
@@ -83,26 +71,6 @@ export default async function MentorDetailPage({
                     label="Highlights"
                     json={mentor.highlights as string}
                     colorClass="bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                />
-                <DetailBadges
-                    label="Style"
-                    json={mentor.mentoring_style as string}
-                    colorClass="bg-purple-500/10 text-purple-600 dark:text-purple-400"
-                />
-            </DetailSection>
-
-            <DetailSection title="Availability">
-                <DetailField
-                    label="Frequency"
-                    value={
-                        availability.oneOnOneFrequency
-                            ? frequencyLabels[availability.oneOnOneFrequency as string] || (availability.oneOnOneFrequency as string)
-                            : null
-                    }
-                />
-                <DetailField
-                    label="Max Mentees"
-                    value={availability.maxMentees ? String(availability.maxMentees) : null}
                 />
             </DetailSection>
 

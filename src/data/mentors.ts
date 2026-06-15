@@ -9,20 +9,6 @@ export type DomainTag =
   | "Founder"
   | "AI";
 
-export type OneOnOneFrequency = "weekly" | "biweekly" | "monthly";
-
-export const ONE_ON_ONE_LABELS: Record<OneOnOneFrequency, string> = {
-  weekly: "Weekly 1:1s",
-  biweekly: "Bi-Weekly 1:1s",
-  monthly: "Monthly 1:1s",
-};
-
-export interface MentorAvailability {
-  async: boolean;
-  weekend: boolean;
-  oneOnOneFrequency?: OneOnOneFrequency;
-}
-
 export interface MentorSocials {
   linkedin?: string;
   twitter?: string;
@@ -42,8 +28,6 @@ export interface Mentor {
   bioShort: string;
   bioLong?: string;
   highlights: string[];
-  mentoringStyle: string[];
-  availability: MentorAvailability;
   socials?: MentorSocials;
   location?: string;
   image: MentorImage;

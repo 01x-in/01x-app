@@ -143,8 +143,6 @@ function parseMentorRow(row: Record<string, unknown>) {
         bioShort: row.bio_short,
         bioLong: row.bio_long || undefined,
         highlights: JSON.parse((row.highlights as string) || "[]"),
-        mentoringStyle: JSON.parse((row.mentoring_style as string) || "[]"),
-        availability: JSON.parse((row.availability as string) || "{}"),
         socials: row.socials ? JSON.parse(row.socials as string) : undefined,
         location: row.location || undefined,
         image: {

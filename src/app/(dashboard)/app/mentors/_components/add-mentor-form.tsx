@@ -10,13 +10,6 @@ import { Switch } from "@/components/ui/switch"
 import { Field, FieldGroup, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field"
 import { KNOWN_DOMAINS } from "@/lib/mentor-input"
 
-const FREQUENCY_OPTIONS = [
-    { value: "", label: "Not set" },
-    { value: "weekly", label: "Weekly" },
-    { value: "biweekly", label: "Biweekly" },
-    { value: "monthly", label: "Monthly" },
-] as const
-
 export function AddMentorForm() {
     const router = useRouter()
     const [submitting, setSubmitting] = useState(false)
@@ -30,10 +23,6 @@ export function AddMentorForm() {
     const [bioShort, setBioShort] = useState("")
     const [bioLong, setBioLong] = useState("")
     const [highlights, setHighlights] = useState("")
-    const [mentoringStyle, setMentoringStyle] = useState("")
-    const [asyncAvailable, setAsyncAvailable] = useState(false)
-    const [weekendAvailable, setWeekendAvailable] = useState(false)
-    const [frequency, setFrequency] = useState("")
     const [linkedin, setLinkedin] = useState("")
     const [twitter, setTwitter] = useState("")
     const [website, setWebsite] = useState("")
@@ -67,12 +56,6 @@ export function AddMentorForm() {
                     bioShort,
                     bioLong,
                     highlights: splitLines(highlights),
-                    mentoringStyle: splitLines(mentoringStyle),
-                    availability: {
-                        async: asyncAvailable,
-                        weekend: weekendAvailable,
-                        ...(frequency ? { oneOnOneFrequency: frequency } : {}),
-                    },
                     socials: { linkedin, twitter, website },
                     imageSrc,
                     isFeatured,
@@ -184,55 +167,16 @@ export function AddMentorForm() {
                     />
                 </Field>
 
-                <div className="grid gap-6 sm:grid-cols-2">
-                    <Field>
-                        <FieldLabel htmlFor="highlights">Highlights</FieldLabel>
-                        <Textarea
-                            id="highlights"
-                            value={highlights}
-                            onChange={(e) => setHighlights(e.target.value)}
-                            rows={3}
-                            placeholder={"One per line\nScaled app to 10M users\nEx-Acme"}
-                        />
-                        <FieldDescription>One per line</FieldDescription>
-                    </Field>
-                    <Field>
-                        <FieldLabel htmlFor="mentoringStyle">Mentoring style</FieldLabel>
-                        <Textarea
-                            id="mentoringStyle"
-                            value={mentoringStyle}
-                            onChange={(e) => setMentoringStyle(e.target.value)}
-                            rows={3}
-                            placeholder={"One per line\nDirect feedback\nHands-on"}
-                        />
-                        <FieldDescription>One per line</FieldDescription>
-                    </Field>
-                </div>
-
                 <Field>
-                    <FieldLabel>Availability</FieldLabel>
-                    <div className="flex flex-wrap items-center gap-6">
-                        <label className="flex items-center gap-2 text-sm">
-                            <Switch checked={asyncAvailable} onCheckedChange={setAsyncAvailable} />
-                            Async feedback
-                        </label>
-                        <label className="flex items-center gap-2 text-sm">
-                            <Switch checked={weekendAvailable} onCheckedChange={setWeekendAvailable} />
-                            Weekend sessions
-                        </label>
-                        <label className="flex items-center gap-2 text-sm">
-                            1:1 frequency
-                            <select
-                                value={frequency}
-                                onChange={(e) => setFrequency(e.target.value)}
-                                className="border-input h-9 rounded-md border bg-transparent px-2 text-sm"
-                            >
-                                {FREQUENCY_OPTIONS.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
-                        </label>
-                    </div>
+                    <FieldLabel htmlFor="highlights">Highlights</FieldLabel>
+                    <Textarea
+                        id="highlights"
+                        value={highlights}
+                        onChange={(e) => setHighlights(e.target.value)}
+                        rows={3}
+                        placeholder={"One per line\nScaled app to 10M users\nEx-Acme"}
+                    />
+                    <FieldDescription>One per line</FieldDescription>
                 </Field>
 
                 <div className="grid gap-6 sm:grid-cols-3">

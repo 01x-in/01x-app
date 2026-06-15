@@ -126,8 +126,8 @@ export function ImportMentorsDialog() {
                         >
                             Download the template
                         </a>{" "}
-                        for the expected columns. Multi-value cells (domains, highlights,
-                        mentoring style) are pipe-separated.
+                        for the expected columns. Multi-value cells (domains, highlights)
+                        are pipe-separated.
                     </DialogDescription>
                 </DialogHeader>
 

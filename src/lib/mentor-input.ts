@@ -12,12 +12,6 @@ export interface MentorProfileInput {
     bioShort?: string
     bioLong?: string | null
     highlights?: string[]
-    mentoringStyle?: string[]
-    availability?: {
-        async?: boolean
-        weekend?: boolean
-        oneOnOneFrequency?: "weekly" | "biweekly" | "monthly"
-    }
     socials?: { linkedin?: string; twitter?: string; website?: string } | null
     imageSrc?: string
     isFeatured?: boolean
@@ -28,7 +22,6 @@ export type ParseResult =
     | { ok: false; errors: string[] }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const FREQUENCIES = ["weekly", "biweekly", "monthly"] as const
 
 // The public site renders these six tags; the DB stores free-form JSON so
 // unknown domains are allowed through, the admin form just constrains the UI.
@@ -66,22 +59,6 @@ export function parseMentorInput(raw: unknown): ParseResult {
         errors.push("Invalid email")
     }
 
-    let availability: MentorProfileInput["availability"]
-    if (typeof input.availability === "object" && input.availability !== null) {
-        const avail = input.availability as Record<string, unknown>
-        availability = {}
-        if (typeof avail.async === "boolean") availability.async = avail.async
-        if (typeof avail.weekend === "boolean") availability.weekend = avail.weekend
-        const freq = asTrimmedString(avail.oneOnOneFrequency)
-        if (freq) {
-            if ((FREQUENCIES as readonly string[]).includes(freq)) {
-                availability.oneOnOneFrequency = freq as "weekly" | "biweekly" | "monthly"
-            } else {
-                errors.push(`Invalid one-on-one frequency "${freq}" (use weekly, biweekly, or monthly)`)
-            }
-        }
-    }
-
     let socials: MentorProfileInput["socials"]
     if (typeof input.socials === "object" && input.socials !== null) {
         const soc = input.socials as Record<string, unknown>
@@ -110,8 +87,6 @@ export function parseMentorInput(raw: unknown): ParseResult {
             bioShort: asTrimmedString(input.bioShort),
             bioLong: asTrimmedString(input.bioLong) ?? null,
             highlights: asStringArray(input.highlights),
-            mentoringStyle: asStringArray(input.mentoringStyle),
-            availability,
             socials: socials ?? null,
             imageSrc: asTrimmedString(input.imageSrc),
             isFeatured: input.isFeatured === true,
@@ -139,14 +114,10 @@ function csvList(value: string): string[] | undefined {
  * Map a CSV record (from csvRecords) into MentorProfileInput via the same
  * validator the single-create endpoint uses.
  *
- * Multi-value cells (domains, highlights, mentoring_style) are pipe-separated.
- * Availability is flattened into async_available / weekend_available /
- * one_on_one_frequency scalar columns.
+ * Multi-value cells (domains, highlights) are pipe-separated.
  */
 export function mentorRowFromCsv(record: Record<string, string>): ParseResult {
     const errors: string[] = []
-    const asyncAvailable = csvBoolean(record.async_available ?? "", "async_available", errors)
-    const weekendAvailable = csvBoolean(record.weekend_available ?? "", "weekend_available", errors)
     const isFeatured = csvBoolean(record.is_featured ?? "", "is_featured", errors)
     if (errors.length > 0) return { ok: false, errors }
 
@@ -159,12 +130,6 @@ export function mentorRowFromCsv(record: Record<string, string>): ParseResult {
         bioShort: record.bio_short,
         bioLong: record.bio_long,
         highlights: csvList(record.highlights ?? ""),
-        mentoringStyle: csvList(record.mentoring_style ?? ""),
-        availability: {
-            ...(asyncAvailable !== undefined ? { async: asyncAvailable } : {}),
-            ...(weekendAvailable !== undefined ? { weekend: weekendAvailable } : {}),
-            oneOnOneFrequency: record.one_on_one_frequency,
-        },
         socials: {
             linkedin: record.linkedin,
             twitter: record.twitter,
@@ -177,6 +142,6 @@ export function mentorRowFromCsv(record: Record<string, string>): ParseResult {
 
 export const CSV_REQUIRED_HEADERS = ["full_name", "email"] as const
 
-export const CSV_TEMPLATE = `full_name,email,title,domains,location,bio_short,bio_long,highlights,mentoring_style,async_available,weekend_available,one_on_one_frequency,linkedin,twitter,website,image_src,is_featured
-Jane Doe,jane@example.com,Head of Product,Product|AI,"Bengaluru, India","Product leader, 12y in consumer apps.","Longer bio goes here, commas are fine inside quotes.",Scaled app to 10M users|Ex-Acme,Direct feedback|Hands-on,true,false,biweekly,https://linkedin.com/in/janedoe,https://x.com/janedoe,https://janedoe.com,,false
+export const CSV_TEMPLATE = `full_name,email,title,domains,location,bio_short,bio_long,highlights,linkedin,twitter,website,image_src,is_featured
+Jane Doe,jane@example.com,Head of Product,Product|AI,"Bengaluru, India","Product leader, 12y in consumer apps.","Longer bio goes here, commas are fine inside quotes.",Scaled app to 10M users|Ex-Acme,https://linkedin.com/in/janedoe,https://x.com/janedoe,https://janedoe.com,,false
 `
