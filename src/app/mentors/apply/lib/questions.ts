@@ -3,9 +3,7 @@ import { Question, FlowFormData as FormData } from "@/components/conversational-
 // Section transition copy
 const transitions = {
     profile: "Great to meet you! Now let's understand your expertise. 🎯",
-    expertise: "Love it. Tell me about how you mentor — your style matters as much as your skills.",
-    mentoring: "Perfect. Let's talk about how much time you're looking to give.",
-    availability: "Almost there! 🎉 A couple of final questions to help us set up your profile.",
+    expertise: "Almost there! 🎉 A couple of final questions to help us set up your profile.",
 };
 
 export const mentorQuestions: Question[] = [
@@ -15,7 +13,7 @@ export const mentorQuestions: Question[] = [
         id: "intro",
         section: "intro",
         type: "confirm",
-        message: `Hey there! 👋\n\nWe're building a community of exceptional mentors for early-stage builders.\n\nThis takes about 4–5 minutes. We'll ask about your background, how you like to work, and how much time you can give.\n\nReady?`,
+        message: `Hey there! 👋\n\nWe're building a community of exceptional mentors for early-stage builders.\n\nThis takes about 3–4 minutes. We'll ask about your background and expertise.\n\nReady?`,
         options: [{ value: "ready", label: "Let's do it", emoji: "🚀" }],
     },
 
@@ -144,104 +142,12 @@ export const mentorQuestions: Question[] = [
         required: true,
     },
 
-    // ─── TRANSITION → MENTORING STYLE ────────────────────────────────────────
-    {
-        id: "transition-mentoring",
-        section: "transition",
-        type: "confirm",
-        message: transitions.expertise,
-        options: [{ value: "continue", label: "Continue", emoji: "→" }],
-    },
-
-    // ─── MENTORING STYLE ──────────────────────────────────────────────────────
-    {
-        id: "mentoringApproach",
-        section: "mentoring",
-        type: "select",
-        message: "How would you describe your mentoring style?",
-        options: [
-            { value: "coach", label: "Coach — I ask questions and guide", emoji: "🧭" },
-            { value: "advisor", label: "Advisor — I share experience and perspective", emoji: "💡" },
-            { value: "hands-on", label: "Hands-on — I roll up my sleeves and dig in", emoji: "🔧" },
-            { value: "challenger", label: "Challenger — I push hard and ask tough questions", emoji: "🔥" },
-        ],
-        required: true,
-    },
-    {
-        id: "whyMentor",
-        section: "mentoring",
-        type: "textarea",
-        message: "Why do you want to mentor builders at 01X? What draws you to this?",
-        placeholder: "Be honest — what's in it for you, and what's in it for them?",
-        required: true,
-    },
-    {
-        id: "idealMentee",
-        section: "mentoring",
-        type: "select",
-        message: "What type of builder do you work best with?",
-        options: [
-            { value: "zero-idea", label: "Very early — still finding the idea", emoji: "💡" },
-            { value: "building", label: "Building — has an idea, executing", emoji: "🔨" },
-            { value: "launched", label: "Launched — looking to grow", emoji: "🚀" },
-            { value: "any", label: "Any stage — I adapt well", emoji: "🔄" },
-        ],
-        required: true,
-    },
-
-    // ─── TRANSITION → AVAILABILITY ────────────────────────────────────────────
-    {
-        id: "transition-availability",
-        section: "transition",
-        type: "confirm",
-        message: transitions.mentoring,
-        options: [{ value: "continue", label: "Continue", emoji: "→" }],
-    },
-
-    // ─── AVAILABILITY ─────────────────────────────────────────────────────────
-    {
-        id: "oneOnOneFrequency",
-        section: "availability",
-        type: "select",
-        message: "How often can you commit to 1:1 sessions with a mentee?",
-        options: [
-            { value: "weekly", label: "Weekly 1:1s", emoji: "📅" },
-            { value: "biweekly", label: "Bi-weekly 1:1s", emoji: "📆" },
-            { value: "monthly", label: "Monthly 1:1s", emoji: "🗓️" },
-        ],
-        required: true,
-    },
-    {
-        id: "asyncFeedback",
-        section: "availability",
-        type: "select",
-        message: "Are you open to async feedback? (Slack messages, reviewing docs, quick voice notes)",
-        options: [
-            { value: "yes", label: "Yes, happy to do async", emoji: "✅" },
-            { value: "sometimes", label: "Occasionally, when I can", emoji: "🤔" },
-            { value: "no", label: "Prefer to keep it to scheduled sessions", emoji: "🙅" },
-        ],
-        required: true,
-    },
-    {
-        id: "weekendSessions",
-        section: "availability",
-        type: "select",
-        message: "01X runs weekend sessions with the cohort. Can you occasionally join?",
-        options: [
-            { value: "yes", label: "Yes, I can make weekends work", emoji: "✅" },
-            { value: "sometimes", label: "Sometimes — depends on the quarter", emoji: "🤔" },
-            { value: "no", label: "Weekdays only for me", emoji: "🙅" },
-        ],
-        required: true,
-    },
-
     // ─── CLOSING ─────────────────────────────────────────────────────────────
     {
         id: "transition-closing",
         section: "transition",
         type: "confirm",
-        message: transitions.availability,
+        message: transitions.expertise,
         options: [{ value: "continue", label: "Continue", emoji: "→" }],
     },
     {

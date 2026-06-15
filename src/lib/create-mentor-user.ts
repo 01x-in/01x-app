@@ -85,8 +85,8 @@ export async function createMentorUser(
         await db.batch([
             db
                 .prepare(`
-          INSERT INTO mentors (id, name, title, domains, bio_short, bio_long, highlights, mentoring_style, availability, socials, location, image_src, is_approved, is_featured)
-          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, 1, ?13)
+          INSERT INTO mentors (id, name, title, domains, bio_short, bio_long, highlights, socials, location, image_src, is_approved, is_featured)
+          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, 1, ?11)
         `)
                 .bind(
                     mentorId,
@@ -96,8 +96,6 @@ export async function createMentorUser(
                     input.bioShort || "",
                     input.bioLong ?? null,
                     JSON.stringify(input.highlights ?? []),
-                    JSON.stringify(input.mentoringStyle ?? []),
-                    JSON.stringify(input.availability ?? {}),
                     input.socials ? JSON.stringify(input.socials) : null,
                     input.location ?? null,
                     input.imageSrc || "/mentors/default.jpg",

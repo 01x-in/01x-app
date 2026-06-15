@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Mentor } from "@/data/mentors";
-import { ONE_ON_ONE_LABELS } from "@/data/mentors";
 import Link from "next/link";
 
 interface MentorModalProps {
@@ -81,48 +80,6 @@ export function MentorModal({ mentor, open, onOpenChange }: MentorModalProps) {
                                 </li>
                             ))}
                         </ul>
-                    </div>
-
-                    <Separator />
-
-                    {/* Mentoring Style */}
-                    <div>
-                        <h4 className="font-semibold mb-3">How They Mentor</h4>
-                        <ul className="space-y-2">
-                            {mentor.mentoringStyle.map((style, idx) => (
-                                <li key={idx} className="flex gap-2 text-sm text-muted-foreground">
-                                    <span className="text-foreground shrink-0">•</span>
-                                    {style}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <Separator />
-
-                    {/* Availability */}
-                    <div>
-                        <h4 className="font-semibold mb-3">Availability</h4>
-                        <div className="flex flex-wrap gap-3">
-                            {mentor.availability.async && (
-                                <Badge variant="outline" className="text-sm py-1.5 px-3">
-                                    <span className="mr-1.5 text-green-600">✓</span>
-                                    Async Feedback
-                                </Badge>
-                            )}
-                            {mentor.availability.weekend && (
-                                <Badge variant="outline" className="text-sm py-1.5 px-3">
-                                    <span className="mr-1.5 text-green-600">✓</span>
-                                    Weekend Sessions
-                                </Badge>
-                            )}
-                            {mentor.availability.oneOnOneFrequency && (
-                                <Badge variant="outline" className="text-sm py-1.5 px-3">
-                                    <span className="mr-1.5 text-blue-600">📅</span>
-                                    {ONE_ON_ONE_LABELS[mentor.availability.oneOnOneFrequency]}
-                                </Badge>
-                            )}
-                        </div>
                     </div>
 
                     {/* Socials */}
